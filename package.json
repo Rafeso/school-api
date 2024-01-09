@@ -1,0 +1,25 @@
+{
+	"name": "school-api",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"engines": { "node": ">=20" },
+	"scripts": {
+		"dev": "tsx watch src/server.ts",
+		"build": "tsup src --out-dir build",
+		"fix": "pnpm dlx @biomejs/biome check --apply src/**/*.ts"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"fastify": "^4.25.2",
+		"zod": "^3.22.4"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.5.0",
+		"tsup": "^8.0.1",
+		"tsx": "^4.7.0",
+		"typescript": "^5.3.3"
+	}
+}
