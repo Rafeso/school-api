@@ -12,6 +12,12 @@ export const AddressSchema = z.object({
 
 export type AddressType = z.infer<typeof AddressSchema>;
 
+export interface SerializableStatic {
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	new (...args: any[]): any;
+	fromObject(data: Record<string, unknown>): InstanceType<this>;
+}
+
 export interface Serializable {
 	toJSON(): string;
 	toObject(): Record<string, unknown>;

@@ -4,8 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"engines": {
-		"node": ">=20",
-		"pnpm": ">=8"
+		"node": ">=20.*",
+		"pnpm": ">=8.*"
 	},
 	"scripts": {
 		"dev": "tsx watch src/app.ts",
@@ -18,7 +18,7 @@
 		"**.ts": "pnpm fix"
 	},
 	"keywords": [],
-	"author": "Rafael Feitosa <rafaefeitosa@gmail.com>",
+	"author": "Rafael Feitosa <rafaefeitosa@gmail.com> (https://rafaelfeitosa.vercel.app)",
 	"license": "MIT",
 	"dependencies": {
 		"fastify": "^4.25.2",

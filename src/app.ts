@@ -1,5 +1,7 @@
+import { appConfig } from "./config";
+
 function helloworld() {
-	return console.log("Hello World!");
+	return console.log(appConfig.PORT);
 }
 
 helloworld();
