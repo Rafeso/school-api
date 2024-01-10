@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"dev": "tsx watch src/index.ts",
-		"build": "tsup src --out-dir build",
+		"build": "tsc",
 		"fix": "pnpm dlx @biomejs/biome check --apply src/**/*.ts",
 		"preinstall": "npx only-allow pnpm",
 		"prepare": "husky install"
@@ -26,10 +26,9 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.5.0",
-		"@tsconfig/node20": "^20.1.2",
+		"@types/node": "^20.10.8",
 		"husky": "^8.0.3",
 		"lint-staged": "^15.2.0",
-		"tsup": "^8.0.1",
 		"tsx": "^4.7.0",
 		"typescript": "^5.3.3"
 	}
