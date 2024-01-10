@@ -8,7 +8,7 @@
 		"pnpm": ">=8"
 	},
 	"scripts": {
-		"dev": "tsx watch src/index.ts",
+		"dev": "tsx watch src/app.ts",
 		"build": "tsc",
 		"fix": "pnpm dlx @biomejs/biome check --apply src/**/*.ts",
 		"preinstall": "npx only-allow pnpm",
