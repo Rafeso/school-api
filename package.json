@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"dev": "tsx watch src/app.ts",
-		"build": "tsc",
+		"build": "tsup src --sourcemap --minify --out-dir build",
 		"fix": "pnpm dlx @biomejs/biome check --apply src/**/*.ts",
 		"preinstall": "npx only-allow pnpm",
 		"prepare": "husky install"
