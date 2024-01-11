@@ -1,6 +1,6 @@
 import z from "zod";
 import { randomUUID } from "node:crypto";
-import { Serializable } from "./types";
+import { Serializable } from "../types";
 
 export const ClassCreationSchema = z.object({
 	id: z.string().uuid().optional(),

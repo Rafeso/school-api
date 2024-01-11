@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import z from "zod";
-import { Serializable } from "./types";
+import { Serializable } from "../types";
 
 export const TeacherCreationSchema = z.object({
 	id: z.string().uuid().optional(),
@@ -61,7 +61,7 @@ export class Teacher implements Serializable {
 			document: this.document,
 			phone: this.phone,
 			email: this.email,
-			hiringDate: this.hiringDate,
+			hiringDate: this.hiringDate.toISOString(),
 			salary: this.salary,
 			major: this.major,
 		};

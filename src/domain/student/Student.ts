@@ -1,7 +1,7 @@
 import z from "zod";
 import { randomUUID } from "node:crypto";
-import { Serializable } from "./types";
-import { ParentCreationSchema } from "./Parent";
+import { Serializable } from "../types";
+import { ParentCreationSchema } from "../parent/Parent";
 
 export const StudentCreationSchema = z.object({
 	id: z.string().uuid().optional(),

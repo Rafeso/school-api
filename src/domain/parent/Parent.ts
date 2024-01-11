@@ -1,5 +1,5 @@
 import z from "zod";
-import { AddressSchema, Serializable } from "./types";
+import { AddressSchema, Serializable } from "../types";
 import { randomUUID } from "node:crypto";
 
 export const ParentCreationSchema = z.object({
@@ -13,6 +13,11 @@ export const ParentCreationSchema = z.object({
 });
 
 export type ParentCreationType = z.infer<typeof ParentCreationSchema>;
+
+export const ParentUpdateSchema = ParentCreationSchema.partial().omit({
+	id: true,
+});
+export type ParentUpdateType = z.infer<typeof ParentUpdateSchema>;
 
 export class Parent implements Serializable {
 	name: ParentCreationType["firstName"];

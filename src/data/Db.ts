@@ -5,12 +5,15 @@ import { existsSync, mkdirSync, readFileSync } from "fs";
 import { dirname } from "path";
 import { writeFileSync } from "node:fs";
 
-export abstract class Database {
+export abstract class Database<
+	S extends SerializableStatic,
+	I extends Serializable = InstanceType<S>,
+> {
 	protected readonly dbPath: string;
-	protected dbData: Map<string, Serializable> = new Map();
-	readonly dbEntity: SerializableStatic;
+	protected dbData: Map<string, I> = new Map();
+	readonly dbEntity: S;
 
-	constructor(entity: SerializableStatic) {
+	constructor(entity: S) {
 		const dbFileName = `${entity.name.toLowerCase()}.json`;
 		const dbPath = path.join(__dirname, ".data", dbFileName);
 
@@ -50,18 +53,16 @@ export abstract class Database {
 		return this.dbData.get(id);
 	}
 
-	list(): Serializable[] {
+	listAll(): I[] {
 		if (this.dbData.size === 0) return [];
 
 		return [...this.dbData.values()];
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	listBy(property: string, value: any) {
-		const allData = this.list();
+	listBy<L extends keyof I>(property: L, value: I[L]) {
+		const allData = this.listAll();
 		return allData.filter((data) => {
-			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-			let comparable = (data as any)[property] as unknown;
+			let comparable = data[property] as unknown;
 			let comparison = value as unknown;
 
 			if (typeof comparable === "object")
@@ -76,6 +77,11 @@ export abstract class Database {
 
 	remove(id: string) {
 		this.dbData.delete(id);
+		return this.#updateFile();
+	}
+
+	save(entity: I) {
+		this.dbData.set(entity.id, entity);
 		return this.#updateFile();
 	}
 }
