@@ -15,7 +15,7 @@
 		"prepare": "husky install"
 	},
 	"lint-staged": {
-		"**.ts": "pnpm fix"
+		"*.ts": "pnpm fix"
 	},
 	"keywords": [],
 	"author": "Rafael Feitosa <rafaefeitosa@gmail.com> (https://rafaelfeitosa.vercel.app)",
