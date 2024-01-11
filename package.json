@@ -10,7 +10,7 @@
 	"scripts": {
 		"dev": "tsx watch src/app.ts",
 		"build": "tsup src --sourcemap --minify --out-dir build",
-		"fix": "pnpm dlx @biomejs/biome check --apply src/**/*.ts",
+		"fix": "pnpm dlx @biomejs/biome check --apply src",
 		"preinstall": "npx only-allow pnpm",
 		"prepare": "husky install"
 	},
@@ -25,10 +25,11 @@
 		"zod": "^3.22.4"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.5.0",
+		"@biomejs/biome": "^1.5.1",
 		"@types/node": "^20.10.8",
 		"husky": "^8.0.3",
 		"lint-staged": "^15.2.0",
+		"tsup": "^8.0.1",
 		"tsx": "^4.7.0",
 		"typescript": "^5.3.3"
 	}

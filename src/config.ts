@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { env } from "node:process";
+import { env } from "node:process"
+import { z } from "zod"
 
 export const AppConfigSchema = z.object({
 	PORT: z
@@ -10,7 +10,7 @@ export const AppConfigSchema = z.object({
 		.refine((port) => port >= 0 && port <= 65535, {
 			message: "Port must be less than 65535",
 		}),
-});
-export type AppConfig = z.infer<typeof AppConfigSchema>;
+})
+export type AppConfig = z.infer<typeof AppConfigSchema>
 
-export const appConfig: AppConfig = AppConfigSchema.parse(env);
+export const appConfig: AppConfig = AppConfigSchema.parse(env)

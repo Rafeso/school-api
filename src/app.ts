@@ -1,7 +1,7 @@
-import { appConfig } from "./config";
+import { appConfig } from "./config"
 
 function helloworld() {
-	return console.log(appConfig.PORT);
+	return console.log(appConfig.PORT)
 }
 
-helloworld();
+helloworld()

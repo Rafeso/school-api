@@ -1,7 +1,7 @@
-import z from "zod";
-import { randomUUID } from "node:crypto";
-import { Serializable } from "../types";
-import { ParentCreationSchema } from "../parent/Parent";
+import { randomUUID } from "node:crypto"
+import z from "zod"
+import { ParentCreationSchema } from "../parent/Parent"
+import { Serializable } from "../types"
 
 export const StudentCreationSchema = z.object({
 	id: z.string().uuid().optional(),
@@ -21,46 +21,46 @@ export const StudentCreationSchema = z.object({
 		.refine((date) => !Number.isNaN(new Date(date).getTime())),
 	document: z.string(),
 	class: z.string().uuid(),
-});
+})
 
-export type StudenCreationType = z.infer<typeof StudentCreationSchema>;
+export type StudenCreationType = z.infer<typeof StudentCreationSchema>
 
 export const StudendUpdateSchema = StudentCreationSchema.partial().omit({
 	id: true,
-});
-export type StudentUpdateType = z.infer<typeof StudendUpdateSchema>;
+})
+export type StudentUpdateType = z.infer<typeof StudendUpdateSchema>
 
 export class Studend implements Serializable {
-	name: StudenCreationType["firstName"];
-	surname: StudenCreationType["surname"];
-	birthDate: Date;
-	accessor parents: StudenCreationType["parents"];
-	allergies: StudenCreationType["allergies"];
-	bloodType: StudenCreationType["bloodType"];
-	medications: StudenCreationType["medications"];
-	startDate: StudenCreationType["startDate"];
-	document: StudenCreationType["document"];
-	class: StudenCreationType["class"];
-	readonly id: string;
+	name: StudenCreationType["firstName"]
+	surname: StudenCreationType["surname"]
+	birthDate: Date
+	accessor parents: StudenCreationType["parents"]
+	allergies: StudenCreationType["allergies"]
+	bloodType: StudenCreationType["bloodType"]
+	medications: StudenCreationType["medications"]
+	startDate: StudenCreationType["startDate"]
+	document: StudenCreationType["document"]
+	class: StudenCreationType["class"]
+	readonly id: string
 
 	constructor(data: StudenCreationType) {
-		const parsed = StudentCreationSchema.parse(data);
-		this.id = parsed.id ?? randomUUID();
-		this.name = parsed.firstName;
-		this.surname = parsed.surname;
-		this.birthDate = new Date(parsed.birthDate);
-		this.parents = parsed.parents;
-		this.allergies = parsed.allergies;
-		this.bloodType = parsed.bloodType;
-		this.medications = parsed.medications;
-		this.startDate = parsed.startDate;
-		this.document = parsed.document;
-		this.class = parsed.class;
+		const parsed = StudentCreationSchema.parse(data)
+		this.id = parsed.id ?? randomUUID()
+		this.name = parsed.firstName
+		this.surname = parsed.surname
+		this.birthDate = new Date(parsed.birthDate)
+		this.parents = parsed.parents
+		this.allergies = parsed.allergies
+		this.bloodType = parsed.bloodType
+		this.medications = parsed.medications
+		this.startDate = parsed.startDate
+		this.document = parsed.document
+		this.class = parsed.class
 	}
 
 	static fromObject(data: Record<string, unknown>) {
-		const parsed = StudentCreationSchema.parse(data);
-		return new Studend(parsed);
+		const parsed = StudentCreationSchema.parse(data)
+		return new Studend(parsed)
 	}
 
 	toObject() {
@@ -76,10 +76,10 @@ export class Studend implements Serializable {
 			startDate: this.startDate,
 			document: this.document,
 			class: this.class,
-		};
+		}
 	}
 
 	toJSON() {
-		return JSON.stringify(this.toObject());
+		return JSON.stringify(this.toObject())
 	}
 }
