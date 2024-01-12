@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto"
 import z from "zod"
-import { AddressSchema, Serializable } from "../types"
+import { BaseDomain } from "./BaseDomain"
+import { AddressSchema, Serializable } from "./types"
 
 export const ParentCreationSchema = z.object({
 	id: z.string().uuid().optional(),
@@ -19,8 +20,8 @@ export const ParentUpdateSchema = ParentCreationSchema.partial().omit({
 })
 export type ParentUpdateType = z.infer<typeof ParentUpdateSchema>
 
-export class Parent implements Serializable {
-	name: ParentCreationType["firstName"]
+export class Parent extends BaseDomain implements Serializable {
+	firstName: ParentCreationType["firstName"]
 	surname: ParentCreationType["surname"]
 	phones: ParentCreationType["phones"]
 	emails: ParentCreationType["emails"]
@@ -29,9 +30,10 @@ export class Parent implements Serializable {
 	readonly id: string
 
 	constructor(data: ParentCreationType) {
+		super()
 		const parsed = ParentCreationSchema.parse(data)
 		this.id = parsed.id ?? randomUUID()
-		this.name = parsed.firstName
+		this.firstName = parsed.firstName
 		this.surname = parsed.surname
 		this.phones = parsed.phones
 		this.emails = parsed.emails
@@ -47,15 +49,12 @@ export class Parent implements Serializable {
 	toObject() {
 		return {
 			id: this.id,
-			firstName: this.name,
+			firstName: this.firstName,
 			surname: this.surname,
 			phones: this.phones,
 			emails: this.emails,
 			address: this.address,
 			document: this.document,
 		}
-	}
-	toJSON() {
-		return JSON.stringify(this.toObject())
 	}
 }

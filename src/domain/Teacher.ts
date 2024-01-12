@@ -1,10 +1,11 @@
 import { randomUUID } from "node:crypto"
 import z from "zod"
-import { Serializable } from "../types"
+import { BaseDomain } from "./BaseDomain"
+import { Serializable } from "./types"
 
 export const TeacherCreationSchema = z.object({
 	id: z.string().uuid().optional(),
-	fistName: z.string(),
+	firstName: z.string(),
 	surname: z.string(),
 	document: z.string(),
 	phone: z.string(),
@@ -24,8 +25,8 @@ export const TeacherUpdateSchema = TeacherCreationSchema.partial().omit({
 })
 export type TeacherUpdateType = z.infer<typeof TeacherUpdateSchema>
 
-export class Teacher implements Serializable {
-	name: TeacherCreationType["fistName"]
+export class Teacher extends BaseDomain implements Serializable {
+	firstName: TeacherCreationType["firstName"]
 	surname: TeacherCreationType["surname"]
 	document: TeacherCreationType["document"]
 	phone: TeacherCreationType["phone"]
@@ -36,9 +37,10 @@ export class Teacher implements Serializable {
 	readonly id: string
 
 	constructor(data: TeacherCreationType) {
+		super()
 		const parsed = TeacherCreationSchema.parse(data)
 		this.id = parsed.id ?? randomUUID()
-		this.name = parsed.fistName
+		this.firstName = parsed.firstName
 		this.surname = parsed.surname
 		this.phone = parsed.phone
 		this.email = parsed.email
@@ -56,7 +58,7 @@ export class Teacher implements Serializable {
 	toObject() {
 		return {
 			id: this.id,
-			fistName: this.name,
+			firstName: this.firstName,
 			surname: this.surname,
 			document: this.document,
 			phone: this.phone,
@@ -65,9 +67,5 @@ export class Teacher implements Serializable {
 			salary: this.salary,
 			major: this.major,
 		}
-	}
-
-	toJSON() {
-		return JSON.stringify(this.toObject())
 	}
 }

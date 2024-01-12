@@ -1,7 +1,8 @@
 import { randomUUID } from "node:crypto"
 import z from "zod"
-import { ParentCreationSchema } from "../parent/Parent"
-import { Serializable } from "../types"
+import { BaseDomain } from "./BaseDomain"
+import { ParentCreationSchema } from "./Parent"
+import { Serializable } from "./types"
 
 export const StudentCreationSchema = z.object({
 	id: z.string().uuid().optional(),
@@ -30,8 +31,8 @@ export const StudendUpdateSchema = StudentCreationSchema.partial().omit({
 })
 export type StudentUpdateType = z.infer<typeof StudendUpdateSchema>
 
-export class Studend implements Serializable {
-	name: StudenCreationType["firstName"]
+export class Student extends BaseDomain implements Serializable {
+	firstName: StudenCreationType["firstName"]
 	surname: StudenCreationType["surname"]
 	birthDate: Date
 	accessor parents: StudenCreationType["parents"]
@@ -44,9 +45,10 @@ export class Studend implements Serializable {
 	readonly id: string
 
 	constructor(data: StudenCreationType) {
+		super()
 		const parsed = StudentCreationSchema.parse(data)
 		this.id = parsed.id ?? randomUUID()
-		this.name = parsed.firstName
+		this.firstName = parsed.firstName
 		this.surname = parsed.surname
 		this.birthDate = new Date(parsed.birthDate)
 		this.parents = parsed.parents
@@ -60,15 +62,15 @@ export class Studend implements Serializable {
 
 	static fromObject(data: Record<string, unknown>) {
 		const parsed = StudentCreationSchema.parse(data)
-		return new Studend(parsed)
+		return new Student(parsed)
 	}
 
 	toObject() {
 		return {
 			id: this.id,
-			firstName: this.name,
+			firstName: this.firstName,
 			surname: this.surname,
-			birthDate: this.birthDate,
+			birthDate: this.birthDate.toISOString(),
 			parents: this.parents,
 			allergies: this.allergies,
 			bloodType: this.bloodType,
@@ -77,9 +79,5 @@ export class Studend implements Serializable {
 			document: this.document,
 			class: this.class,
 		}
-	}
-
-	toJSON() {
-		return JSON.stringify(this.toObject())
 	}
 }
