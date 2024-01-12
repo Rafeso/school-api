@@ -1,4 +1,4 @@
-import { Parent, ParentCreationType } from "../domain/parent/Parent"
+import { Parent, ParentCreationType } from "../domain/Parent"
 import { Service } from "./BaseService"
 
 export class ParentService extends Service<typeof Parent> {

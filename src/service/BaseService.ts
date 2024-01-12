@@ -8,7 +8,7 @@ export abstract class Service<
 	constructor(protected repository: Database<S>) {}
 
 	findById(id: string) {
-		const entity = this.repository.findByiD(id)
+		const entity = this.repository.findById(id)
 		return entity
 	}
 
