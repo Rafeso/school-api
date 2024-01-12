@@ -49,7 +49,7 @@ export abstract class Database<
 		return this
 	}
 
-	findByiD(id: string) {
+	findById(id: string) {
 		return this.dbData.get(id)
 	}
 
