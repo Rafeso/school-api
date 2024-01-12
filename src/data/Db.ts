@@ -1,9 +1,9 @@
-import { existsSync, mkdirSync, readFileSync } from "fs"
-import { writeFileSync } from "node:fs"
-import path from "node:path"
-import { dirname } from "path"
-import { Serializable } from "../domain/types"
-import { SerializableStatic } from "../domain/types"
+import { existsSync, mkdirSync, readFileSync } from 'fs'
+import { writeFileSync } from 'node:fs'
+import path from 'node:path'
+import { dirname } from 'path'
+import { Serializable } from '../domain/types'
+import { SerializableStatic } from '../domain/types'
 
 export abstract class Database<
 	S extends SerializableStatic,
@@ -15,7 +15,7 @@ export abstract class Database<
 
 	constructor(entity: S) {
 		const dbFileName = `${entity.name.toLowerCase()}.json`
-		const dbPath = path.join(__dirname, ".data", dbFileName)
+		const dbPath = path.join(__dirname, '.data', dbFileName)
 
 		this.dbPath = dbPath
 		this.dbEntity = entity
@@ -29,7 +29,7 @@ export abstract class Database<
 
 		if (existsSync(this.dbPath)) {
 			const data: [string, Record<string, unknown>][] = JSON.parse(
-				readFileSync(this.dbPath, "utf-8"),
+				readFileSync(this.dbPath, 'utf-8'),
 			)
 			for (const [key, value] of data) {
 				this.dbData.set(key, this.dbEntity.fromObject(value))
@@ -49,7 +49,7 @@ export abstract class Database<
 		return this
 	}
 
-	findById(id: string) {
+	findById(id: I['id']) {
 		return this.dbData.get(id)
 	}
 
@@ -65,7 +65,7 @@ export abstract class Database<
 			let comparable = data[property] as unknown
 			let comparison = value as unknown
 
-			if (typeof comparable === "object")
+			if (typeof comparable === 'object')
 				[comparable, comparison] = [
 					JSON.stringify(comparable),
 					JSON.stringify(comparison),

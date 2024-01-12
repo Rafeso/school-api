@@ -1,6 +1,6 @@
-import { Serializable } from "./types"
+import { Serializable } from './types'
 
-export abstract class BaseDomain implements Omit<Serializable, "id"> {
+export abstract class BaseDomain implements Omit<Serializable, 'id'> {
 	toJSON() {
 		return JSON.stringify(this.toObject())
 	}

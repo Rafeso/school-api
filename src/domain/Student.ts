@@ -1,8 +1,8 @@
-import { randomUUID } from "node:crypto"
-import z from "zod"
-import { BaseDomain } from "./BaseDomain"
-import { ParentCreationSchema } from "./Parent"
-import { Serializable } from "./types"
+import { randomUUID } from 'node:crypto'
+import z from 'zod'
+import { BaseDomain } from './BaseDomain'
+import { ParentCreationSchema } from './Parent'
+import { Serializable } from './types'
 
 export const StudentCreationSchema = z.object({
 	id: z.string().uuid().optional(),
@@ -24,7 +24,7 @@ export const StudentCreationSchema = z.object({
 	class: z.string().uuid(),
 })
 
-export type StudenCreationType = z.infer<typeof StudentCreationSchema>
+export type StudentCreationType = z.infer<typeof StudentCreationSchema>
 
 export const StudendUpdateSchema = StudentCreationSchema.partial().omit({
 	id: true,
@@ -32,19 +32,19 @@ export const StudendUpdateSchema = StudentCreationSchema.partial().omit({
 export type StudentUpdateType = z.infer<typeof StudendUpdateSchema>
 
 export class Student extends BaseDomain implements Serializable {
-	firstName: StudenCreationType["firstName"]
-	surname: StudenCreationType["surname"]
+	firstName: StudentCreationType['firstName']
+	surname: StudentCreationType['surname']
 	birthDate: Date
-	accessor parents: StudenCreationType["parents"]
-	allergies: StudenCreationType["allergies"]
-	bloodType: StudenCreationType["bloodType"]
-	medications: StudenCreationType["medications"]
-	startDate: StudenCreationType["startDate"]
-	document: StudenCreationType["document"]
-	class: StudenCreationType["class"]
+	accessor parents: StudentCreationType['parents']
+	allergies: StudentCreationType['allergies']
+	bloodType: StudentCreationType['bloodType']
+	medications: StudentCreationType['medications']
+	startDate: StudentCreationType['startDate']
+	document: StudentCreationType['document']
+	class: StudentCreationType['class']
 	readonly id: string
 
-	constructor(data: StudenCreationType) {
+	constructor(data: StudentCreationType) {
 		super()
 		const parsed = StudentCreationSchema.parse(data)
 		this.id = parsed.id ?? randomUUID()

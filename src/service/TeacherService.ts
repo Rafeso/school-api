@@ -2,8 +2,8 @@ import {
 	Teacher,
 	TeacherCreationType,
 	TeacherUpdateType,
-} from "../domain/Teacher"
-import { Service } from "./BaseService"
+} from '../domain/Teacher'
+import { Service } from './BaseService'
 
 export class TeacherService extends Service<typeof Teacher> {
 	update(id: string, newData: TeacherUpdateType) {

@@ -1,7 +1,7 @@
-import { randomUUID } from "node:crypto"
-import z from "zod"
-import { BaseDomain } from "./BaseDomain"
-import { AddressSchema, Serializable } from "./types"
+import { randomUUID } from 'node:crypto'
+import z from 'zod'
+import { BaseDomain } from './BaseDomain'
+import { AddressSchema, Serializable } from './types'
 
 export const ParentCreationSchema = z.object({
 	id: z.string().uuid().optional(),
@@ -21,12 +21,12 @@ export const ParentUpdateSchema = ParentCreationSchema.partial().omit({
 export type ParentUpdateType = z.infer<typeof ParentUpdateSchema>
 
 export class Parent extends BaseDomain implements Serializable {
-	firstName: ParentCreationType["firstName"]
-	surname: ParentCreationType["surname"]
-	phones: ParentCreationType["phones"]
-	emails: ParentCreationType["emails"]
-	address: ParentCreationType["address"]
-	document: ParentCreationType["document"]
+	firstName: ParentCreationType['firstName']
+	surname: ParentCreationType['surname']
+	phones: ParentCreationType['phones']
+	emails: ParentCreationType['emails']
+	address: ParentCreationType['address']
+	document: ParentCreationType['document']
 	readonly id: string
 
 	constructor(data: ParentCreationType) {

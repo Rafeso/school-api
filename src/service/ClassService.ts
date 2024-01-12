@@ -1,10 +1,10 @@
-import { Database } from "../data/Db"
-import { Class, ClassCreationType, ClassUpdateType } from "../domain/Class"
-import { Student } from "../domain/Student"
-import { Teacher } from "../domain/Teacher"
-import { Service } from "./BaseService"
-import { StudentService } from "./StudentService"
-import { TeacherService } from "./TeacherService"
+import { Database } from '../data/Db'
+import { Class, ClassCreationType, ClassUpdateType } from '../domain/Class'
+import { Student } from '../domain/Student'
+import { Teacher } from '../domain/Teacher'
+import { Service } from './BaseService'
+import { StudentService } from './StudentService'
+import { TeacherService } from './TeacherService'
 
 export class ClassService extends Service<typeof Class> {
 	constructor(
@@ -43,13 +43,13 @@ export class ClassService extends Service<typeof Class> {
 	}
 
 	remove(classId: string) {
-		const students = this.studentService.listBy("class", classId)
+		const students = this.studentService.listBy('class', classId)
 
 		this.repository.remove(classId)
 	}
 
 	getStudent(classId: string) {
 		const classEntity = this.findById(classId) as Class
-		return this.studentService.listBy("class", classEntity.id) as Student[]
+		return this.studentService.listBy('class', classEntity.id) as Student[]
 	}
 }

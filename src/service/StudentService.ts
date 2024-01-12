@@ -1,9 +1,9 @@
 import {
-	StudenCreationType,
 	Student,
+	StudentCreationType,
 	StudentUpdateType,
-} from "../domain/Student"
-import { Service } from "./BaseService"
+} from '../domain/Student'
+import { Service } from './BaseService'
 
 export class StudentService extends Service<typeof Student> {
 	update(id: string, newData: StudentUpdateType) {
@@ -15,7 +15,7 @@ export class StudentService extends Service<typeof Student> {
 		this.repository.save(updated)
 		return updated
 	}
-	create(creationData: StudenCreationType) {
+	create(creationData: StudentCreationType) {
 		const entity = new Student(creationData)
 		this.repository.save(entity)
 		return entity

@@ -1,5 +1,5 @@
-import { Database } from "../data/Db"
-import { Serializable, SerializableStatic } from "../domain/types"
+import { Database } from '../data/Db'
+import { Serializable, SerializableStatic } from '../domain/types'
 
 export abstract class Service<
 	S extends SerializableStatic,

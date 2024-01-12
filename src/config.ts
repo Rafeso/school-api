@@ -1,14 +1,14 @@
-import { env } from "node:process"
-import { z } from "zod"
+import { env } from 'node:process'
+import { z } from 'zod'
 
 export const AppConfigSchema = z.object({
 	PORT: z
 		.string()
 		.optional()
-		.default("3000")
+		.default('3000')
 		.transform((value) => Number(value))
 		.refine((port) => port >= 0 && port <= 65535, {
-			message: "Port must be less than 65535",
+			message: 'Port must be less than 65535',
 		}),
 })
 export type AppConfig = z.infer<typeof AppConfigSchema>

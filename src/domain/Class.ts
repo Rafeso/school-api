@@ -1,7 +1,7 @@
-import { randomUUID } from "node:crypto"
-import z from "zod"
-import { BaseDomain } from "./BaseDomain"
-import { Serializable } from "./types"
+import { randomUUID } from 'node:crypto'
+import z from 'zod'
+import { BaseDomain } from './BaseDomain'
+import { Serializable } from './types'
 
 export const ClassCreationSchema = z.object({
 	id: z.string().uuid().optional(),
@@ -16,8 +16,8 @@ export const ClassUpdateSchema = ClassCreationSchema.partial().omit({
 export type ClassUpdateType = z.infer<typeof ClassUpdateSchema>
 
 export class Class extends BaseDomain implements Serializable {
-	code: ClassCreationType["code"]
-	accessor teacher: ClassCreationType["teacher"]
+	code: ClassCreationType['code']
+	accessor teacher: ClassCreationType['teacher']
 	readonly id: string
 
 	constructor(data: ClassCreationType) {
