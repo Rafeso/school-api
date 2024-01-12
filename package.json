@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"dev": "tsx watch src/app.ts",
-		"build": "tsup src --clean --sourcemap --minify --out-dir build",
+		"build": "tsc",
 		"fix": "pnpm dlx @biomejs/biome check --apply src",
 		"preinstall": "npx only-allow pnpm",
 		"prepare": "husky install"
@@ -29,7 +29,6 @@
 		"@types/node": "^20.10.8",
 		"husky": "^8.0.3",
 		"lint-staged": "^15.2.0",
-		"tsup": "^8.0.1",
 		"tsx": "^4.7.0",
 		"typescript": "^5.3.3"
 	}
