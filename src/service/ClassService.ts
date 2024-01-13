@@ -1,10 +1,9 @@
-import { Database } from '../data/Db'
-import { Class, ClassCreationType, ClassUpdateType } from '../domain/Class'
-import { Student } from '../domain/Student'
-import { Teacher } from '../domain/Teacher'
-import { Service } from './BaseService'
-import { StudentService } from './StudentService'
-import { TeacherService } from './TeacherService'
+import { Database } from '../data/Db.js'
+import { Class, ClassCreationType, ClassUpdateType } from '../domain/Class.js'
+import { Student } from '../domain/Student.js'
+import { Service } from './BaseService.js'
+import { StudentService } from './StudentService.js'
+import { TeacherService } from './TeacherService.js'
 
 export class ClassService extends Service<typeof Class> {
 	constructor(
@@ -22,7 +21,7 @@ export class ClassService extends Service<typeof Class> {
 	}
 
 	update(id: string, newData: ClassUpdateType) {
-		const entity = this.findById(id) as Class
+		const entity = this.findById(id)
 		this.#assertsTeacherExists(newData.teacher)
 
 		const updated = new Class({ ...entity.toObject(), ...newData })
@@ -36,7 +35,7 @@ export class ClassService extends Service<typeof Class> {
 	}
 
 	getTeacher(classId: string) {
-		const classEntity = this.findById(classId) as Class
+		const classEntity = this.findById(classId)
 
 		const teacher = this.teacherService.findById(classEntity.id)
 		return teacher
@@ -49,7 +48,7 @@ export class ClassService extends Service<typeof Class> {
 	}
 
 	getStudent(classId: string) {
-		const classEntity = this.findById(classId) as Class
+		const classEntity = this.findById(classId)
 		return this.studentService.listBy('class', classEntity.id) as Student[]
 	}
 }

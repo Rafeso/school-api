@@ -1,4 +1,4 @@
-import { appConfig } from './config'
+import { appConfig } from './config.js'
 
 function helloworld() {
 	return console.log(appConfig.PORT)

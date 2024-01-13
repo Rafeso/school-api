@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import z from 'zod'
-import { BaseDomain } from './BaseDomain'
-import { AddressSchema, Serializable } from './types'
+import { BaseDomain } from './BaseDomain.js'
+import { AddressSchema, Serializable } from './types.js'
 
 export const ParentCreationSchema = z.object({
 	id: z.string().uuid().optional(),

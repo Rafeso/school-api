@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import z from 'zod'
-import { BaseDomain } from './BaseDomain'
-import { ParentCreationSchema } from './Parent'
-import { Serializable } from './types'
+import { BaseDomain } from './BaseDomain.js'
+import { ParentCreationSchema } from './Parent.js'
+import { Serializable } from './types.js'
 
 export const StudentCreationSchema = z.object({
 	id: z.string().uuid().optional(),
@@ -39,7 +39,7 @@ export class Student extends BaseDomain implements Serializable {
 	allergies: StudentCreationType['allergies']
 	bloodType: StudentCreationType['bloodType']
 	medications: StudentCreationType['medications']
-	startDate: StudentCreationType['startDate']
+	startDate: Date
 	document: StudentCreationType['document']
 	class: StudentCreationType['class']
 	readonly id: string
@@ -55,7 +55,7 @@ export class Student extends BaseDomain implements Serializable {
 		this.allergies = parsed.allergies
 		this.bloodType = parsed.bloodType
 		this.medications = parsed.medications
-		this.startDate = parsed.startDate
+		this.startDate = new Date(parsed.startDate)
 		this.document = parsed.document
 		this.class = parsed.class
 	}
@@ -75,7 +75,7 @@ export class Student extends BaseDomain implements Serializable {
 			allergies: this.allergies,
 			bloodType: this.bloodType,
 			medications: this.medications,
-			startDate: this.startDate,
+			startDate: this.startDate.toISOString(),
 			document: this.document,
 			class: this.class,
 		}

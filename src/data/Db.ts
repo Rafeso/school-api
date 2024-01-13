@@ -1,9 +1,7 @@
-import { existsSync, mkdirSync, readFileSync } from 'fs'
-import { writeFileSync } from 'node:fs'
-import path from 'node:path'
-import { dirname } from 'path'
-import { Serializable } from '../domain/types'
-import { SerializableStatic } from '../domain/types'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import type { Serializable, SerializableStatic } from '../domain/types.js'
 
 export abstract class Database<
 	S extends SerializableStatic,
@@ -14,8 +12,8 @@ export abstract class Database<
 	readonly dbEntity: S
 
 	constructor(entity: S) {
-		const dbFileName = `${entity.name.toLowerCase()}.json`
-		const dbPath = path.join(__dirname, '.data', dbFileName)
+		const dbFileName = `.data/${entity.name.toLowerCase()}.json`
+		const dbPath = resolve(dirname(fileURLToPath(import.meta.url)), dbFileName)
 
 		this.dbPath = dbPath
 		this.dbEntity = entity
@@ -49,7 +47,7 @@ export abstract class Database<
 		return this
 	}
 
-	findById(id: I['id']) {
+	findById(id: string) {
 		return this.dbData.get(id)
 	}
 

@@ -1,5 +1,5 @@
-import { Parent, ParentCreationType } from '../domain/Parent'
-import { Service } from './BaseService'
+import { Parent, ParentCreationType } from '../domain/Parent.js'
+import { Service } from './BaseService.js'
 
 export class ParentService extends Service<typeof Parent> {
 	create(creationData: ParentCreationType): Parent {
@@ -9,7 +9,7 @@ export class ParentService extends Service<typeof Parent> {
 	}
 
 	update(id: string, newData: ParentCreationType) {
-		const entity = this.findById(id) as Parent
+		const entity = this.findById(id)
 		const updated = new Parent({
 			...entity.toObject(),
 			...newData,

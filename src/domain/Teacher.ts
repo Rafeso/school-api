@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import z from 'zod'
-import { BaseDomain } from './BaseDomain'
-import { Serializable } from './types'
+import { BaseDomain } from './BaseDomain.js'
+import { Serializable } from './types.js'
 
 export const TeacherCreationSchema = z.object({
 	id: z.string().uuid().optional(),

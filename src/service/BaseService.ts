@@ -1,5 +1,5 @@
-import { Database } from '../data/Db'
-import { Serializable, SerializableStatic } from '../domain/types'
+import { Database } from '../data/Db.js'
+import type { Serializable, SerializableStatic } from '../domain/types.js'
 
 export abstract class Service<
 	S extends SerializableStatic,
@@ -9,6 +9,7 @@ export abstract class Service<
 
 	findById(id: string) {
 		const entity = this.repository.findById(id)
+		if (!entity) throw new Error('Entity not found')
 		return entity
 	}
 
