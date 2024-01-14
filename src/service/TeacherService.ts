@@ -1,8 +1,8 @@
+import { Teacher } from '../domain/teacher/Teacher.js'
 import {
-	Teacher,
 	TeacherCreationType,
 	TeacherUpdateType,
-} from '../domain/Teacher.js'
+} from '../domain/teacher/types.js'
 import { Service } from './BaseService.js'
 
 export class TeacherService extends Service<typeof Teacher> {

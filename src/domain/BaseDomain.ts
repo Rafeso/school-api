@@ -1,4 +1,4 @@
-import type { Serializable } from './types.js'
+import type { Serializable } from './sharedTypes.js'
 
 export abstract class BaseDomain implements Omit<Serializable, 'id'> {
 	toJSON() {

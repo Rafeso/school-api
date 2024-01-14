@@ -1,4 +1,4 @@
-import { Class } from '../../domain/Class.js'
+import { Class } from '../../domain/class/Class.js'
 import { Database } from '../Db.js'
 
 export class ClassRepository extends Database<typeof Class> {

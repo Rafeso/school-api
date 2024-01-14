@@ -1,8 +1,8 @@
+import { Student } from '../domain/student/Student.js'
 import {
-	Student,
 	StudentCreationType,
 	StudentUpdateType,
-} from '../domain/Student.js'
+} from '../domain/student/types.js'
 import { Service } from './BaseService.js'
 
 export class StudentService extends Service<typeof Student> {

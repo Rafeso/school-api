@@ -1,35 +1,7 @@
 import { randomUUID } from 'node:crypto'
-import z from 'zod'
-import { BaseDomain } from './BaseDomain.js'
-import { ParentCreationSchema } from './Parent.js'
-import { Serializable } from './types.js'
-
-export const StudentCreationSchema = z.object({
-	id: z.string().uuid().optional(),
-	firstName: z.string(),
-	surname: z.string(),
-	birthDate: z
-		.string()
-		.datetime()
-		.refine((date) => !Number.isNaN(new Date(date).getTime())),
-	parents: z.array(ParentCreationSchema).nonempty(),
-	allergies: z.array(z.string()).optional(),
-	bloodType: z.string().max(3),
-	medications: z.array(z.string()).optional(),
-	startDate: z
-		.string()
-		.datetime()
-		.refine((date) => !Number.isNaN(new Date(date).getTime())),
-	document: z.string(),
-	class: z.string().uuid(),
-})
-
-export type StudentCreationType = z.infer<typeof StudentCreationSchema>
-
-export const StudendUpdateSchema = StudentCreationSchema.partial().omit({
-	id: true,
-})
-export type StudentUpdateType = z.infer<typeof StudendUpdateSchema>
+import { BaseDomain } from '../BaseDomain.js'
+import { Serializable } from '../sharedTypes.js'
+import { StudentCreationSchema, StudentCreationType } from './types.js'
 
 export class Student extends BaseDomain implements Serializable {
 	firstName: StudentCreationType['firstName']
