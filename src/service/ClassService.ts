@@ -1,11 +1,11 @@
-import { Database } from '../data/Db.js'
-import { ConflictError } from '../domain/@errors/Conflict.js'
-import { DependencyConflictError } from '../domain/@errors/DependencyConflict.js'
-import { MissingDependecyError } from '../domain/@errors/MissingDependecy.js'
-import { Class } from '../domain/class/Class.js'
-import { ClassCreationType, ClassUpdateType } from '../domain/class/types.js'
-import { Student } from '../domain/student/Student.js'
-import { Teacher } from '../domain/teacher/Teacher.js'
+import { Database } from '@data/Db.js'
+import { ConflictError } from '@domain/@errors/Conflict.js'
+import { DependencyConflictError } from '@domain/@errors/DependencyConflict.js'
+import { MissingDependecyError } from '@domain/@errors/MissingDependecy.js'
+import { Class } from '@domain/class/Class.js'
+import { ClassCreationType, ClassUpdateType } from '@domain/class/types.js'
+import { Student } from '@domain/student/Student.js'
+import { Teacher } from '@domain/teacher/Teacher.js'
 import { Service } from './BaseService.js'
 import { StudentService } from './StudentService.js'
 import { TeacherService } from './TeacherService.js'
@@ -33,6 +33,7 @@ export class ClassService extends Service<typeof Class> {
 		this.repository.save(updated)
 		return updated
 	}
+
 	create(creationData: ClassCreationType) {
 		const existing = this.repository.listBy('code', creationData.code)
 		if (existing) throw new ConflictError(this.repository.dbEntity, Class)

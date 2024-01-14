@@ -16,7 +16,6 @@ export abstract class BaseError extends Error {
 		super(message, options)
 		this.name = `${entity.name}Error`
 		this.code = options?.code ?? 'DOMAIN ERROR'
-		this.stack = new Error().stack
 		this.status = options?.status ?? 500
 	}
 }

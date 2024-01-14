@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { Serializable, SerializableStatic } from '../domain/sharedTypes.js'
+import { Serializable, SerializableStatic } from '@domain/sharedTypes.js'
 
 export abstract class Database<
 	S extends SerializableStatic,
@@ -59,7 +59,6 @@ export abstract class Database<
 
 	listBy<L extends keyof I>(property: L, value: I[L]) {
 		const allData = this.listAll()
-		if (allData.length === 0) return []
 		return allData.filter((data) => {
 			let comparable = data[property] as unknown
 			let comparison = value as unknown
