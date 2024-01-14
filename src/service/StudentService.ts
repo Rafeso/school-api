@@ -39,14 +39,14 @@ export class StudentService extends Service<typeof Student> {
 	}
 
 	getParents(studentId: string) {
-		const student = this.findById(studentId) as Student // FIXME: Como melhorar?
+		const student = this.findById(studentId)
 		return student.parents.map((parentId: string) =>
 			this.parentService.findById(parentId),
 		)
 	}
 
 	linkParents(id: string, parentsToUpdate: StudentCreationType['parents']) {
-		const student = this.findById(id) as Student // FIXME: Como melhorar?
+		const student = this.findById(id)
 		parentsToUpdate.forEach((parentId, _) =>
 			this.parentService.findById(parentId),
 		)
