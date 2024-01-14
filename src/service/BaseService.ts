@@ -1,4 +1,5 @@
 import { Database } from '../data/Db.js'
+import { NotFoundError } from '../domain/Errors/NotFound.js'
 import type { Serializable, SerializableStatic } from '../domain/types.js'
 
 export abstract class Service<
@@ -9,7 +10,7 @@ export abstract class Service<
 
 	findById(id: string) {
 		const entity = this.repository.findById(id)
-		if (!entity) throw new Error('Entity not found')
+		if (!entity) throw new NotFoundError(id, this.repository.dbEntity)
 		return entity
 	}
 
