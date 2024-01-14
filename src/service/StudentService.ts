@@ -27,9 +27,9 @@ export class StudentService extends Service<typeof Student> {
 	create(creationData: StudentCreationType) {
 		const existing = this.repository.listBy('document', creationData.document)
 
-		if (existing.length > 0) {
+		if (existing.length > 0)
 			throw new ConflictError(Student, creationData.document)
-		}
+
 		creationData.parents.forEach((parentId, _) =>
 			this.parentService.findById(parentId),
 		)

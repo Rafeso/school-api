@@ -1,4 +1,4 @@
-import { SerializableStatic } from '../sharedTypes.js'
+import { SerializableStatic } from '../types.js'
 import { BaseError } from './BaseError.js'
 
 export class MissingDependecyError extends BaseError {

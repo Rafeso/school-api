@@ -1,4 +1,4 @@
-import { SerializableStatic } from '../sharedTypes.js'
+import { SerializableStatic } from '../types.js'
 
 interface DomainErrosOptions extends ErrorOptions {
 	code?: string

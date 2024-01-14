@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { BaseDomain } from '../BaseDomain.js'
-import { Serializable } from '../sharedTypes.js'
+import { Serializable } from '../types.js'
 import { ClassCreationSchema, ClassCreationType } from './types.js'
 
 export class Class extends BaseDomain implements Serializable {
