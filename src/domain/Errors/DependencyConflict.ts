@@ -1,7 +1,7 @@
 import { SerializableStatic } from '../types.js'
-import { BaseDomainError } from './BaseDomainError.js'
+import { BaseError } from './BaseError.js'
 
-export class DependencyConflictError extends BaseDomainError {
+export class DependencyConflictError extends BaseError {
 	constructor(
 		entity: SerializableStatic,
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>

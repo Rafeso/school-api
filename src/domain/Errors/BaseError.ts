@@ -5,7 +5,7 @@ interface DomainErrosOptions extends ErrorOptions {
 	status?: number
 }
 
-export abstract class BaseDomainError extends Error {
+export abstract class BaseError extends Error {
 	readonly code: string
 	readonly status: number
 	constructor(

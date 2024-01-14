@@ -1,7 +1,7 @@
 import { SerializableStatic } from '../types.js'
-import { BaseDomainError } from './BaseDomainError.js'
+import { BaseError } from './BaseError.js'
 
-export class MissingDependecyError extends BaseDomainError {
+export class MissingDependecyError extends BaseError {
 	constructor(
 		searched: SerializableStatic,
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
