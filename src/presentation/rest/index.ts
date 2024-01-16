@@ -43,6 +43,7 @@ export async function WebLayer(config: AppConfig, services: ServiceList) {
 	)
 	app.register(
 		studentRouterFactory(services.student, services.parent, services.class),
+		{ prefix: '/students' },
 	)
 
 	const start = async () => {

@@ -19,7 +19,7 @@ export class ClassService extends Service<typeof Class> {
 		super(repository)
 	}
 
-	#assertsTeacherExists(teacherId?: string | null) {
+	#assertTeacherExists(teacherId?: string | null) {
 		if (teacherId) {
 			this.teacherService.findById(teacherId)
 		}
@@ -27,7 +27,7 @@ export class ClassService extends Service<typeof Class> {
 
 	update(id: string, newData: ClassUpdateType) {
 		const entity = this.findById(id)
-		this.#assertsTeacherExists(newData.teacher)
+		this.#assertTeacherExists(newData.teacher)
 
 		const updated = new Class({ ...entity.toObject(), ...newData })
 		this.repository.save(updated)
@@ -36,7 +36,9 @@ export class ClassService extends Service<typeof Class> {
 
 	create(creationData: ClassCreationType) {
 		const existing = this.repository.listBy('code', creationData.code)
-		if (existing) throw new ConflictError(this.repository.dbEntity, Class)
+		if (existing.length > 0) throw new ConflictError(Class, creationData.code)
+
+		this.#assertTeacherExists(creationData.teacher)
 
 		const entity = new Class(creationData)
 		this.repository.save(entity)
