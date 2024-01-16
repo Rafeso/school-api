@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import { env } from 'node:process'
 import { z } from 'zod'
 
