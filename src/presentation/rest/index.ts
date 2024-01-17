@@ -33,17 +33,17 @@ export async function WebLayer(config: AppConfig, services: ServiceList) {
 
 	let server: typeof app
 
-	app.register(classRouterFactory(services.class), { prefix: '/classes' })
+	app.register(classRouterFactory(services.class), { prefix: '/v1/classes' })
 	app.register(parentRouterFactory(services.parent, services.student), {
-		prefix: '/parents',
+		prefix: '/v1/parents',
 	})
 	app.register(
 		teacherRouterFactory(services.teacher, services.class, services.student),
-		{ prefix: '/teachers' },
+		{ prefix: '/v1/teachers' },
 	)
 	app.register(
 		studentRouterFactory(services.student, services.parent, services.class),
-		{ prefix: '/students' },
+		{ prefix: '/v1/students' },
 	)
 
 	const start = async () => {
