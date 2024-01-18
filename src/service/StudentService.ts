@@ -15,6 +15,7 @@ export class StudentService extends Service<typeof Student> {
 	) {
 		super(repository)
 	}
+
 	update(id: string, newData: StudentUpdateType) {
 		const entity = this.findById(id)
 		const updated = new Student({
@@ -33,6 +34,7 @@ export class StudentService extends Service<typeof Student> {
 		creationData.parents.forEach((parentId, _) =>
 			this.parentService.findById(parentId),
 		)
+
 		const entity = new Student(creationData)
 		this.repository.save(entity)
 		return entity

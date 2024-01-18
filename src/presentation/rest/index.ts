@@ -41,10 +41,9 @@ export async function WebLayer(config: AppConfig, services: ServiceList) {
 		teacherRouterFactory(services.teacher, services.class, services.student),
 		{ prefix: '/v1/teachers' },
 	)
-	app.register(
-		studentRouterFactory(services.student, services.parent, services.class),
-		{ prefix: '/v1/students' },
-	)
+	app.register(studentRouterFactory(services.student, services.class), {
+		prefix: '/v1/students',
+	})
 
 	const start = async () => {
 		console.log('Starting web layer')

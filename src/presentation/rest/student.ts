@@ -3,7 +3,6 @@ import {
 	StudentUpdateSchema,
 } from '@domain/student/types.js'
 import { ClassService } from '@service/ClassService.js'
-import { ParentService } from '@service/ParentService.js'
 import { StudentService } from '@service/StudentService.js'
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
@@ -11,7 +10,6 @@ import { onlyIdParam } from './index.js'
 
 export function studentRouterFactory(
 	studentService: StudentService,
-	parentService: ParentService,
 	classService: ClassService,
 ) {
 	return (

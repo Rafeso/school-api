@@ -21,10 +21,10 @@ export type Application = (
 
 function initDependencies() {
 	const repositories = {
-		teacher: new TeacherRepository(),
-		parent: new ParentRepository(),
-		student: new StudentRepository(),
 		class: new ClassRepository(),
+		student: new StudentRepository(),
+		parent: new ParentRepository(),
+		teacher: new TeacherRepository(),
 	}
 
 	const teacherService = new TeacherService(repositories.teacher)
