@@ -2,10 +2,7 @@ import z from 'zod'
 
 export const AddressSchema = z.object({
 	street: z.string(),
-	number: z.string(),
-	neighborhood: z.string(),
 	city: z.string(),
-	state: z.string(),
 	country: z.string().optional(),
 	zipCode: z.string(),
 })

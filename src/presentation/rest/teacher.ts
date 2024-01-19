@@ -1,11 +1,13 @@
-import { Student } from '@domain/student/Student.js'
-import { TeacherUpdateSchema } from '@domain/teacher/types.js'
-import { TeacherCreationSchema } from '@domain/teacher/types.js'
-import { ClassService } from '@service/ClassService.js'
-import { StudentService } from '@service/StudentService.js'
-import { TeacherService } from '@service/TeacherService.js'
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
+import { Student } from '../../domain/student/Student.js'
+import {
+	TeacherCreationSchema,
+	TeacherUpdateSchema,
+} from '../../domain/teacher/types.js'
+import { ClassService } from '../../service/ClassService.js'
+import { StudentService } from '../../service/StudentService.js'
+import { TeacherService } from '../../service/TeacherService.js'
 import { onlyIdParam } from './index.js'
 
 export function teacherRouterFactory(

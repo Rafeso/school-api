@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { Serializable, SerializableStatic } from '@domain/types.js'
+import { Serializable, SerializableStatic } from '../domain/types.js'
 
 export abstract class Database<
 	S extends SerializableStatic,

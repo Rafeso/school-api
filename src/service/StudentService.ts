@@ -1,10 +1,10 @@
-import { Database } from '@data/Db.js'
-import { ConflictError } from '@domain/@errors/Conflict.js'
-import { Student } from '@domain/student/Student.js'
+import { Database } from '../data/Db.js'
+import { ConflictError } from '../domain/@errors/Conflict.js'
+import { Student } from '../domain/student/Student.js'
 import {
 	StudentCreationType,
 	StudentUpdateType,
-} from '@domain/student/types.js'
+} from '../domain/student/types.js'
 import { Service } from './BaseService.js'
 import { ParentService } from './ParentService.js'
 

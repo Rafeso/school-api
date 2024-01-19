@@ -1,7 +1,10 @@
-import { ClassCreationSchema, ClassUpdateSchema } from '@domain/class/types.js'
-import { ClassService } from '@service/ClassService.js'
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
+import {
+	ClassCreationSchema,
+	ClassUpdateSchema,
+} from '../../domain/class/types.js'
+import { ClassService } from '../../service/ClassService.js'
 import { onlyIdParam } from './index.js'
 
 export function classRouterFactory(classService: ClassService) {

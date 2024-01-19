@@ -1,11 +1,11 @@
-import { ServiceList } from 'app.js'
-import { AppConfig } from 'config.js'
 import fastify from 'fastify'
 import {
 	serializerCompiler,
 	validatorCompiler,
 } from 'fastify-type-provider-zod'
 import { ZodError, z } from 'zod'
+import { ServiceList } from '../../app.js'
+import { AppConfig } from '../../config.js'
 import { classRouterFactory } from './class.js'
 import { parentRouterFactory } from './parent.js'
 import { studentRouterFactory } from './student.js'

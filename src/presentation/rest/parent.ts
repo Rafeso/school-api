@@ -1,11 +1,11 @@
+import { FastifyInstance, FastifyPluginOptions } from 'fastify'
+import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import {
 	ParentCreationSchema,
 	ParentUpdateSchema,
-} from '@domain/parent/types.js'
-import { ParentService } from '@service/ParentService.js'
-import { StudentService } from '@service/StudentService.js'
-import { FastifyInstance, FastifyPluginOptions } from 'fastify'
-import { ZodTypeProvider } from 'fastify-type-provider-zod'
+} from '../../domain/parent/types.js'
+import { ParentService } from '../../service/ParentService.js'
+import { StudentService } from '../../service/StudentService.js'
 import { onlyIdParam } from './index.js'
 
 export function parentRouterFactory(

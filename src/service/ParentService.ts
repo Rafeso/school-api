@@ -1,5 +1,5 @@
-import { Parent } from '@domain/parent/Parent.js'
-import { ParentCreationType, ParentUpdateType } from '@domain/parent/types.js'
+import { Parent } from '../domain/parent/Parent.js'
+import { ParentCreationType, ParentUpdateType } from '../domain/parent/types.js'
 import { Service } from './BaseService.js'
 
 export class ParentService extends Service<typeof Parent> {

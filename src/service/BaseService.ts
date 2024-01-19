@@ -1,6 +1,6 @@
-import { Database } from '@data/Db.js'
-import { NotFoundError } from '@domain/@errors/NotFound.js'
-import type { Serializable, SerializableStatic } from '@domain/types.js'
+import { Database } from '../data/Db.js'
+import { NotFoundError } from '../domain/@errors/NotFound.js'
+import { Serializable, SerializableStatic } from '../domain/types.js'
 
 export abstract class Service<
 	S extends SerializableStatic,

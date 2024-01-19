@@ -1,11 +1,11 @@
+import { FastifyInstance, FastifyPluginOptions } from 'fastify'
+import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import {
 	StudentCreationSchema,
 	StudentUpdateSchema,
-} from '@domain/student/types.js'
-import { ClassService } from '@service/ClassService.js'
-import { StudentService } from '@service/StudentService.js'
-import { FastifyInstance, FastifyPluginOptions } from 'fastify'
-import { ZodTypeProvider } from 'fastify-type-provider-zod'
+} from '../../domain/student/types.js'
+import { ClassService } from '../../service/ClassService.js'
+import { StudentService } from '../../service/StudentService.js'
 import { onlyIdParam } from './index.js'
 
 export function studentRouterFactory(
