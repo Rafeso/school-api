@@ -6,7 +6,7 @@ export const StudentCreationSchema = z.object({
 	surname: z.string(),
 	birthDate: z
 		.string()
-		.datetime()
+		.datetime({ offset: true })
 		.refine((date) => !Number.isNaN(new Date(date).getTime())),
 	parents: z.array(z.string().uuid()).nonempty(),
 	allergies: z.array(z.string()).optional(),

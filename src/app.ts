@@ -1,13 +1,16 @@
-import { ClassRepository } from '@data/repositories/ClassRepository.js'
-import { ParentRepository } from '@data/repositories/ParentRepository.js'
-import { StudentRepository } from '@data/repositories/StudentRepository.js'
-import { TeacherRepository } from '@data/repositories/TeacherRepository.js'
-import { WebLayer } from '@presentation/rest/index.js'
-import { ClassService } from '@service/ClassService.js'
-import { ParentService } from '@service/ParentService.js'
-import { StudentService } from '@service/StudentService.js'
-import { TeacherService } from '@service/TeacherService.js'
-import { AppConfig, appConfig } from 'config.js'
+#!/usr/bin/env node
+
+import { AppConfig, appConfig } from './config.js'
+import { ClassRepository } from './data/repositories/ClassRepository.js'
+import { ParentRepository } from './data/repositories/ParentRepository.js'
+import { StudentRepository } from './data/repositories/StudentRepository.js'
+import { TeacherRepository } from './data/repositories/TeacherRepository.js'
+import { CLILayer } from './presentation/cli/index.js'
+import { WebLayer } from './presentation/rest/index.js'
+import { ClassService } from './service/ClassService.js'
+import { ParentService } from './service/ParentService.js'
+import { StudentService } from './service/StudentService.js'
+import { TeacherService } from './service/TeacherService.js'
 
 export type ServiceList = ReturnType<typeof initDependencies>['services']
 
@@ -69,4 +72,8 @@ async function main(app: Application, config: AppConfig) {
 	return start()
 }
 
-await main(WebLayer, appConfig)
+if (process.env.IS_WEB) {
+	await main(WebLayer, appConfig)
+} else {
+	await main(CLILayer, appConfig)
+}
