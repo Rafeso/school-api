@@ -2,11 +2,11 @@ import { z } from 'zod'
 
 export const StudentCreationSchema = z.object({
 	id: z.string().uuid().optional(),
-	firstName: z.string(),
-	surname: z.string(),
+	firstName: z.string().min(1),
+	surname: z.string().min(1),
 	birthDate: z
 		.string()
-		.datetime({ offset: true })
+		.datetime()
 		.refine((date) => !Number.isNaN(new Date(date).getTime())),
 	parents: z.array(z.string().uuid()).nonempty(),
 	allergies: z.array(z.string()).optional(),
@@ -16,7 +16,7 @@ export const StudentCreationSchema = z.object({
 		.string()
 		.datetime()
 		.refine((date) => !Number.isNaN(new Date(date).getTime())),
-	document: z.string(),
+	document: z.string().min(1),
 	class: z.string().uuid(),
 })
 

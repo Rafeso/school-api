@@ -78,9 +78,7 @@ export async function createStudentHandler(service: StudentService) {
 			name: 'startDate',
 			message: 'Start date:',
 			validate(value) {
-				return StudentCreationSchema.shape.startDate.safeParse(
-					new Date(value).toISOString(),
-				).success
+				return StudentCreationSchema.shape.startDate.safeParse(value).success
 			},
 		},
 		{
