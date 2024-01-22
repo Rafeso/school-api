@@ -13,8 +13,8 @@
 	},
 	"scripts": {
 		"prestart": "npm run build",
-		"start": "SET IS_WEB=1 & node --env-file=.env build/app.js",
-		"dev": "SET IS_WEB=1 & tsx watch src/app.ts",
+		"start": "IS_WEB=1 node --env-file=.env build/app.js",
+		"dev": "IS_WEB=1 tsx watch src/app.ts",
 		"build": "tsc",
 		"fix": "npx @biomejs/biome check --apply src",
 		"prepare": "husky install"
