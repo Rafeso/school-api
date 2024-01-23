@@ -9,20 +9,20 @@ export function StudentSubcommandHandler(
 	subcommand: string,
 	options?: { Id?: string },
 ) {
-	const service = services
+	const studentService = services.student
 
 	switch (subcommand) {
 		case 'create':
-			createStudentHandler(service.student)
+			createStudentHandler(studentService)
 			break
 		case 'delete':
-			deleteStudentHandler(service.student, options?.Id)
+			deleteStudentHandler(studentService, options?.Id)
 			break
 		case 'find':
-			findStudentHandler(service.student, options?.Id)
+			findStudentHandler(studentService, options?.Id)
 			break
 		case 'list':
-			listStudentHandler(service.student)
+			listStudentHandler(studentService)
 			break
 		default:
 			return console.log('Subcommand not found')

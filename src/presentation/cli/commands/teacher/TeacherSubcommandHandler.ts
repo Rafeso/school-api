@@ -9,20 +9,20 @@ export function TeacherSubcommandHandler(
 	subcommand: string,
 	options?: { Id?: string },
 ) {
-	const service = services
+	const service = services.teacher
 
 	switch (subcommand) {
 		case 'create':
-			createTeacherHandler(service.teacher)
+			createTeacherHandler(service)
 			break
 		case 'delete':
-			deleteTeacherHandler(service.teacher, options?.Id)
+			deleteTeacherHandler(service, options?.Id)
 			break
 		case 'find':
-			findTeacherHandler(service.teacher, options?.Id)
+			findTeacherHandler(service, options?.Id)
 			break
 		case 'list':
-			listTeacherHandler(service.teacher)
+			listTeacherHandler(service)
 			break
 		default:
 			return console.log('Subcommand not found')

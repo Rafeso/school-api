@@ -11,13 +11,14 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 
 	program
 		.name('school')
-		.usage('school [command] <query> [options]')
+		.usage('[table] <query> [options]')
 		.version('0.0.1', '-v, --version', 'output the current version')
 		.description('School CLI for managing a school api')
 
 	program
 		.command('parent')
-		.argument('query')
+		.description('Perform queries in the parent table')
+		.argument('query', 'the query to be executed: find, create, delete, list')
 		.option(
 			'-i,--id [id]',
 			'If subcommand is find or delete, the id of the parent to be found or deleted',
@@ -28,25 +29,30 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 
 	program
 		.command('student')
-		.argument(
-			'-i, --id [id]',
-			'If subcommand is find or delete, the id of the student to be found or deleted',
+		.description('Perform queries in the student table')
+		.argument('query', 'the query to be executed: find, create, delete, list')
+		.option(
+			'-i,--id [id]',
+			'If subcommand is find or delete, the id of the parent to be found or deleted',
 		)
 		.action((subcommand, options) =>
 			StudentSubcommandHandler(services, subcommand, options),
 		)
 	program
 		.command('teacher')
-		.argument(
-			'-i, --id [id]',
-			'If subcommand is find or delete, the id of the teacher to be found or deleted',
+		.description('Perform queries in the teacher table')
+		.argument('query', 'the query to be executed: find, create, delete, list')
+		.option(
+			'-i,--id [id]',
+			'If subcommand is find or delete, the id of the parent to be found or deleted',
 		)
 		.action((subcommand, options) =>
 			TeacherSubcommandHandler(services, subcommand, options),
 		)
 	program
 		.command('class')
-		.argument('query')
+		.description('Perform queries in the class table')
+		.argument('query', 'the query to be executed: find, create, delete, list')
 		.option(
 			'-i,--id [id]',
 			'If subcommand is find or delete, the id of the parent to be found or deleted',
