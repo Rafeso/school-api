@@ -23,24 +23,35 @@ export function studentRouterFactory(
 			'/',
 			{ schema: { body: StudentCreationSchema.omit({ id: true }) } },
 			async (req, res) => {
-				const studentEntity = studentService.create(req.body)
-				classService.findById(req.body.class)
-				return res.status(201).send(studentEntity.toObject())
+				const studentEntity = studentService.create(req.body).toObject()
+				const classEntity = classService.findById(req.body.class).toObject()
+
+				return res.status(201).send({ studentEntity, classEntity })
 			},
 		)
 
 		router.get('/', async (_, res) => {
+			const students = studentService.listAll()
 			return res.send(
-				studentService
-					.listAll()
-					.map((studentEntity) => studentEntity.toObject()),
+				students.map((studentEntity) => {
+					const classEntity = classService
+						.findById(studentEntity.class)
+						.toObject()
+
+					return {
+						...studentEntity.toObject(),
+						classEntity,
+					}
+				}),
 			)
 		})
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			const student = studentService.findById(id)
-			return res.send(student.toObject())
+			const student = studentService.findById(id).toObject()
+			const classEntity = classService.findById(student.class).toObject()
+
+			return res.send({ student, classEntity })
 		})
 
 		router.put(
@@ -53,20 +64,24 @@ export function studentRouterFactory(
 			},
 			async (req, res) => {
 				const { id } = req.params
-				const updated = studentService.update(id, req.body)
-				return res.send(updated.toObject())
+				const updated = studentService.update(id, req.body).toObject()
+				const classEntity = classService.findById(updated.class).toObject()
+
+				return res.send({ updated, classEntity })
 			},
 		)
 
 		router.delete('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
 			studentService.remove(id)
+
 			return res.status(204).send()
 		})
 
 		router.get('/:id/parents', onlyIdParam, async (req, res) => {
 			const { id } = req.params
 			const parents = studentService.getParents(id)
+
 			return res.send(parents.map((parentEntity) => parentEntity.toObject()))
 		})
 
@@ -81,8 +96,10 @@ export function studentRouterFactory(
 			async (req, res) => {
 				const { id } = req.params
 				const { parents } = req.body
+				const updated = studentService.linkParents(id, parents).toObject()
+				const classEntity = classService.findById(updated.class).toObject()
 
-				return res.send(studentService.linkParents(id, parents).toObject())
+				return res.send({ updated, classEntity })
 			},
 		)
 

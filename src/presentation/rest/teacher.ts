@@ -63,7 +63,7 @@ export function teacherRouterFactory(
 			},
 		)
 
-		router.get('/:id/studens', onlyIdParam, async (req, res) => {
+		router.get('/:id/students', onlyIdParam, async (req, res) => {
 			const { id } = req.params
 			teacherService.findById(id)
 

@@ -2,7 +2,7 @@ import { Database } from '../data/Db.js'
 import { ConflictError } from '../domain/@errors/Conflict.js'
 import { DependencyConflictError } from '../domain/@errors/DependencyConflict.js'
 import { MissingDependecyError } from '../domain/@errors/MissingDependecy.js'
-import { Class } from '../domain/class/Class.js'
+import { Class, ExtendedClass } from '../domain/class/Class.js'
 import { ClassCreationType, ClassUpdateType } from '../domain/class/types.js'
 import { Student } from '../domain/student/Student.js'
 import { Teacher } from '../domain/teacher/Teacher.js'
@@ -31,7 +31,11 @@ export class ClassService extends Service<typeof Class> {
 
 		const updated = new Class({ ...entity.toObject(), ...newData })
 		this.repository.save(updated)
-		return updated
+
+		if (!updated.teacher) return new ExtendedClass(updated)
+
+		const teacher = this.teacherService.findById(updated.teacher)
+		return new ExtendedClass(updated, teacher)
 	}
 
 	create(creationData: ClassCreationType) {
@@ -42,7 +46,13 @@ export class ClassService extends Service<typeof Class> {
 
 		const entity = new Class(creationData)
 		this.repository.save(entity)
-		return entity
+
+		if (entity.teacher) {
+			const teacher = this.teacherService.findById(entity.teacher)
+			return new ExtendedClass(entity, teacher)
+		}
+
+		return new ExtendedClass(entity)
 	}
 
 	getTeacher(classId: string) {

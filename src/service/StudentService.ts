@@ -1,6 +1,6 @@
 import { Database } from '../data/Db.js'
 import { ConflictError } from '../domain/@errors/Conflict.js'
-import { Student } from '../domain/student/Student.js'
+import { ExtendedStudent, Student } from '../domain/student/Student.js'
 import {
 	StudentCreationType,
 	StudentUpdateType,
@@ -23,7 +23,9 @@ export class StudentService extends Service<typeof Student> {
 			...newData,
 		})
 		this.repository.save(updated)
-		return updated
+
+		const parents = this.getParents(updated.id)
+		return new ExtendedStudent(updated, parents)
 	}
 	create(creationData: StudentCreationType) {
 		const existing = this.repository.listBy('document', creationData.document)
@@ -31,30 +33,41 @@ export class StudentService extends Service<typeof Student> {
 		if (existing.length > 0)
 			throw new ConflictError(Student, creationData.document)
 
-		creationData.parents.forEach((parentId, _) =>
+		const parents = creationData.parents.map((parentId) =>
 			this.parentService.findById(parentId),
 		)
-
 		const entity = new Student(creationData)
 		this.repository.save(entity)
-		return entity
+
+		return new ExtendedStudent(entity, parents)
 	}
 
-	getParents(studentId: string) {
-		const student = this.findById(studentId)
-		return student.parents.map((parentId: string) =>
+	listAll() {
+		const entities = this.repository.listAll()
+		return entities.map((student) => {
+			const parents = this.getParents(student)
+			return new ExtendedStudent(student, parents)
+		})
+	}
+
+	getParents(studentIdOrEntity: string | Student) {
+		const student =
+			typeof studentIdOrEntity === 'string'
+				? this.findById(studentIdOrEntity)
+				: studentIdOrEntity
+		return student.parents.map((parentId) =>
 			this.parentService.findById(parentId),
 		)
 	}
 
 	linkParents(id: string, parentsToUpdate: StudentCreationType['parents']) {
 		const student = this.findById(id)
-		parentsToUpdate.forEach((parentId, _) =>
+		const parents = parentsToUpdate.map((parentId) =>
 			this.parentService.findById(parentId),
 		)
 
 		student.parents = parentsToUpdate
 		this.repository.save(student)
-		return student
+		return new ExtendedStudent(student, parents)
 	}
 }

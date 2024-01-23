@@ -5,9 +5,13 @@ import {
 	ClassUpdateSchema,
 } from '../../domain/class/types.js'
 import { ClassService } from '../../service/ClassService.js'
+import { TeacherService } from '../../service/TeacherService.js'
 import { onlyIdParam } from './index.js'
 
-export function classRouterFactory(classService: ClassService) {
+export function classRouterFactory(
+	classService: ClassService,
+	teacherService: TeacherService,
+) {
 	return (
 		app: FastifyInstance,
 		_: FastifyPluginOptions,
@@ -19,22 +23,38 @@ export function classRouterFactory(classService: ClassService) {
 			'/',
 			{ schema: { body: ClassCreationSchema.omit({ id: true }) } },
 			async (req, res) => {
-				const classEntity = classService.create(req.body)
-				return res.status(201).send(classEntity.toObject())
+				const classEntity = classService.create(req.body).toObject()
+				const teacherEntity = teacherService
+					.findById(classEntity.teacher)
+					.toObject()
+
+				return res.status(201).send({ classEntity, teacherEntity })
 			},
 		)
 
 		router.get('/', async (_, res) => {
+			const classEntities = classService.listAll()
+
 			return res.send(
-				classService.listAll().map((classEntity) => classEntity.toObject()),
+				classEntities.map((Class) => {
+					const teacher = teacherService.findById(Class.teacher)
+					return {
+						...Class.toObject(),
+						teacher: teacher.toObject(),
+					}
+				}),
 			)
 		})
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
+			const classEntity = classService.findById(id).toObject()
+			const teacher = teacherService.findById(classEntity.teacher).toObject()
 
-			const classEntity = classService.findById(id)
-			return res.send(classEntity.toObject())
+			return res.send({
+				classEntity,
+				teacher: teacher,
+			})
 		})
 
 		router.put(
@@ -47,9 +67,13 @@ export function classRouterFactory(classService: ClassService) {
 			},
 			async (req, res) => {
 				const { id } = req.params
-
 				const updated = classService.update(id, req.body)
-				return res.send(updated.toObject())
+				const teacher = teacherService.findById(updated.teacher)
+
+				return res.send({
+					...updated.toObject(),
+					teacher: teacher,
+				})
 			},
 		)
 
