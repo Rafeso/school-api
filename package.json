@@ -1,45 +1,45 @@
 {
-  "name": "school-api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "build/app.js",
-  "bin": {
-    "school": "build/app.js"
-  },
-  "type": "module",
-  "engines": {
-    "node": ">=20.*"
-  },
-  "scripts": {
-    "prestart": "bun run build",
-    "start": "IS_WEB=1 bun --env-file=.env build/app.js",
-    "dev": "IS_WEB=1 tsx watch src/app.ts",
-    "dev:cli": "tsx src/app.ts",
-    "build": "tsc",
-    "fix": "bunx @biomejs/biome check --apply src",
-    "prepare": "husky install"
-  },
-  "lint-staged": {
-    "*.ts": "bun run fix"
-  },
-  "keywords": [],
-  "author": "Rafael Feitosa <rafaefeitosa@gmail.com> (https://rafaelfeitosa.vercel.app)",
-  "license": "MIT",
-  "dependencies": {
-    "commander": "^11.1.0",
-    "enquirer": "^2.4.1",
-    "fastify": "^4.25.2",
-    "fastify-type-provider-zod": "^1.1.9",
-    "zod": "^3.22.4"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.5.1",
-    "@types/node": "^20.11.5",
-    "bun-types": "^1.0.25",
-    "chalk": "^5.3.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
-    "tsx": "^4.7.0",
-    "typescript": "^5.3.3"
-  }
+	"name": "school-api",
+	"version": "1.0.0",
+	"description": "",
+	"main": "build/app.js",
+	"bin": {
+		"school": "../build/app.js"
+	},
+	"type": "module",
+	"engines": {
+		"node": ">=20.*"
+	},
+	"scripts": {
+		"prestart": "bun run build",
+		"start": "IS_WEB=1 bun --env-file=.env build/app.js",
+		"dev": "IS_WEB=1 tsx watch src/app.ts",
+		"dev:cli": "tsx src/app.ts",
+		"build": "tsc",
+		"fix": "bunx @biomejs/biome check --apply src",
+		"prepare": "husky install"
+	},
+	"lint-staged": {
+		"*.ts": "bun run fix"
+	},
+	"keywords": [],
+	"author": "Rafael Feitosa <rafaefeitosa@gmail.com> (https://rafaelfeitosa.vercel.app)",
+	"license": "MIT",
+	"dependencies": {
+		"commander": "^11.1.0",
+		"enquirer": "^2.4.1",
+		"fastify": "^4.25.2",
+		"fastify-type-provider-zod": "^1.1.9",
+		"zod": "^3.22.4"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.5.1",
+		"@types/node": "^20.11.5",
+		"bun-types": "^1.0.25",
+		"chalk": "^5.3.0",
+		"husky": "^8.0.3",
+		"lint-staged": "^15.2.0",
+		"tsx": "^4.7.0",
+		"typescript": "^5.3.3"
+	}
 }
