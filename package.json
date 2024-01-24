@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "build/app.js",
 	"bin": {
-		"school": "../build/app.js"
+		"school": "build/app.js"
 	},
 	"type": "module",
 	"engines": {
