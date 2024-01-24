@@ -4,6 +4,7 @@ import {
 	TeacherCreationType,
 } from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
+import chalk from 'chalk'
 
 export async function deleteTeacherHandler(
 	service: TeacherService,
@@ -16,13 +17,16 @@ export async function deleteTeacherHandler(
 		const { id } = await enquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
-			message: 'Parent id:',
+			message: 'Teacher id:',
 			validate(value) {
 				return TeacherCreationSchema.shape.id.safeParse(value).success
 			},
 		})
 		teacherId = id
 	}
+
 	service.remove(teacherId)
-	console.log(`Teacher ${teacherId} deleted`)
+	console.log(
+		chalk.yellow(`Teacher: ${chalk.underline(teacherId)} was deleted!`),
+	)
 }

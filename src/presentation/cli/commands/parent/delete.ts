@@ -4,6 +4,7 @@ import {
 	ParentCreationType,
 } from '../../../../domain/parent/types.js'
 import { ParentService } from '../../../../service/ParentService.js'
+import chalk from 'chalk'
 
 export async function deleteParentHandler(
 	service: ParentService,
@@ -23,6 +24,7 @@ export async function deleteParentHandler(
 		})
 		parentId = id
 	}
+
 	service.remove(parentId)
-	console.log(`Parent ${parentId} deleted`)
+	console.log(chalk.yellow(`Parent ${chalk.underline(parentId)} deleted`))
 }

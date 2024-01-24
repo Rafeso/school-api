@@ -3,6 +3,7 @@ import { Parent } from '../../../../domain/parent/Parent.js'
 import { ParentCreationSchema } from '../../../../domain/parent/types.js'
 import { AddressSchema } from '../../../../domain/types.js'
 import { ParentService } from '../../../../service/ParentService.js'
+import chalk from 'chalk'
 
 export async function createParentHandler(service: ParentService) {
 	const responses = await enquirer.prompt<{
@@ -107,5 +108,7 @@ export async function createParentHandler(service: ParentService) {
 	})
 
 	service.create(parent)
-	console.log(`Created parent with id: ${parent.id}`)
+	console.log(
+		chalk.green(`Created parent with id: ${chalk.underline(parent.id)}`),
+	)
 }

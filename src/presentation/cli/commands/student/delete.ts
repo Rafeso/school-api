@@ -4,6 +4,7 @@ import {
 	StudentCreationType,
 } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
+import chalk from 'chalk'
 
 export async function deleteStudentHandler(
 	service: StudentService,
@@ -23,6 +24,7 @@ export async function deleteStudentHandler(
 		})
 		StudentId = id
 	}
+
 	service.remove(StudentId)
-	console.log(`Student ${StudentId} deleted`)
+	console.log(chalk.yellow(`Student ${chalk.underline(StudentId)} deleted`))
 }

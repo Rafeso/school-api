@@ -4,6 +4,7 @@ import {
 	ClassCreationType,
 } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
+import chalk from 'chalk'
 
 export async function deleteClassHandler(
 	service: ClassService,
@@ -24,10 +25,6 @@ export async function deleteClassHandler(
 		classId = id
 	}
 
-	try {
-		service.remove(classId)
-		console.log(`Class ${classId} deleted`)
-	} catch (err) {
-		console.error((err as Error).message)
-	}
+	service.remove(classId)
+	console.log(chalk.yellow(`Class ${chalk.underline(classId)} deleted`))
 }

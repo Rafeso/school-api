@@ -2,6 +2,7 @@ import enquirer from 'enquirer'
 import { Teacher } from '../../../../domain/teacher/Teacher.js'
 import { TeacherCreationSchema } from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
+import chalk from 'chalk'
 
 export async function createTeacherHandler(service: TeacherService) {
 	const response = await enquirer.prompt<{
@@ -92,5 +93,7 @@ export async function createTeacherHandler(service: TeacherService) {
 	})
 
 	service.create(teacher.toObject())
-	console.log(`Teacher ${teacher.id} created`)
+	console.log(
+		chalk.green(`Teacher ${chalk.underline(teacher.id)} created successfully!`),
+	)
 }

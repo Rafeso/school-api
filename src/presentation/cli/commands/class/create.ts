@@ -2,6 +2,7 @@ import enquirer from 'enquirer'
 import { Class } from '../../../../domain/class/Class.js'
 import { ClassCreationSchema } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
+import chalk from 'chalk'
 
 export async function createClassHandler(service: ClassService) {
 	const response = await enquirer.prompt<{ code: string; teacher: string }>([
@@ -29,5 +30,7 @@ export async function createClassHandler(service: ClassService) {
 	})
 
 	service.create(newClass)
-	console.log('Class created successfully')
+	console.log(
+		chalk.green(`Class ${chalk.underline(newClass.id)} created successfully`),
+	)
 }

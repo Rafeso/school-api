@@ -1,8 +1,10 @@
+import chalk from 'chalk'
 import { ServiceList } from '../../../../app.js'
 import { createStudentHandler } from './create.js'
 import { deleteStudentHandler } from './delete.js'
 import { findStudentHandler } from './find.js'
 import { listStudentHandler } from './list.js'
+import { updateStudentHandler } from './update.js'
 
 export function StudentSubcommandHandler(
 	services: ServiceList,
@@ -24,7 +26,10 @@ export function StudentSubcommandHandler(
 		case 'list':
 			listStudentHandler(studentService)
 			break
+		case 'update':
+			updateStudentHandler(studentService, options?.Id)
+			break
 		default:
-			return console.log('Subcommand not found')
+			return console.log(chalk.red('Subcommand not found'))
 	}
 }

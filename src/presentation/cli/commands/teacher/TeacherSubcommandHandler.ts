@@ -1,30 +1,40 @@
+import chalk from 'chalk'
 import { ServiceList } from '../../../../app.js'
 import { createTeacherHandler } from './create.js'
 import { deleteTeacherHandler } from './delete.js'
 import { findTeacherHandler } from './find.js'
 import { listTeacherHandler } from './list.js'
+import { updateTeacherHandler } from './update.js'
 
 export function TeacherSubcommandHandler(
 	services: ServiceList,
 	subcommand: string,
-	options?: { Id?: string },
+	options?: { id?: string },
 ) {
-	const service = services.teacher
+	const teacherService = services.teacher
 
 	switch (subcommand) {
 		case 'create':
-			createTeacherHandler(service)
+			createTeacherHandler(teacherService)
 			break
 		case 'delete':
-			deleteTeacherHandler(service, options?.Id)
+			deleteTeacherHandler(teacherService, options?.id)
 			break
 		case 'find':
-			findTeacherHandler(service, options?.Id)
+			findTeacherHandler(teacherService, options?.id)
 			break
 		case 'list':
-			listTeacherHandler(service)
+			listTeacherHandler(teacherService)
 			break
+		case 'update':
+			updateTeacherHandler(teacherService, options?.id)
+			break
+
 		default:
-			return console.log('Subcommand not found')
+			return console.log(
+				chalk.red(
+					'Subcommand not found try to run "school teacher --help" to list all subcommands',
+				),
+			)
 	}
 }
