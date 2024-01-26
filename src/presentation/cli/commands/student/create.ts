@@ -1,8 +1,8 @@
+import chalk from 'chalk'
 import enquirer from 'enquirer'
 import { Student } from '../../../../domain/student/Student.js'
 import { StudentCreationSchema } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
-import chalk from 'chalk'
 
 export async function createStudentHandler(service: StudentService) {
 	const response = await enquirer.prompt<{

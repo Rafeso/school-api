@@ -1,10 +1,10 @@
+import chalk from 'chalk'
 import enquirer from 'enquirer'
 import {
 	TeacherCreationSchema,
 	TeacherCreationType,
 } from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
-import chalk from 'chalk'
 
 export async function deleteTeacherHandler(
 	service: TeacherService,

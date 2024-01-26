@@ -1,8 +1,8 @@
+import chalk from 'chalk'
 import enquirer from 'enquirer'
 import { Teacher } from '../../../../domain/teacher/Teacher.js'
 import { TeacherCreationSchema } from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
-import chalk from 'chalk'
 
 export async function createTeacherHandler(service: TeacherService) {
 	const response = await enquirer.prompt<{
