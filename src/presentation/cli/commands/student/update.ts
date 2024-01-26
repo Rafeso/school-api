@@ -1,12 +1,13 @@
+import { inspect } from 'node:util'
+import chalk from 'chalk'
 import enquirer from 'enquirer'
+import { ZodError } from 'zod'
 import {
-	StudentCreationType,
 	StudentCreationSchema,
+	StudentCreationType,
 	StudentUpdateType,
 } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
-import { inspect } from 'node:util'
-import chalk from 'chalk'
 export async function updateStudentHandler(
 	service: StudentService,
 	id?: string,
@@ -43,15 +44,47 @@ export async function updateStudentHandler(
 		],
 	})
 
-	console.log(response.field)
+	async function updateClass(id: string) {
+		const response = await enquirer.prompt<{ class: string }>({
+			type: 'input',
+			name: 'class',
+			message: 'New class:',
+			validate(value) {
+				return StudentCreationSchema.shape.class.safeParse(value).success
+			},
+		})
+		const updated = service
+			.update(id, {
+				class: response.class,
+			})
+			.toObject()
+		console.log(
+			chalk.green.underline.bold('\nStudent class updated successfully!'),
+		)
+		return console.log(inspect(updated, { depth: null, colors: true }))
+	}
 
-	const updated = await enquirer.prompt<StudentUpdateType>({
-		type: 'input',
-		name: response.field,
-		message: `New ${response.field}:`,
-	})
+	switch (response.field) {
+		case 'class':
+			return updateClass(StudentId)
+		default: {
+			const updated = await enquirer.prompt<StudentUpdateType>({
+				type: 'input',
+				name: response.field,
+				message: `New ${response.field}:`,
+			})
 
-	const Student = service.update(StudentId, updated).toObject()
-	console.log(chalk.green.underline.bold('\nStudent updated successfully!'))
-	console.log(inspect(Student, { depth: null, colors: true }))
+			try {
+				const Student = service.update(StudentId, updated).toObject()
+				console.log(
+					chalk.green.underline.bold('\nStudent updated successfully!'),
+				)
+				console.log(inspect(Student, { depth: null, colors: true }))
+			} catch (err) {
+				if (err instanceof ZodError) {
+					console.error(err.message)
+				}
+			}
+		}
+	}
 }

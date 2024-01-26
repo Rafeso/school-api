@@ -12,15 +12,15 @@
 	},
 	"scripts": {
 		"prestart": "bun run build",
-		"start": "IS_WEB=1 bun --env-file=.env build/app.js",
+		"start": "IS_WEB=1 node --env-file=.env build/app.js",
 		"dev": "IS_WEB=1 tsx watch src/app.ts",
 		"dev:cli": "tsx src/app.ts",
 		"build": "tsc",
-		"fix": "bunx @biomejs/biome check --apply src",
+		"fix": "npx @biomejs/biome check --apply src",
 		"prepare": "husky install"
 	},
 	"lint-staged": {
-		"*.ts": "bun run fix"
+		"*.ts": "npm run fix"
 	},
 	"keywords": [],
 	"author": "Rafael Feitosa <rafaefeitosa@gmail.com> (https://rafaelfeitosa.vercel.app)",

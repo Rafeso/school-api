@@ -1,12 +1,13 @@
+import { inspect } from 'node:util'
+import chalk from 'chalk'
 import enquirer from 'enquirer'
+import { ZodError } from 'zod'
 import {
-	TeacherCreationType,
 	TeacherCreationSchema,
+	TeacherCreationType,
 	TeacherUpdateType,
 } from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
-import { inspect } from 'node:util'
-import chalk from 'chalk'
 export async function updateTeacherHandler(
 	service: TeacherService,
 	id?: string,
@@ -30,18 +31,61 @@ export async function updateTeacherHandler(
 		type: 'select',
 		name: 'field',
 		message: 'What field do you want to update?',
-		choices: [{ name: 'firstName' }, { name: 'surname' }],
+		choices: [
+			{ name: 'firstName' },
+			{ name: 'surname' },
+			{ name: 'document' },
+			{ name: 'phone' },
+			{ name: 'email' },
+			{ name: 'hiringDate' },
+			{ name: 'salary' },
+			{ name: 'major' },
+		],
 	})
 
-	console.log(response.field)
+	async function updateSalary(id: string) {
+		const response = await enquirer.prompt<{ salary: number }>({
+			type: 'numeral',
+			name: 'salary',
+			message: 'New salary:',
+			validate(value) {
+				return TeacherCreationSchema.shape.salary.safeParse(value).success
+			},
+		})
 
-	const updated = await enquirer.prompt<TeacherUpdateType>({
-		type: 'input',
-		name: response.field,
-		message: `New ${response.field}:`,
-	})
+		const teacher = service
+			.update(id, {
+				salary: response.salary,
+			})
+			.toObject()
+		console.log(
+			chalk.green.underline.bold('\nTeacher salary updated successfully!'),
+		)
+		return console.log(inspect(teacher, { depth: null, colors: true }))
+	}
 
-	const teacher = service.update(TeacherId, updated).toObject()
-	console.log(chalk.green.underline.bold('\nTeacher updated successfully!'))
-	console.log(inspect(teacher, { depth: null, colors: true }))
+	switch (response.field) {
+		case 'salary':
+			updateSalary(TeacherId)
+			break
+		default: {
+			const updated = await enquirer.prompt<TeacherUpdateType>({
+				type: 'input',
+				name: response.field,
+				message: `New ${response.field}:`,
+			})
+
+			try {
+				const teacher = service.update(TeacherId, updated).toObject()
+				console.log(
+					chalk.green.underline.bold('\nTeacher updated successfully!'),
+				)
+				console.log(inspect(teacher, { depth: null, colors: true }))
+			} catch (err) {
+				if (err instanceof ZodError) {
+					console.log(err.message)
+				}
+			}
+		}
+	}
 }

@@ -11,7 +11,7 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 
 	program
 		.name('school')
-		.usage('[table] <query> [options]')
+		.usage('command <subcommand> [flags]')
 		.version('0.0.1', '-v, --version', 'output the current version')
 		.description('School CLI for managing a school api')
 
