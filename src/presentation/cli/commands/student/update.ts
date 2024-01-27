@@ -53,11 +53,11 @@ export async function updateStudentHandler(
 				return StudentCreationSchema.shape.class.safeParse(value).success
 			},
 		})
-		const updated = service
-			.update(id, {
+		const updated = (
+			await service.update(id, {
 				class: response.class,
 			})
-			.toObject()
+		).toObject()
 		console.log(
 			chalk.green.underline.bold('\nStudent class updated successfully!'),
 		)
@@ -75,7 +75,7 @@ export async function updateStudentHandler(
 			})
 
 			try {
-				const Student = service.update(StudentId, updated).toObject()
+				const Student = (await service.update(StudentId, updated)).toObject()
 				console.log(
 					chalk.green.underline.bold('\nStudent updated successfully!'),
 				)

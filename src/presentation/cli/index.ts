@@ -1,6 +1,7 @@
 import { Command } from 'commander'
 import { ServiceList } from '../../app.js'
 import { AppConfig } from '../../config.js'
+import { connectToDatabase } from '../../data/connection.js'
 import { ClassSubcommandHandler } from './commands/class/ClassSubcommandHandler.js'
 import { ParentSubcommandHandler } from './commands/parent/ParentSubcommandHandler.js'
 import { StudentSubcommandHandler } from './commands/student/StudentSubcommandHandler.js'

@@ -4,6 +4,7 @@ import { Serializable } from '../types.js'
 import { ParentCreationSchema, ParentCreationType } from './types.js'
 
 export class Parent extends BaseDomain implements Serializable {
+	static collection = 'parents'
 	firstName: ParentCreationType['firstName']
 	surname: ParentCreationType['surname']
 	phones: ParentCreationType['phones']

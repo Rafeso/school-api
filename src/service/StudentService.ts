@@ -1,6 +1,6 @@
 import { Database } from '../data/Db.js'
 import { ConflictError } from '../domain/@errors/Conflict.js'
-import { ExtendedStudent, Student } from '../domain/student/Student.js'
+import { Student } from '../domain/student/Student.js'
 import {
 	StudentCreationType,
 	StudentUpdateType,
@@ -16,58 +16,54 @@ export class StudentService extends Service<typeof Student> {
 		super(repository)
 	}
 
-	update(id: string, newData: StudentUpdateType) {
-		const entity = this.findById(id)
+	async update(id: string, newData: StudentUpdateType) {
+		const entity = await this.findById(id)
 		const updated = new Student({
 			...entity.toObject(),
 			...newData,
 		})
-		this.repository.save(updated)
+		await this.repository.save(updated)
 
-		const parents = this.getParents(updated.id)
-		return new ExtendedStudent(updated, parents)
+		return updated
 	}
-	create(creationData: StudentCreationType) {
-		const existing = this.repository.listBy('document', creationData.document)
+	async create(creationData: StudentCreationType) {
+		const existing = await this.repository.listBy(
+			'document',
+			creationData.document,
+		)
 
 		if (existing.length > 0)
 			throw new ConflictError(Student, creationData.document)
 
-		const parents = creationData.parents.map((parentId) =>
+		creationData.parents.map((parentId) =>
 			this.parentService.findById(parentId),
 		)
 		const entity = new Student(creationData)
-		this.repository.save(entity)
+		await this.repository.save(entity)
 
-		return new ExtendedStudent(entity, parents)
+		return entity
 	}
 
-	listAll() {
-		const entities = this.repository.listAll()
-		return entities.map((student) => {
-			const parents = this.getParents(student)
-			return new ExtendedStudent(student, parents)
-		})
-	}
-
-	getParents(studentIdOrEntity: string | Student) {
-		const student =
-			typeof studentIdOrEntity === 'string'
-				? this.findById(studentIdOrEntity)
-				: studentIdOrEntity
-		return student.parents.map((parentId) =>
-			this.parentService.findById(parentId),
+	async getParents(studentId: string) {
+		const student = await this.findById(studentId)
+		const parents = await Promise.all(
+			student.parents.map((parentId: string) =>
+				this.parentService.findById(parentId),
+			),
 		)
+
+		return parents
 	}
 
-	linkParents(id: string, parentsToUpdate: StudentCreationType['parents']) {
-		const student = this.findById(id)
-		const parents = parentsToUpdate.map((parentId) =>
-			this.parentService.findById(parentId),
-		)
+	async linkParents(
+		id: string,
+		parentsToUpdate: StudentCreationType['parents'],
+	) {
+		const student = await this.findById(id)
+		parentsToUpdate.map((parentId) => this.parentService.findById(parentId))
 
 		student.parents = parentsToUpdate
-		this.repository.save(student)
-		return new ExtendedStudent(student, parents)
+		await this.repository.save(student)
+		return student
 	}
 }

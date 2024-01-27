@@ -12,6 +12,7 @@ export type AddressType = z.infer<typeof AddressSchema>
 export interface SerializableStatic {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	new (...args: any[]): any
+	collection: string
 	fromObject(data: Record<string, unknown>): InstanceType<this>
 }
 

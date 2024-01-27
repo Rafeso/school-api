@@ -46,7 +46,9 @@ export async function updateParentHandler(service: ParentService, id?: string) {
 			message: 'New phones:',
 		})
 
-		const parent = service.update(id, { phones: [response.phones] }).toObject()
+		const parent = (
+			await service.update(id, { phones: [response.phones] })
+		).toObject()
 		console.log(
 			chalk.green.underline.bold('\nParent phones updated successfully!'),
 		)
@@ -63,7 +65,9 @@ export async function updateParentHandler(service: ParentService, id?: string) {
 			},
 		})
 
-		const parent = service.update(id, { emails: [response.emails] }).toObject()
+		const parent = (
+			await service.update(id, { emails: [response.emails] })
+		).toObject()
 		console.log(
 			chalk.green.underline.bold('\nParent emails updated successfully!'),
 		)
@@ -111,8 +115,8 @@ export async function updateParentHandler(service: ParentService, id?: string) {
 			},
 		])
 
-		const parent = service
-			.update(id, {
+		const parent = (
+			await service.update(id, {
 				address: [
 					{
 						country: response.country,
@@ -122,7 +126,7 @@ export async function updateParentHandler(service: ParentService, id?: string) {
 					},
 				],
 			})
-			.toObject()
+		).toObject()
 		console.log(
 			chalk.green.underline.bold('\nParent address updated successfully!'),
 		)
@@ -147,7 +151,7 @@ export async function updateParentHandler(service: ParentService, id?: string) {
 			})
 
 			try {
-				const parent = service.update(ParentId, updated).toObject()
+				const parent = (await service.update(ParentId, updated)).toObject()
 				console.log(
 					chalk.green.underline.bold(
 						`\nParent ${response.field} updated successfully!`,

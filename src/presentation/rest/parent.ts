@@ -23,21 +23,20 @@ export function parentRouterFactory(
 			'/',
 			{ schema: { body: ParentCreationSchema.omit({ id: true }) } },
 			async (req, res) => {
-				const parentEntity = parentService.create(req.body)
+				const parentEntity = await parentService.create(req.body)
 				return res.status(201).send(parentEntity.toObject())
 			},
 		)
 
 		router.get('/', async (_, res) => {
-			return res.send(
-				parentService.listAll().map((parentEntity) => parentEntity.toObject()),
-			)
+			const parents = await parentService.listAll()
+			return res.send(parents.map((parentEntity) => parentEntity.toObject()))
 		})
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
 
-			const parentEntity = parentService.findById(id)
+			const parentEntity = await parentService.findById(id)
 			return res.send(parentEntity.toObject())
 		})
 
@@ -49,14 +48,14 @@ export function parentRouterFactory(
 			async (req, res) => {
 				const { id } = req.params
 
-				const updated = parentService.update(id, req.body)
+				const updated = await parentService.update(id, req.body)
 				return res.send(updated.toObject())
 			},
 		)
 
 		router.delete('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			const students = studentService.listBy('parents', [id])
+			const students = await studentService.listBy('parents', [id])
 			if (students.length > 0) {
 				return res.code(403).send({
 					message: `Cannot delete parent with id ${id} because it has students assigned`,
@@ -69,7 +68,7 @@ export function parentRouterFactory(
 
 		router.get('/:id/students', onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			const students = studentService.listBy('parents', [id])
+			const students = await studentService.listBy('parents', [id])
 			return res.send(students.map((studentEntity) => studentEntity.toObject()))
 		})
 

@@ -10,23 +10,23 @@ export function ParentSubcommandHandler(
 	subcommand: string,
 	options?: { id?: string },
 ) {
-	const parentService = services.parent
+	const service = services
 
 	switch (subcommand) {
 		case 'create':
-			createParentHandler(parentService)
+			createParentHandler(service.parent)
 			break
 		case 'delete':
-			deleteParentHandler(parentService, options?.id)
+			deleteParentHandler(service.parent, service.student, options?.id)
 			break
 		case 'find':
-			findParentHandler(parentService, options?.id)
+			findParentHandler(service.parent, options?.id)
 			break
 		case 'list':
-			listParentHandler(parentService)
+			listParentHandler(service.parent)
 			break
 		case 'update':
-			updateParentHandler(parentService, options?.id)
+			updateParentHandler(service.parent, options?.id)
 			break
 		default:
 			return console.log('Subcommand not found')

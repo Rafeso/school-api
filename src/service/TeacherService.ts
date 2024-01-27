@@ -1,3 +1,4 @@
+import { ConflictError } from '../domain/@errors/Conflict.js'
 import { Teacher } from '../domain/teacher/Teacher.js'
 import {
 	TeacherCreationType,
@@ -6,19 +7,26 @@ import {
 import { Service } from './BaseService.js'
 
 export class TeacherService extends Service<typeof Teacher> {
-	update(id: string, newData: TeacherUpdateType) {
-		const entity = this.findById(id)
+	async update(id: string, newData: TeacherUpdateType) {
+		const entity = await this.findById(id)
 		const updated = new Teacher({
 			...entity.toObject(),
 			...newData,
 		})
-		this.repository.save(updated)
+		await this.repository.save(updated)
 		return updated
 	}
 
-	create(creationData: TeacherCreationType) {
+	async create(creationData: TeacherCreationType) {
+		const existing = await this.repository.listBy(
+			'document',
+			creationData.document,
+		)
+		if (existing.length > 0) {
+			throw new ConflictError(Teacher, creationData.document)
+		}
 		const entity = new Teacher(creationData)
-		this.repository.save(entity)
+		await this.repository.save(entity)
 		return entity
 	}
 }

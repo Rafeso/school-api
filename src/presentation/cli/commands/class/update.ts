@@ -38,7 +38,7 @@ export async function updateClassHandler(service: ClassService, id?: string) {
 	})
 
 	try {
-		const Class = service.update(ClassId, updated).toObject()
+		const Class = (await service.update(ClassId, updated)).toObject()
 		console.log(chalk.green.underline.bold('\nClass updated successfully!'))
 		console.log(inspect(Class, { depth: null, colors: true }))
 	} catch (err) {

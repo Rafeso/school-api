@@ -9,9 +9,9 @@ export const StudentCreationSchema = z.object({
 		.datetime()
 		.refine((date) => !Number.isNaN(new Date(date).getTime())),
 	parents: z.array(z.string().uuid()).nonempty(),
-	allergies: z.array(z.string()).optional(),
-	bloodType: z.string().max(3),
-	medications: z.array(z.string()).optional(),
+	allergies: z.array(z.string()).nullable().optional().default([]),
+	bloodType: z.string().max(3).min(2),
+	medications: z.array(z.string()).nullable().optional().default([]),
 	startDate: z
 		.string()
 		.datetime()

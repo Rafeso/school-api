@@ -4,6 +4,7 @@ import { Serializable } from '../types.js'
 import { TeacherCreationSchema, TeacherCreationType } from './types.js'
 
 export class Teacher extends BaseDomain implements Serializable {
+	static collection = 'teachers'
 	firstName: TeacherCreationType['firstName']
 	surname: TeacherCreationType['surname']
 	document: TeacherCreationType['document']

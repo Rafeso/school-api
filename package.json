@@ -11,13 +11,14 @@
 		"node": ">=20.*"
 	},
 	"scripts": {
-		"prestart": "bun run build",
-		"start": "IS_WEB=1 node --env-file=.env build/app.js",
-		"dev": "IS_WEB=1 tsx watch src/app.ts",
-		"dev:cli": "tsx src/app.ts",
+		"prestart": "npm run build",
+		"start": "npm run infra:up && IS_WEB=1 node --env-file=.env build/app.js",
+		"dev": "npm run infra:up && IS_WEB=1 tsx watch src/app.ts",
+		"dev:cli": "npm run infra:up && tsx src/app.ts",
 		"build": "tsc",
 		"fix": "npx @biomejs/biome check --apply src",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"infra:up": "docker compose up -d"
 	},
 	"lint-staged": {
 		"*.ts": "npm run fix"
@@ -30,6 +31,7 @@
 		"enquirer": "^2.4.1",
 		"fastify": "^4.25.2",
 		"fastify-type-provider-zod": "^1.1.9",
+		"mongodb": "^6.3.0",
 		"zod": "^3.22.4"
 	},
 	"devDependencies": {

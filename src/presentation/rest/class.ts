@@ -23,21 +23,21 @@ export function classRouterFactory(
 			'/',
 			{ schema: { body: ClassCreationSchema.omit({ id: true }) } },
 			async (req, res) => {
-				const classEntity = classService.create(req.body).toObject()
-				const teacherEntity = teacherService
-					.findById(classEntity.teacher)
-					.toObject()
+				const classEntity = (await classService.create(req.body)).toObject()
+				const teacherEntity = (
+					await teacherService.findById(classEntity.teacher)
+				).toObject()
 
 				return res.status(201).send({ classEntity, teacherEntity })
 			},
 		)
 
 		router.get('/', async (_, res) => {
-			const classEntities = classService.listAll()
+			const classEntities = await classService.listAll()
 
 			return res.send(
-				classEntities.map((Class) => {
-					const teacher = teacherService.findById(Class.teacher)
+				classEntities.map(async (Class) => {
+					const teacher = await teacherService.findById(Class.teacher)
 					return {
 						...Class.toObject(),
 						teacher: teacher.toObject(),
@@ -48,8 +48,10 @@ export function classRouterFactory(
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			const classEntity = classService.findById(id).toObject()
-			const teacher = teacherService.findById(classEntity.teacher).toObject()
+			const classEntity = (await classService.findById(id)).toObject()
+			const teacher = (
+				await teacherService.findById(classEntity.teacher)
+			).toObject()
 
 			return res.send({
 				classEntity,
@@ -67,8 +69,8 @@ export function classRouterFactory(
 			},
 			async (req, res) => {
 				const { id } = req.params
-				const updated = classService.update(id, req.body)
-				const teacher = teacherService.findById(updated.teacher)
+				const updated = await classService.update(id, req.body)
+				const teacher = await teacherService.findById(updated.teacher)
 
 				return res.send({
 					...updated.toObject(),
@@ -85,7 +87,7 @@ export function classRouterFactory(
 		router.get('/:id/teacher', onlyIdParam, async (req, res) => {
 			const { id } = req.params
 
-			const teacher = classService.getTeacher(id)
+			const teacher = await classService.getTeacher(id)
 			return res.send(teacher.toObject())
 		})
 

@@ -53,11 +53,11 @@ export async function updateTeacherHandler(
 			},
 		})
 
-		const teacher = service
-			.update(id, {
+		const teacher = (
+			await service.update(id, {
 				salary: response.salary,
 			})
-			.toObject()
+		).toObject()
 		console.log(
 			chalk.green.underline.bold('\nTeacher salary updated successfully!'),
 		)
@@ -76,7 +76,7 @@ export async function updateTeacherHandler(
 			})
 
 			try {
-				const teacher = service.update(TeacherId, updated).toObject()
+				const teacher = (await service.update(TeacherId, updated)).toObject()
 				console.log(
 					chalk.green.underline.bold('\nTeacher updated successfully!'),
 				)

@@ -26,24 +26,21 @@ export function teacherRouterFactory(
 			'/',
 			{ schema: { body: TeacherCreationSchema.omit({ id: true }) } },
 			async (req, res) => {
-				const teacherEntity = teacherService.create(req.body)
+				const teacherEntity = await teacherService.create(req.body)
 
 				return res.status(201).send(teacherEntity.toObject())
 			},
 		)
 
 		router.get('/', async (_, res) => {
-			return res.send(
-				teacherService
-					.listAll()
-					.map((teacherEntity) => teacherEntity.toObject()),
-			)
+			const teachers = await teacherService.listAll()
+			return res.send(teachers.map((teacherEntity) => teacherEntity.toObject()))
 		})
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
 
-			const teacherEntity = teacherService.findById(id)
+			const teacherEntity = await teacherService.findById(id)
 			return res.send(teacherEntity.toObject())
 		})
 
@@ -58,7 +55,7 @@ export function teacherRouterFactory(
 			async (req, res) => {
 				const { id } = req.params
 
-				const updated = teacherService.update(id, req.body)
+				const updated = await teacherService.update(id, req.body)
 				res.send(updated.toObject())
 			},
 		)
@@ -67,14 +64,14 @@ export function teacherRouterFactory(
 			const { id } = req.params
 			teacherService.findById(id)
 
-			const classes = classService.listBy('teacher', id)
+			const classes = await classService.listBy('teacher', id)
 			if (classes.length === 0) {
 				return res.send([])
 			}
 
 			let totalStudents: Student[] = []
 			for (const classEntity of classes) {
-				const students = studentService.listBy('class', classEntity.id)
+				const students = await studentService.listBy('class', classEntity.id)
 				totalStudents = [...totalStudents, ...students]
 			}
 
@@ -87,9 +84,15 @@ export function teacherRouterFactory(
 			const { id } = req.params
 			teacherService.findById(id)
 
-			const classes = classService.listBy('teacher', id)
+			const classes = await classService.listBy('teacher', id)
 
 			res.send(classes.map((classEntity) => classEntity.toObject()))
+		})
+
+		router.delete('/:id', onlyIdParam, async (req, res) => {
+			const { id } = req.params
+			teacherService.remove(id)
+			return res.status(204).send()
 		})
 
 		done()

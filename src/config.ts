@@ -10,6 +10,8 @@ export const AppConfigSchema = z.object({
 		.refine((port) => port >= 0 && port <= 65535, {
 			message: 'Port must be less than 65535',
 		}),
+	DB_HOST: z.string().optional().default('mongodb://localhost:27017'),
+	DB_NAME: z.string().optional().default('school-api'),
 })
 export type AppConfig = z.infer<typeof AppConfigSchema>
 

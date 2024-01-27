@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto'
 import { BaseDomain } from '../BaseDomain.js'
-import { Parent } from '../parent/Parent.js'
 import { Serializable } from '../types.js'
 import { StudentCreationSchema, StudentCreationType } from './types.js'
 
 export class Student extends BaseDomain implements Serializable {
+	static collection = 'students'
 	firstName: StudentCreationType['firstName']
 	surname: StudentCreationType['surname']
 	birthDate: Date
@@ -25,9 +25,9 @@ export class Student extends BaseDomain implements Serializable {
 		this.surname = parsed.surname
 		this.birthDate = new Date(parsed.birthDate)
 		this.parents = parsed.parents
-		this.allergies = parsed.allergies
+		this.allergies = parsed.allergies ?? []
 		this.bloodType = parsed.bloodType
-		this.medications = parsed.medications
+		this.medications = parsed.medications ?? []
 		this.startDate = new Date(parsed.startDate)
 		this.document = parsed.document
 		this.class = parsed.class
@@ -51,26 +51,6 @@ export class Student extends BaseDomain implements Serializable {
 			startDate: this.startDate.toISOString(),
 			document: this.document,
 			class: this.class,
-		}
-	}
-}
-
-export class ExtendedStudent extends Student {
-	parentEntity: Parent[]
-
-	constructor(studentEntity: Student, parents: Parent[]) {
-		super(studentEntity.toObject())
-		this.parentEntity = parents
-	}
-
-	toJSON() {
-		return JSON.stringify(this.toObject())
-	}
-
-	toObject() {
-		return {
-			...super.toObject(),
-			parentEntity: this.parentEntity,
 		}
 	}
 }
