@@ -1,9 +1,7 @@
 import { inspect } from 'util'
 import enquirer from 'enquirer'
-import {
-	ParentCreationSchema,
-	ParentCreationType,
-} from '../../../../domain/parent/types.js'
+import { oraPromise } from 'ora'
+import { ParentCreationSchema, ParentCreationType } from '../../../../domain/parent/types.js'
 import { ParentService } from '../../../../service/ParentService.js'
 
 export async function findParentHandler(service: ParentService, id?: string) {
@@ -22,10 +20,12 @@ export async function findParentHandler(service: ParentService, id?: string) {
 		parentId = id
 	}
 
-	try {
-		const parent = service.findById(parentId)
-		console.log(inspect(parent, { depth: null, colors: true }))
-	} catch (err) {
-		console.error((err as Error).message)
-	}
+	await oraPromise(service.findById(parentId), {
+		text: 'Finding parent...',
+		spinner: 'bouncingBar',
+		failText: (err) => `Failed to find parent ${parentId}: ${err.message}`,
+		successText: 'Parent found!',
+	}).then((parent) => {
+		console.log(inspect(parent.toObject(), { depth: null, colors: true }))
+	})
 }

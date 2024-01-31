@@ -1,5 +1,7 @@
+import { inspect } from 'node:util'
 import chalk from 'chalk'
 import enquirer from 'enquirer'
+import { oraPromise } from 'ora'
 import { Student } from '../../../../domain/student/Student.js'
 import { StudentCreationSchema } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
@@ -70,8 +72,7 @@ export async function createStudentHandler(service: StudentService) {
 			name: 'medications',
 			message: 'Medications:',
 			validate(value) {
-				return StudentCreationSchema.shape.medications.safeParse([value])
-					.success
+				return StudentCreationSchema.shape.medications.safeParse([value]).success
 			},
 		},
 		{
@@ -113,6 +114,10 @@ export async function createStudentHandler(service: StudentService) {
 		class: response.class,
 	})
 
-	service.create(student.toObject())
-	console.log(chalk.green(`Student ${chalk.underline(student.id)} created`))
+	await oraPromise(service.create(student.toObject()), {
+		text: 'Creating student...',
+		spinner: 'bouncingBar',
+		failText: (err) => `Failed to create student: ${err.message}`,
+		successText: 'Student created!',
+	}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
 }

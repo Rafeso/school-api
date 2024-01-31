@@ -1,9 +1,7 @@
 import chalk from 'chalk'
 import enquirer from 'enquirer'
-import {
-	ParentCreationSchema,
-	ParentCreationType,
-} from '../../../../domain/parent/types.js'
+import { oraPromise } from 'ora'
+import { ParentCreationSchema, ParentCreationType } from '../../../../domain/parent/types.js'
 import { ParentService } from '../../../../service/ParentService.js'
 import { StudentService } from '../../../../service/StudentService.js'
 
@@ -31,15 +29,29 @@ export async function deleteParentHandler(
 	const students = await studentService.listBy('parents', [parentId])
 
 	if (students.length > 1) {
-		console.log(
-			chalk.red(
-				`Cannot delete parent with id ${chalk.underline(
-					parentId,
-				)} because it has students assigned`,
-			),
-		)
+		console.log(chalk.red(`Cannot delete parent with id ${chalk.underline(parentId)} because it has students assigned`))
+		return
 	}
 
-	parentService.remove(parentId)
-	console.log(chalk.yellow(`Parent ${chalk.underline(parentId)} deleted`))
+	const response = await enquirer.prompt<{ confirm: boolean }>({
+		type: 'confirm',
+		name: 'confirm',
+		message: `Are you sure you want to delete parent: ${chalk.underline.bold.yellowBright(parentId)} ?`,
+	})
+
+	if (response.confirm === false) {
+		console.log(chalk.yellow('\nParent deletion aborted!'))
+		return
+	}
+
+	await oraPromise(parentService.remove(parentId), {
+		text: 'Deleting parent...',
+		spinner: 'bouncingBar',
+		failText(err) {
+			return `Failed to delete parent ${chalk.underline(parentId)}: ${err.message}`
+		},
+		successText() {
+			return `Parent ${chalk.underline(parentId)} was deleted!`
+		},
+	})
 }

@@ -1,10 +1,8 @@
 import { inspect } from 'util'
+import chalk from 'chalk'
 import enquirer from 'enquirer'
-
-import {
-	StudentCreationSchema,
-	StudentCreationType,
-} from '../../../../domain/student/types.js'
+import { oraPromise } from 'ora'
+import { StudentCreationSchema, StudentCreationType } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
 
 export async function findStudentHandler(service: StudentService, id?: string) {
@@ -23,10 +21,12 @@ export async function findStudentHandler(service: StudentService, id?: string) {
 		StudentId = id
 	}
 
-	try {
-		const Student = service.findById(StudentId)
-		console.log(inspect(Student, { depth: null, colors: true }))
-	} catch (err) {
-		console.error((err as Error).message)
-	}
+	await oraPromise(service.findById(StudentId), {
+		text: 'Finding student...',
+		spinner: 'bouncingBar',
+		failText: (err) => `Failed to find student ${StudentId}: ${err.message}`,
+		successText: chalk.green('Student found!'),
+	}).then((student) => {
+		console.log(inspect(student.toObject(), { depth: null, colors: true }))
+	})
 }

@@ -1,17 +1,11 @@
 import { inspect } from 'node:util'
 import chalk from 'chalk'
 import enquirer from 'enquirer'
+import { oraPromise } from 'ora'
 import { ZodError } from 'zod'
-import {
-	TeacherCreationSchema,
-	TeacherCreationType,
-	TeacherUpdateType,
-} from '../../../../domain/teacher/types.js'
+import { TeacherCreationSchema, TeacherCreationType, TeacherUpdateType } from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
-export async function updateTeacherHandler(
-	service: TeacherService,
-	id?: string,
-) {
+export async function updateTeacherHandler(service: TeacherService, id?: string) {
 	let TeacherId: Required<TeacherCreationType['id']>
 	if (id) {
 		TeacherId = id
@@ -30,7 +24,7 @@ export async function updateTeacherHandler(
 	const response = await enquirer.prompt<{ field: string }>({
 		type: 'select',
 		name: 'field',
-		message: 'What field do you want to update?',
+		message: chalk.cyanBright('What field do you want to update?'),
 		choices: [
 			{ name: 'firstName' },
 			{ name: 'surname' },
@@ -58,10 +52,8 @@ export async function updateTeacherHandler(
 				salary: response.salary,
 			})
 		).toObject()
-		console.log(
-			chalk.green.underline.bold('\nTeacher salary updated successfully!'),
-		)
-		return console.log(inspect(teacher, { depth: null, colors: true }))
+		console.log(chalk.green.underline.bold('\nTeacher salary updated successfully!'))
+		console.log(inspect(teacher, { depth: null, colors: true }))
 	}
 
 	switch (response.field) {
@@ -75,17 +67,12 @@ export async function updateTeacherHandler(
 				message: `New ${response.field}:`,
 			})
 
-			try {
-				const teacher = (await service.update(TeacherId, updated)).toObject()
-				console.log(
-					chalk.green.underline.bold('\nTeacher updated successfully!'),
-				)
-				console.log(inspect(teacher, { depth: null, colors: true }))
-			} catch (err) {
-				if (err instanceof ZodError) {
-					console.log(err.message)
-				}
-			}
+			await oraPromise(service.update(TeacherId, updated), {
+				text: 'Updating teacher...',
+				spinner: 'bouncingBar',
+				failText: (err) => chalk.red.underline.bold(err.message),
+				successText: chalk.green.underline.bold(`Teacher ${response.field} updated successfully!`),
+			}).then((teacher) => console.log(inspect(teacher.toObject(), { depth: null, colors: true })))
 		}
 	}
 }

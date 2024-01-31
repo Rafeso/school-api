@@ -1,7 +1,7 @@
 import { inspect } from 'util'
 import { ParentService } from '../../../../service/ParentService.js'
 
-export function listParentHandler(service: ParentService) {
-	const parents = service.listAll()
+export async function listParentHandler(service: ParentService) {
+	const parents = await service.listAll()
 	console.log(inspect(parents, { depth: null, colors: true }))
 }

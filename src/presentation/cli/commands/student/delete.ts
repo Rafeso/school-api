@@ -1,15 +1,10 @@
 import chalk from 'chalk'
 import enquirer from 'enquirer'
-import {
-	StudentCreationSchema,
-	StudentCreationType,
-} from '../../../../domain/student/types.js'
+import { oraPromise } from 'ora'
+import { StudentCreationSchema, StudentCreationType } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
 
-export async function deleteStudentHandler(
-	service: StudentService,
-	id?: StudentCreationType['id'],
-) {
+export async function deleteStudentHandler(service: StudentService, id?: StudentCreationType['id']) {
 	let StudentId: Required<StudentCreationType['id']>
 	if (id) {
 		StudentId = id
@@ -17,7 +12,7 @@ export async function deleteStudentHandler(
 		const { id } = await enquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
-			message: 'Parent id:',
+			message: 'Student id:',
 			validate(value) {
 				return StudentCreationSchema.shape.id.safeParse(value).success
 			},
@@ -25,6 +20,21 @@ export async function deleteStudentHandler(
 		StudentId = id
 	}
 
-	service.remove(StudentId)
-	console.log(chalk.yellow(`Student ${chalk.underline(StudentId)} deleted`))
+	const response = await enquirer.prompt<{ confirm: boolean }>({
+		type: 'confirm',
+		name: 'confirm',
+		message: `Are you sure you want to delete student: ${chalk.underline.bold.yellowBright(StudentId)} ?`,
+	})
+
+	if (response.confirm === false) {
+		console.log(chalk.yellow('\nStudent deletion aborted!'))
+		return
+	}
+
+	await oraPromise(service.remove(StudentId), {
+		text: 'Deleting student...',
+		spinner: 'bouncingBar',
+		failText: (err) => `Failed to delete student ${chalk.underline(StudentId)}: ${err.message}`,
+		successText: `Student ${chalk.underline(StudentId)} was deleted!`,
+	})
 }

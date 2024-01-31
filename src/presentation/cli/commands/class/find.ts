@@ -1,15 +1,10 @@
 import { inspect } from 'util'
 import enquirer from 'enquirer'
-import {
-	ClassCreationSchema,
-	ClassCreationType,
-} from '../../../../domain/class/types.js'
+import { oraPromise } from 'ora'
+import { ClassCreationSchema, ClassCreationType } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
 
-export async function findClassHandler(
-	service: ClassService,
-	id?: ClassCreationType['id'],
-) {
+export async function findClassHandler(service: ClassService, id?: ClassCreationType['id']) {
 	let classId: Required<ClassCreationType['id']>
 	if (id) {
 		classId = id
@@ -25,10 +20,12 @@ export async function findClassHandler(
 		classId = id
 	}
 
-	try {
-		const Class = service.findById(classId)
-		console.log(inspect(Class, { depth: null, colors: true }))
-	} catch (err) {
-		console.error((err as Error).message)
-	}
+	await oraPromise(service.findById(classId), {
+		text: 'Finding class...',
+		spinner: 'bouncingBar',
+		failText: (err) => `Failed to find class ${classId}: ${err.message}`,
+		successText: 'Class found!',
+	}).then((classFound) => {
+		console.log(inspect(classFound.toObject(), { depth: null, colors: true }))
+	})
 }

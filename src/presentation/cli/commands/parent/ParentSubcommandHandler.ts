@@ -1,15 +1,12 @@
+import chalk from 'chalk'
 import { ServiceList } from '../../../../app.js'
 import { createParentHandler } from './create.js'
 import { deleteParentHandler } from './delete.js'
 import { findParentHandler } from './find.js'
 import { listParentHandler } from './list.js'
-import { updateParentHandler } from './update.js'
+import { updateParentHandler } from './update/update.js'
 
-export function ParentSubcommandHandler(
-	services: ServiceList,
-	subcommand: string,
-	options?: { id?: string },
-) {
+export function ParentSubcommandHandler(services: ServiceList, subcommand: string, options?: { id?: string }) {
 	const service = services
 
 	switch (subcommand) {
@@ -29,6 +26,6 @@ export function ParentSubcommandHandler(
 			updateParentHandler(service.parent, options?.id)
 			break
 		default:
-			return console.log('Subcommand not found')
+			return console.log(chalk.red('Subcommand not found try to run "school parent --help" to list all subcommands'))
 	}
 }

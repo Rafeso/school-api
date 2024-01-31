@@ -1,12 +1,8 @@
 import { inspect } from 'node:util'
 import chalk from 'chalk'
 import enquirer from 'enquirer'
-import { ZodError } from 'zod'
-import {
-	ClassCreationSchema,
-	ClassCreationType,
-	ClassUpdateType,
-} from '../../../../domain/class/types.js'
+import { oraPromise } from 'ora'
+import { ClassCreationSchema, ClassCreationType, ClassUpdateType } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
 export async function updateClassHandler(service: ClassService, id?: string) {
 	let ClassId: Required<ClassCreationType['id']>
@@ -37,13 +33,10 @@ export async function updateClassHandler(service: ClassService, id?: string) {
 		message: `New ${response.field}:`,
 	})
 
-	try {
-		const Class = (await service.update(ClassId, updated)).toObject()
-		console.log(chalk.green.underline.bold('\nClass updated successfully!'))
-		console.log(inspect(Class, { depth: null, colors: true }))
-	} catch (err) {
-		if (err instanceof ZodError) {
-			console.error(err.message)
-		}
-	}
+	await oraPromise(service.update(ClassId, updated), {
+		text: `Updating ${response.field}...`,
+		failText: (err) => `Failed to update ${response.field}: ${err.message}`,
+		spinner: 'bouncingBar',
+		successText: `Updated class ${response.field} successfully!`,
+	}).then((updated) => console.log(inspect(updated, { depth: null, colors: true })))
 }

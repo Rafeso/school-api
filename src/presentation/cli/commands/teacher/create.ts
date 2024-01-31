@@ -1,5 +1,7 @@
+import { inspect } from 'node:util'
 import chalk from 'chalk'
 import enquirer from 'enquirer'
+import { oraPromise } from 'ora'
 import { Teacher } from '../../../../domain/teacher/Teacher.js'
 import { TeacherCreationSchema } from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
@@ -92,8 +94,12 @@ export async function createTeacherHandler(service: TeacherService) {
 		major: response.major,
 	})
 
-	service.create(teacher.toObject())
-	console.log(
-		chalk.green(`Teacher ${chalk.underline(teacher.id)} created successfully!`),
-	)
+	await oraPromise(service.create(teacher.toObject()), {
+		text: chalk.cyan('Creating teacher...'),
+		spinner: 'bouncingBar',
+		failText(err) {
+			return chalk.red(`Failed to create teacher ${chalk.underline.bold(teacher.id)}: ${err.message}`)
+		},
+		successText: chalk.green('Teacher created!'),
+	}).then((teacher) => console.log(inspect(teacher.toObject(), { depth: null, colors: true })))
 }

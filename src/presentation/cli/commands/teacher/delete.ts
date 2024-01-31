@@ -1,15 +1,10 @@
 import chalk from 'chalk'
 import enquirer from 'enquirer'
-import {
-	TeacherCreationSchema,
-	TeacherCreationType,
-} from '../../../../domain/teacher/types.js'
+import { oraPromise } from 'ora'
+import { TeacherCreationSchema, TeacherCreationType } from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
 
-export async function deleteTeacherHandler(
-	service: TeacherService,
-	id?: TeacherCreationType['id'],
-) {
+export async function deleteTeacherHandler(service: TeacherService, id?: TeacherCreationType['id']) {
 	let teacherId: Required<TeacherCreationType['id']>
 	if (id) {
 		teacherId = id
@@ -25,8 +20,21 @@ export async function deleteTeacherHandler(
 		teacherId = id
 	}
 
-	service.remove(teacherId)
-	console.log(
-		chalk.yellow(`Teacher: ${chalk.underline(teacherId)} was deleted!`),
-	)
+	const response = await enquirer.prompt<{ confirm: boolean }>({
+		type: 'confirm',
+		name: 'confirm',
+		message: `Are you sure you want to delete teacher: ${chalk.underline.bold.yellowBright(teacherId)} ?`,
+	})
+
+	if (response.confirm === false) {
+		console.log(chalk.yellow('\nTeacher deletion aborted!'))
+		return
+	}
+
+	await oraPromise(service.remove(teacherId), {
+		text: chalk.yellow('Deleting teacher...'),
+		spinner: 'bouncingBar',
+		failText: (err) => chalk.red(`Failed to delete teacher ${chalk.underline(teacherId)}: ${err.message}`),
+		successText: chalk.green(`Teacher ${chalk.underline(teacherId)} was deleted!`),
+	})
 }

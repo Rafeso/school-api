@@ -4,13 +4,9 @@ import { createStudentHandler } from './create.js'
 import { deleteStudentHandler } from './delete.js'
 import { findStudentHandler } from './find.js'
 import { listStudentHandler } from './list.js'
-import { updateStudentHandler } from './update.js'
+import { updateStudentHandler } from './update/update.js'
 
-export function StudentSubcommandHandler(
-	services: ServiceList,
-	subcommand: string,
-	options?: { Id?: string },
-) {
+export function StudentSubcommandHandler(services: ServiceList, subcommand: string, options?: { id?: string }) {
 	const studentService = services.student
 
 	switch (subcommand) {
@@ -18,18 +14,18 @@ export function StudentSubcommandHandler(
 			createStudentHandler(studentService)
 			break
 		case 'delete':
-			deleteStudentHandler(studentService, options?.Id)
+			deleteStudentHandler(studentService, options?.id)
 			break
 		case 'find':
-			findStudentHandler(studentService, options?.Id)
+			findStudentHandler(studentService, options?.id)
 			break
 		case 'list':
 			listStudentHandler(studentService)
 			break
 		case 'update':
-			updateStudentHandler(studentService, options?.Id)
+			updateStudentHandler(studentService, options?.id)
 			break
 		default:
-			return console.log(chalk.red('Subcommand not found'))
+			return console.log(chalk.red('Subcommand not found try to run "school student --help" to list all subcommands'))
 	}
 }

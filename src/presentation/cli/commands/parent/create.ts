@@ -1,5 +1,7 @@
+import { inspect } from 'util'
 import chalk from 'chalk'
 import enquirer from 'enquirer'
+import { oraPromise } from 'ora'
 import { Parent } from '../../../../domain/parent/Parent.js'
 import { ParentCreationSchema } from '../../../../domain/parent/types.js'
 import { AddressSchema } from '../../../../domain/types.js'
@@ -107,8 +109,10 @@ export async function createParentHandler(service: ParentService) {
 		document: responses.document,
 	})
 
-	service.create(parent)
-	console.log(
-		chalk.green(`Created parent with id: ${chalk.underline(parent.id)}`),
-	)
+	await oraPromise(service.create(parent), {
+		text: 'Creating parent...',
+		spinner: 'bouncingBar',
+		failText: (err) => `Failed to create parent: ${err.message}`,
+		successText: 'Parent created!',
+	}).then((parent) => console.log(inspect(parent, { depth: null, colors: true })))
 }
