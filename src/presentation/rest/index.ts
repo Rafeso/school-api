@@ -1,8 +1,5 @@
 import fastify from 'fastify'
-import {
-	serializerCompiler,
-	validatorCompiler,
-} from 'fastify-type-provider-zod'
+import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
 import { ZodError, z } from 'zod'
 import { ServiceList } from '../../app.js'
 import { AppConfig } from '../../config.js'
@@ -13,6 +10,15 @@ import { teacherRouterFactory } from './teacher.js'
 
 export const onlyIdParam = {
 	schema: { params: z.object({ id: z.string().uuid() }) },
+}
+
+export const StudentAndParentId = {
+	schema: {
+		params: z.object({
+			id: z.string().uuid(),
+			parentId: z.string().uuid(),
+		}),
+	},
 }
 
 export async function WebLayer(config: AppConfig, services: ServiceList) {
@@ -39,10 +45,9 @@ export async function WebLayer(config: AppConfig, services: ServiceList) {
 	app.register(parentRouterFactory(services.parent, services.student), {
 		prefix: '/v1/parents',
 	})
-	app.register(
-		teacherRouterFactory(services.teacher, services.class, services.student),
-		{ prefix: '/v1/teachers' },
-	)
+	app.register(teacherRouterFactory(services.teacher, services.class, services.student), {
+		prefix: '/v1/teachers',
+	})
 	app.register(studentRouterFactory(services.student, services.class), {
 		prefix: '/v1/students',
 	})

@@ -1,57 +1,31 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
-import {
-	ClassCreationSchema,
-	ClassUpdateSchema,
-} from '../../domain/class/types.js'
+import { ClassCreationSchema, ClassUpdateSchema } from '../../domain/class/types.js'
 import { ClassService } from '../../service/ClassService.js'
 import { TeacherService } from '../../service/TeacherService.js'
 import { onlyIdParam } from './index.js'
 
-export function classRouterFactory(
-	classService: ClassService,
-	teacherService: TeacherService,
-) {
-	return (
-		app: FastifyInstance,
-		_: FastifyPluginOptions,
-		done: (err?: Error) => void,
-	) => {
+export function classRouterFactory(classService: ClassService, teacherService: TeacherService) {
+	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
-		router.post(
-			'/',
-			{ schema: { body: ClassCreationSchema.omit({ id: true }) } },
-			async (req, res) => {
-				const classEntity = (await classService.create(req.body)).toObject()
-				const teacherEntity = (
-					await teacherService.findById(classEntity.teacher)
-				).toObject()
+		router.post('/', { schema: { body: ClassCreationSchema.omit({ id: true }) } }, async (req, res) => {
+			const classEntity = (await classService.create(req.body)).toObject()
+			const teacherEntity = (await teacherService.findById(classEntity.teacher)).toObject()
 
-				return res.status(201).send({ classEntity, teacherEntity })
-			},
-		)
+			return res.status(201).send({ classEntity, teacherEntity })
+		})
 
 		router.get('/', async (_, res) => {
 			const classEntities = await classService.listAll()
 
-			return res.send(
-				classEntities.map(async (Class) => {
-					const teacher = await teacherService.findById(Class.teacher)
-					return {
-						...Class.toObject(),
-						teacher: teacher.toObject(),
-					}
-				}),
-			)
+			return res.send(classEntities.map(async (Class) => Class.toObject()))
 		})
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
 			const classEntity = (await classService.findById(id)).toObject()
-			const teacher = (
-				await teacherService.findById(classEntity.teacher)
-			).toObject()
+			const teacher = (await teacherService.findById(classEntity.teacher)).toObject()
 
 			return res.send({
 				classEntity,

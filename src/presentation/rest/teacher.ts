@@ -1,10 +1,7 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { Student } from '../../domain/student/Student.js'
-import {
-	TeacherCreationSchema,
-	TeacherUpdateSchema,
-} from '../../domain/teacher/types.js'
+import { TeacherCreationSchema, TeacherUpdateSchema } from '../../domain/teacher/types.js'
 import { ClassService } from '../../service/ClassService.js'
 import { StudentService } from '../../service/StudentService.js'
 import { TeacherService } from '../../service/TeacherService.js'
@@ -15,22 +12,14 @@ export function teacherRouterFactory(
 	classService: ClassService,
 	studentService: StudentService,
 ) {
-	return (
-		app: FastifyInstance,
-		_: FastifyPluginOptions,
-		done: (err?: Error) => void,
-	) => {
+	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
-		router.post(
-			'/',
-			{ schema: { body: TeacherCreationSchema.omit({ id: true }) } },
-			async (req, res) => {
-				const teacherEntity = await teacherService.create(req.body)
+		router.post('/', { schema: { body: TeacherCreationSchema.omit({ id: true }) } }, async (req, res) => {
+			const teacherEntity = await teacherService.create(req.body)
 
-				return res.status(201).send(teacherEntity.toObject())
-			},
-		)
+			return res.status(201).send(teacherEntity.toObject())
+		})
 
 		router.get('/', async (_, res) => {
 			const teachers = await teacherService.listAll()
@@ -39,6 +28,7 @@ export function teacherRouterFactory(
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
+			const classEntity = await classService.listBy('teacher', id)
 
 			const teacherEntity = await teacherService.findById(id)
 			return res.send(teacherEntity.toObject())
@@ -75,9 +65,7 @@ export function teacherRouterFactory(
 				totalStudents = [...totalStudents, ...students]
 			}
 
-			return res.send(
-				totalStudents.map((studentEntity) => studentEntity.toObject()),
-			)
+			return res.send(totalStudents.map((studentEntity) => studentEntity.toObject()))
 		})
 
 		router.get('/:id/classes', onlyIdParam, async (req, res) => {

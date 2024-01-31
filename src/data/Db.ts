@@ -24,11 +24,11 @@ export abstract class Database<S extends SerializableStatic, I extends Serializa
 
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	async listBy<L extends keyof I>(property: L, value: I[any]) {
-		const query = { [property]: value }
+		const command = { [property]: value }
 		if (Array.isArray(value)) {
-			query[property as string] = { $in: value }
+			command[property as string] = { $in: value }
 		}
-		const documents = await this.db.find(query).toArray()
+		const documents = await this.db.find(command).toArray()
 		return documents.map((document) => this.dbEntity.fromObject(document))
 	}
 
@@ -36,8 +36,8 @@ export abstract class Database<S extends SerializableStatic, I extends Serializa
 		await this.db.deleteOne({ id })
 	}
 
-	save(entity: I) {
-		return this.db.replaceOne({ id: entity.id }, entity.toObject(), {
+	async save(entity: I) {
+		return await this.db.replaceOne({ id: entity.id }, entity.toObject(), {
 			upsert: true,
 		})
 	}
