@@ -2,10 +2,7 @@ import { Database } from '../data/Db.js'
 import { NotFoundError } from '../domain/@errors/NotFound.js'
 import { Serializable, SerializableStatic } from '../domain/types.js'
 
-export abstract class Service<
-	S extends SerializableStatic,
-	I extends Serializable = InstanceType<S>,
-> {
+export abstract class Service<S extends SerializableStatic, I extends Serializable = InstanceType<S>> {
 	constructor(protected repository: Database<S>) {}
 
 	async findById(id: string) {

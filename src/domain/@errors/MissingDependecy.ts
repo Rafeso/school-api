@@ -9,9 +9,7 @@ export class MissingDependecyError extends BaseError {
 		dependent: SerializableStatic,
 	) {
 		super(
-			`${searched.name} could not be found in ${
-				dependent.name
-			} with locator ${JSON.stringify(locator)}`,
+			`${searched.name} could not be found in ${dependent.name} with locator ${JSON.stringify(locator)}`,
 			searched,
 			{
 				code: 'DEPENDENCY_LOCK',

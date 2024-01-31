@@ -8,11 +8,7 @@ interface DomainErrosOptions extends ErrorOptions {
 export abstract class BaseError extends Error {
 	readonly code: string
 	readonly status: number
-	constructor(
-		message: string,
-		entity: SerializableStatic,
-		options?: DomainErrosOptions,
-	) {
+	constructor(message: string, entity: SerializableStatic, options?: DomainErrosOptions) {
 		super(message, options)
 		this.name = `${entity.name}Error`
 		this.code = options?.code ?? 'DOMAIN ERROR'

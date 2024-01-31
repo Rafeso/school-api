@@ -25,5 +25,7 @@ export type StudentCreationType = z.infer<typeof StudentCreationSchema>
 export const StudentUpdateSchema = StudentCreationSchema.partial().omit({
 	id: true,
 	parents: true,
+	allergies: true,
+	medications: true,
 })
 export type StudentUpdateType = z.infer<typeof StudentUpdateSchema>
