@@ -13,7 +13,7 @@ export async function updatePhone(service: ParentService, id: string) {
 		message: 'New phones:',
 	})
 
-	await oraPromise(service.addPhone(id, [response.phones]), {
+	await oraPromise(service.updatePhone(id, [response.phones]), {
 		text: 'Updating parent phones...',
 		spinner: 'bouncingBar',
 		failText: (err) => `Failed to update parent phones: ${err.message}`,
@@ -31,7 +31,7 @@ export async function updateEmail(service: ParentService, id: string) {
 		},
 	})
 
-	await oraPromise(service.addEmail(id, [response.emails]), {
+	await oraPromise(service.updateEmail(id, [response.emails]), {
 		text: 'Updating parent emails...',
 		spinner: 'bouncingBar',
 		failText: (err) => `Failed to update parent emails: ${err.message}`,
@@ -81,7 +81,7 @@ export async function updateAddress(service: ParentService, id: string) {
 	])
 
 	await oraPromise(
-		service.addAddres(id, [
+		service.updateAddress(id, [
 			{
 				country: response.country,
 				city: response.city,
