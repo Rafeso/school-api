@@ -2,9 +2,9 @@
 	"name": "school-api",
 	"version": "1.0.0",
 	"description": "",
-	"main": "build/app.js",
+	"main": "./build/app.js",
 	"bin": {
-		"school": "build/app.js"
+		"school": "./build/app.js"
 	},
 	"type": "module",
 	"engines": {
@@ -14,7 +14,7 @@
 		"prestart": "npm run build",
 		"start": "npm run infra:up && IS_WEB=1 node --env-file=.env build/app.js",
 		"dev": "npm run infra:up && IS_WEB=1 tsx watch src/app.ts",
-		"dev:cli": "npm run infra:up && tsx src/app.ts",
+		"dev:cli": "tsx src/app.ts",
 		"build": "tsc",
 		"fix": "npx @biomejs/biome check --apply src",
 		"prepare": "husky install",
@@ -30,15 +30,15 @@
 		"commander": "^11.1.0",
 		"enquirer": "^2.4.1",
 		"fastify": "^4.25.2",
-		"fastify-type-provider-zod": "^1.1.9",
 		"mongodb": "^6.3.0",
+		"ora": "^8.0.1",
+		"chalk": "^5.3.0",
 		"zod": "^3.22.4"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.5.1",
 		"@types/node": "^20.11.5",
-		"bun-types": "^1.0.25",
-		"chalk": "^5.3.0",
+		"fastify-type-provider-zod": "^1.1.9",
 		"husky": "^8.0.3",
 		"lint-staged": "^15.2.0",
 		"tsx": "^4.7.0",
