@@ -5,6 +5,7 @@ import { oraPromise } from 'ora'
 import { ParentCreationSchema, ParentCreationType, ParentUpdateType } from '../../../../../domain/parent/types.js'
 import { ParentService } from '../../../../../service/ParentService.js'
 import { updateAddress, updateEmail, updatePhone } from './propmt.js'
+
 export async function updateParentHandler(service: ParentService, id?: string) {
 	let ParentId: Required<ParentCreationType['id']>
 	if (id) {

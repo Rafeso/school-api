@@ -5,6 +5,7 @@ import { oraPromise } from 'ora'
 import { StudentCreationSchema, StudentCreationType, StudentUpdateType } from '../../../../../domain/student/types.js'
 import { StudentService } from '../../../../../service/StudentService.js'
 import { updateAllergies, updateMedications, updateStudentParentsHandler } from './prompt.js'
+
 export async function updateStudentHandler(service: StudentService, id?: string) {
 	let StudentId: Required<StudentCreationType['id']>
 	if (id) {
