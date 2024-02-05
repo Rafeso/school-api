@@ -1,12 +1,12 @@
 import { inspect } from 'util'
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { StudentCreationSchema } from '../../../../../domain/student/types.js'
 import { StudentService } from '../../../../../service/StudentService.js'
 
 export async function updateAllergies(id: string, service: StudentService) {
-	const response = await enquirer.prompt<{ allergies: string }>({
+	const response = await inquirer.prompt<{ allergies: string }>({
 		type: 'input',
 		name: 'allergies',
 		message: 'New allergies:',
@@ -24,7 +24,7 @@ export async function updateAllergies(id: string, service: StudentService) {
 }
 
 export async function updateMedications(id: string, service: StudentService) {
-	const response = await enquirer.prompt<{ medications: string }>({
+	const response = await inquirer.prompt<{ medications: string }>({
 		type: 'input',
 		name: 'medications',
 		message: 'New medications:',
@@ -42,7 +42,7 @@ export async function updateMedications(id: string, service: StudentService) {
 }
 
 export async function linkParent(service: StudentService, studentId: string) {
-	const response = await enquirer.prompt<{ parents: string }>({
+	const response = await inquirer.prompt<{ parents: string }>({
 		type: 'input',
 		name: 'parents',
 		message: 'Id of parent to add:',
@@ -56,11 +56,11 @@ export async function linkParent(service: StudentService, studentId: string) {
 		spinner: 'bouncingBar',
 		failText: (err) => `Failed to link parents: ${err.message}`,
 		successText: chalk.green.underline.bold('Student parents updated successfully!'),
-	}).then((Student) => console.log(inspect(Student.toObject(), { depth: null, colors: true })))
+	}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
 }
 
 export async function unlinkParent(service: StudentService, studentId: string) {
-	const response = await enquirer.prompt<{ parents: string }>({
+	const response = await inquirer.prompt<{ parents: string }>({
 		type: 'input',
 		name: 'parents',
 		message: 'Id of parent to remove:',
@@ -78,8 +78,8 @@ export async function unlinkParent(service: StudentService, studentId: string) {
 }
 
 export async function updateStudentParentsHandler(StudentId: string, service: StudentService) {
-	const response = await enquirer.prompt<{ field: string }>({
-		type: 'select',
+	const response = await inquirer.prompt<{ field: string }>({
+		type: 'list',
 		name: 'field',
 		message: 'What action do you want to perform?',
 		choices: [{ name: 'Add new parent' }, { name: 'Remove parent' }],

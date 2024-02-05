@@ -1,13 +1,13 @@
 import { inspect } from 'node:util'
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { Teacher } from '../../../../domain/teacher/Teacher.js'
 import { TeacherCreationSchema } from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
 
 export async function createTeacherHandler(service: TeacherService) {
-	const response = await enquirer.prompt<{
+	const response = await inquirer.prompt<{
 		firstName: string
 		surname: string
 		document: string
@@ -66,7 +66,7 @@ export async function createTeacherHandler(service: TeacherService) {
 			},
 		},
 		{
-			type: 'numeral',
+			type: 'number',
 			name: 'salary',
 			message: 'Salary:',
 			validate(value) {

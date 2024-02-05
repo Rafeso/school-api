@@ -1,6 +1,6 @@
 import { inspect } from 'util'
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { StudentCreationSchema, StudentCreationType } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
@@ -10,7 +10,7 @@ export async function findStudentHandler(service: StudentService, id?: string) {
 	if (id) {
 		StudentId = id
 	} else {
-		const { id } = await enquirer.prompt<{ id: string }>({
+		const { id } = await inquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
 			message: 'Student id:',

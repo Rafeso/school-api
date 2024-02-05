@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { ParentCreationSchema, ParentCreationType } from '../../../../domain/parent/types.js'
 import { ParentService } from '../../../../service/ParentService.js'
@@ -15,7 +15,7 @@ export async function deleteParentHandler(
 	if (id) {
 		parentId = id
 	} else {
-		const { id } = await enquirer.prompt<{ id: string }>({
+		const { id } = await inquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
 			message: 'Parent id:',
@@ -33,7 +33,7 @@ export async function deleteParentHandler(
 		return
 	}
 
-	const response = await enquirer.prompt<{ confirm: boolean }>({
+	const response = await inquirer.prompt<{ confirm: boolean }>({
 		type: 'confirm',
 		name: 'confirm',
 		message: `Are you sure you want to delete parent: ${chalk.underline.bold.yellowBright(parentId)} ?`,

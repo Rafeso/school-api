@@ -1,6 +1,6 @@
 import { inspect } from 'node:util'
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { ParentCreationSchema, ParentCreationType, ParentUpdateType } from '../../../../../domain/parent/types.js'
 import { ParentService } from '../../../../../service/ParentService.js'
@@ -11,7 +11,7 @@ export async function updateParentHandler(service: ParentService, id?: string) {
 	if (id) {
 		ParentId = id
 	} else {
-		const { id } = await enquirer.prompt<{ id: string }>({
+		const { id } = await inquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
 			message: 'Parent id:',
@@ -22,8 +22,8 @@ export async function updateParentHandler(service: ParentService, id?: string) {
 		ParentId = id
 	}
 
-	const response = await enquirer.prompt<{ field: string }>({
-		type: 'select',
+	const response = await inquirer.prompt<{ field: string }>({
+		type: 'list',
 		name: 'field',
 		message: 'What field do you want to update?',
 		choices: [
@@ -47,7 +47,7 @@ export async function updateParentHandler(service: ParentService, id?: string) {
 			updateAddress(service, ParentId)
 			break
 		default: {
-			const updated = await enquirer.prompt<ParentUpdateType>({
+			const updated = await inquirer.prompt<ParentUpdateType>({
 				type: 'input',
 				name: response.field,
 				message: `New ${response.field}:`,

@@ -1,13 +1,13 @@
 import { inspect } from 'node:util'
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { Student } from '../../../../domain/student/Student.js'
 import { StudentCreationSchema } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
 
 export async function createStudentHandler(service: StudentService) {
-	const response = await enquirer.prompt<{
+	const response = await inquirer.prompt<{
 		firstName: string
 		surname: string
 		birthDate: string

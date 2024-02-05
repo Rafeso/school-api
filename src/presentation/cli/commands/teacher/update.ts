@@ -1,6 +1,6 @@
 import { inspect } from 'node:util'
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { ZodError } from 'zod'
 import { TeacherCreationSchema, TeacherCreationType, TeacherUpdateType } from '../../../../domain/teacher/types.js'
@@ -10,7 +10,7 @@ export async function updateTeacherHandler(service: TeacherService, id?: string)
 	if (id) {
 		TeacherId = id
 	} else {
-		const { id } = await enquirer.prompt<{ id: string }>({
+		const { id } = await inquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
 			message: 'Teacher id:',
@@ -21,8 +21,8 @@ export async function updateTeacherHandler(service: TeacherService, id?: string)
 		TeacherId = id
 	}
 
-	const response = await enquirer.prompt<{ field: string }>({
-		type: 'select',
+	const response = await inquirer.prompt<{ field: string }>({
+		type: 'list',
 		name: 'field',
 		message: chalk.cyanBright('What field do you want to update?'),
 		choices: [
@@ -38,8 +38,8 @@ export async function updateTeacherHandler(service: TeacherService, id?: string)
 	})
 
 	async function updateSalary(id: string) {
-		const response = await enquirer.prompt<{ salary: number }>({
-			type: 'numeral',
+		const response = await inquirer.prompt<{ salary: number }>({
+			type: 'number',
 			name: 'salary',
 			message: 'New salary:',
 			validate(value) {
@@ -47,13 +47,12 @@ export async function updateTeacherHandler(service: TeacherService, id?: string)
 			},
 		})
 
-		const teacher = (
-			await service.update(id, {
-				salary: response.salary,
-			})
-		).toObject()
+		const teacher = await service.update(id, {
+			salary: response.salary,
+		})
+
 		console.log(chalk.green.underline.bold('\nTeacher salary updated successfully!'))
-		console.log(inspect(teacher, { depth: null, colors: true }))
+		console.log(inspect(teacher.toObject(), { depth: null, colors: true }))
 	}
 
 	switch (response.field) {
@@ -61,7 +60,7 @@ export async function updateTeacherHandler(service: TeacherService, id?: string)
 			updateSalary(TeacherId)
 			break
 		default: {
-			const updated = await enquirer.prompt<TeacherUpdateType>({
+			const updated = await inquirer.prompt<TeacherUpdateType>({
 				type: 'input',
 				name: response.field,
 				message: `New ${response.field}:`,

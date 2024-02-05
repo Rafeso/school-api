@@ -1,5 +1,5 @@
 import { inspect } from 'util'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { ParentCreationSchema, ParentCreationType } from '../../../../domain/parent/types.js'
 import { ParentService } from '../../../../service/ParentService.js'
@@ -9,7 +9,7 @@ export async function findParentHandler(service: ParentService, id?: string) {
 	if (id) {
 		parentId = id
 	} else {
-		const { id } = await enquirer.prompt<{ id: string }>({
+		const { id } = await inquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
 			message: 'Parent id:',

@@ -1,5 +1,5 @@
 import { inspect } from 'util'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { ClassCreationSchema, ClassCreationType } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
@@ -9,7 +9,7 @@ export async function findClassHandler(service: ClassService, id?: ClassCreation
 	if (id) {
 		classId = id
 	} else {
-		const { id } = await enquirer.prompt<{ id: string }>({
+		const { id } = await inquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
 			message: 'Class id:',

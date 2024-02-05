@@ -1,13 +1,13 @@
 import { inspect } from 'util'
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { ParentCreationSchema } from '../../../../../domain/parent/types.js'
 import { AddressSchema } from '../../../../../domain/types.js'
 import { ParentService } from '../../../../../service/ParentService.js'
 
 export async function updatePhone(service: ParentService, id: string) {
-	const response = await enquirer.prompt<{ phones: string }>({
+	const response = await inquirer.prompt<{ phones: string }>({
 		type: 'input',
 		name: 'phones',
 		message: 'New phones:',
@@ -22,7 +22,7 @@ export async function updatePhone(service: ParentService, id: string) {
 }
 
 export async function updateEmail(service: ParentService, id: string) {
-	const response = await enquirer.prompt<{ emails: string }>({
+	const response = await inquirer.prompt<{ emails: string }>({
 		type: 'input',
 		name: 'emails',
 		message: 'New emails:',
@@ -40,7 +40,7 @@ export async function updateEmail(service: ParentService, id: string) {
 }
 
 export async function updateAddress(service: ParentService, id: string) {
-	const response = await enquirer.prompt<{
+	const response = await inquirer.prompt<{
 		country: string
 		city: string
 		street: string

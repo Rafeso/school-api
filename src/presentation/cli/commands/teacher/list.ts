@@ -3,5 +3,10 @@ import { TeacherService } from '../../../../service/TeacherService.js'
 
 export async function listTeacherHandler(service: TeacherService) {
 	const teachers = await service.listAll()
-	console.log(inspect(teachers, { depth: null, colors: true }))
+	console.log(
+		inspect(
+			teachers.map((t) => t.toObject()),
+			{ depth: null, colors: true },
+		),
+	)
 }

@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { ClassCreationSchema, ClassCreationType } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
@@ -9,7 +9,7 @@ export async function deleteClassHandler(service: ClassService, id?: ClassCreati
 	if (id) {
 		classId = id
 	} else {
-		const { id } = await enquirer.prompt<{ id: string }>({
+		const { id } = await inquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
 			message: 'Class id:',
@@ -20,7 +20,7 @@ export async function deleteClassHandler(service: ClassService, id?: ClassCreati
 		classId = id
 	}
 
-	const response = await enquirer.prompt<{ confirm: boolean }>({
+	const response = await inquirer.prompt<{ confirm: boolean }>({
 		type: 'confirm',
 		name: 'confirm',
 		message: `Are you sure you want to delete class: ${chalk.underline.bold.yellowBright(classId)} ?`,

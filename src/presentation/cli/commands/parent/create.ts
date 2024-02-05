@@ -1,6 +1,6 @@
 import { inspect } from 'util'
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { Parent } from '../../../../domain/parent/Parent.js'
 import { ParentCreationSchema } from '../../../../domain/parent/types.js'
@@ -8,7 +8,7 @@ import { AddressSchema } from '../../../../domain/types.js'
 import { ParentService } from '../../../../service/ParentService.js'
 
 export async function createParentHandler(service: ParentService) {
-	const responses = await enquirer.prompt<{
+	const responses = await inquirer.prompt<{
 		firstName: string
 		surname: string
 		phone: string

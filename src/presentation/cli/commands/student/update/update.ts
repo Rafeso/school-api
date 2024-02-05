@@ -1,6 +1,6 @@
 import { inspect } from 'node:util'
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { StudentCreationSchema, StudentCreationType, StudentUpdateType } from '../../../../../domain/student/types.js'
 import { StudentService } from '../../../../../service/StudentService.js'
@@ -11,7 +11,7 @@ export async function updateStudentHandler(service: StudentService, id?: string)
 	if (id) {
 		StudentId = id
 	} else {
-		const { id } = await enquirer.prompt<{ id: string }>({
+		const { id } = await inquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
 			message: 'Student id:',
@@ -22,8 +22,8 @@ export async function updateStudentHandler(service: StudentService, id?: string)
 		StudentId = id
 	}
 
-	const response = await enquirer.prompt<{ field: string }>({
-		type: 'select',
+	const response = await inquirer.prompt<{ field: string }>({
+		type: 'list',
 		name: 'field',
 		message: 'What field do you want to update?',
 		choices: [
@@ -51,7 +51,7 @@ export async function updateStudentHandler(service: StudentService, id?: string)
 			await updateAllergies(StudentId, service)
 			break
 		default: {
-			const updated = await enquirer.prompt<StudentUpdateType>({
+			const updated = await inquirer.prompt<StudentUpdateType>({
 				type: 'input',
 				name: response.field,
 				message: `New ${response.field}:`,
@@ -62,7 +62,7 @@ export async function updateStudentHandler(service: StudentService, id?: string)
 				spinner: 'bouncingBar',
 				failText: (err) => `Failed to update student ${chalk.underline(StudentId)}: ${err.message}`,
 				successText: chalk.green.underline.bold(`\nStudent ${response.field} updated successfully!`),
-			}).then((updated) => console.log(inspect(updated, { depth: null, colors: true })))
+			}).then((updated) => console.log(inspect(updated.toObject(), { depth: null, colors: true })))
 		}
 	}
 }

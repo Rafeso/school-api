@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { TeacherCreationSchema, TeacherCreationType } from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
@@ -9,7 +9,7 @@ export async function deleteTeacherHandler(service: TeacherService, id?: Teacher
 	if (id) {
 		teacherId = id
 	} else {
-		const { id } = await enquirer.prompt<{ id: string }>({
+		const { id } = await inquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
 			message: 'Teacher id:',
@@ -20,7 +20,7 @@ export async function deleteTeacherHandler(service: TeacherService, id?: Teacher
 		teacherId = id
 	}
 
-	const response = await enquirer.prompt<{ confirm: boolean }>({
+	const response = await inquirer.prompt<{ confirm: boolean }>({
 		type: 'confirm',
 		name: 'confirm',
 		message: `Are you sure you want to delete teacher: ${chalk.underline.bold.yellowBright(teacherId)} ?`,

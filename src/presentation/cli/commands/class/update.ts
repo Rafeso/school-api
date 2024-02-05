@@ -1,6 +1,6 @@
 import { inspect } from 'node:util'
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { ClassCreationSchema, ClassCreationType, ClassUpdateType } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
@@ -9,7 +9,7 @@ export async function updateClassHandler(service: ClassService, id?: string) {
 	if (id) {
 		ClassId = id
 	} else {
-		const { id } = await enquirer.prompt<{ id: string }>({
+		const { id } = await inquirer.prompt<{ id: string }>({
 			type: 'input',
 			name: 'id',
 			message: 'Class id:',
@@ -20,14 +20,14 @@ export async function updateClassHandler(service: ClassService, id?: string) {
 		ClassId = id
 	}
 
-	const response = await enquirer.prompt<{ field: string }>({
-		type: 'select',
+	const response = await inquirer.prompt<{ field: string }>({
+		type: 'list',
 		name: 'field',
 		message: 'What field do you want to update?',
 		choices: [{ name: 'code' }, { name: 'teacher' }],
 	})
 
-	const updated = await enquirer.prompt<ClassUpdateType>({
+	const updated = await inquirer.prompt<ClassUpdateType>({
 		type: 'input',
 		name: response.field,
 		message: `New ${response.field}:`,

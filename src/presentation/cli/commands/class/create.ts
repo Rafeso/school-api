@@ -1,13 +1,13 @@
 import { inspect } from 'node:util'
 import chalk from 'chalk'
-import enquirer from 'enquirer'
+import inquirer from 'inquirer'
 import { oraPromise, spinners } from 'ora'
 import { Class } from '../../../../domain/class/Class.js'
 import { ClassCreationSchema } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
 
 export async function createClassHandler(service: ClassService) {
-	const response = await enquirer.prompt<{ code: string; teacher: string }>([
+	const response = await inquirer.prompt<{ code: string; teacher: string }>([
 		{
 			name: 'code',
 			type: 'input',
