@@ -18,6 +18,14 @@
 
   Certifique-se de ter o NodeJs na versão >=20.*
   ```shell
+  # Dica: Se você estiver no windows e usando o NVM(Node Version Manager)
+  # Crie um arquivo .nvmrc e fixe a versão do node no seu workspace
+  # para evitar usar uma versão muito antiga sem suporte ao projeto.
+  $ echo "20.11.0" > .nvmrc
+  # Se você estiver no linux utilizando o asdf, crie um arquivo .tool-versions.
+  $ echo "nodejs 20.11.0" > .tool-versions
+  # Se você não tiver essas versões instaladas basta executar nvm install ou asdf install no terminal
+  # para instalar a versão fixada no arquivo de configuração.
   $ node -v
     v20.11.0
   ```
