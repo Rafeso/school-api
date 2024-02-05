@@ -27,17 +27,17 @@
   $ docker -v
     Docker version 25.0.2, build 29cf629
   
-  // Execute o script para iniciar a infraestrutura do projeto e criar um container com a imagem do banco de dados
+  # Execute o script para iniciar a infraestrutura do projeto e criar um container com a imagem do banco de dados
   $ npm run infra:up
 
-  // Executando a camada rest
-  // A aplicação ira iniciar na porta 3000 por padrão. Para mudar a porta configue o arquivo .env
+  # Executando a camada rest
+  # A aplicação ira iniciar na porta 3000 por padrão. Para mudar a porta configue o arquivo .env
   $ npm run dev:rest
 
-  // Executando a camada CLI
+  # Executando a camada CLI
   $ npm run dev:cli
-  // ou execute o binário
-  // OBS: para conseguir executar o binário será necessário executar o comando de build antes
+  # ou execute o binário
+  # OBS: para conseguir executar o binário será necessário executar o comando de build antes
   $ npm run build
   $ school
   ```
