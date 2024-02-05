@@ -13,7 +13,7 @@
 	"scripts": {
 		"prestart": "npm run build",
 		"start": "npm run infra:up && IS_WEB=1 node --env-file=.env build/app.js",
-		"dev": "IS_WEB=1 tsx watch src/app.ts",
+		"dev:rest": "IS_WEB=1 tsx watch src/app.ts",
 		"dev:cli": "tsx src/app.ts",
 		"build": "tsc",
 		"build:clean": "npm run clean && npm run build",
