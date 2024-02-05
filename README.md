@@ -7,7 +7,7 @@
 
 <h2 align="center">Como executar o projeto</h2>
 
-  Este arquivo está divido em camadas, para saber mais sobre a arquitetura leia este handbook dos autores desta camada [Developer Handbook]("https://github.com/nxcd/developer-handbook/blob/master/Arquitetura/Arquitetura-de-C%C3%B3digo.md" 'Sobre a arquitetura de código')
+  Este arquivo está divido em camadas, para saber mais sobre a arquitetura leia este handbook dos autores desta camada [Developer Handbook](https://github.com/nxcd/developer-handbook/blob/master/Arquitetura/Arquitetura-de-C%C3%B3digo.md 'Sobre a arquitetura de código')
 
   Primeiro clone o projeto e instale as dependências
   ```shell
