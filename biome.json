@@ -1,5 +1,6 @@
 {
 	"$schema": "https://biomejs.dev/schemas/1.5.0/schema.json",
+	"files": { "ignore": [".commitlintrc", ".czrc"] },
 	"organizeImports": {
 		"enabled": true
 	},
