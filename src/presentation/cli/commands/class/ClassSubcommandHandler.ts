@@ -5,7 +5,11 @@ import { deleteClassHandler } from './delete.js'
 import { findClassHandler } from './find.js'
 import { listClassHandler } from './list.js'
 
-export function ClassSubcommandHandler(services: ServiceList, subcommand: string, options?: { id?: string }) {
+export function ClassSubcommandHandler(
+	services: ServiceList,
+	subcommand: string,
+	options?: { id?: string; page?: number; perPage?: number },
+) {
 	const classService = services.class
 
 	switch (subcommand) {
@@ -19,9 +23,11 @@ export function ClassSubcommandHandler(services: ServiceList, subcommand: string
 			findClassHandler(classService, options?.id)
 			break
 		case 'list':
-			listClassHandler(classService)
+			listClassHandler(classService, options?.page, options?.perPage)
 			break
 		default:
-			return console.log(chalk.red('Subcommand not found try to run "school class --help" to list all subcommands'))
+			return console.log(
+				chalk.red('Subcommand not found try to run "school class --help" to list all subcommands'),
+			)
 	}
 }

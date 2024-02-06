@@ -98,7 +98,9 @@ export async function createTeacherHandler(service: TeacherService) {
 		text: chalk.cyan('Creating teacher...'),
 		spinner: 'bouncingBar',
 		failText(err) {
-			return chalk.red(`Failed to create teacher ${chalk.underline.bold(teacher.id)}: ${err.message}`)
+			return chalk.red(
+				`Failed to create teacher ${chalk.underline.bold(teacher.id)}: ${err.message}`,
+			)
 		},
 		successText: chalk.green('Teacher created!'),
 	}).then((teacher) => console.log(inspect(teacher.toObject(), { depth: null, colors: true })))

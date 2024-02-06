@@ -21,6 +21,15 @@ export const StudentAndParentId = {
 	},
 }
 
+export const queryPage = {
+	schema: {
+		querystring: z.object({
+			page: z.string().optional(),
+			perPage: z.string().optional(),
+		}),
+	},
+}
+
 export async function WebLayer(config: AppConfig, services: ServiceList) {
 	const app = fastify({ logger: true })
 	app.setValidatorCompiler(validatorCompiler)

@@ -3,7 +3,11 @@ import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { ZodError } from 'zod'
-import { TeacherCreationSchema, TeacherCreationType, TeacherUpdateType } from '../../../../domain/teacher/types.js'
+import {
+	TeacherCreationSchema,
+	TeacherCreationType,
+	TeacherUpdateType,
+} from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
 export async function updateTeacherHandler(service: TeacherService, id?: string) {
 	let TeacherId: Required<TeacherCreationType['id']>

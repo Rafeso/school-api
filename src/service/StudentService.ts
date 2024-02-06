@@ -39,7 +39,9 @@ export class StudentService extends Service<typeof Student> {
 
 	async getParents(studentId: string) {
 		const student = await this.findById(studentId)
-		const parents = await Promise.all(student.parents.map((parentId: string) => this.parentService.findById(parentId)))
+		const parents = await Promise.all(
+			student.parents.map((parentId: string) => this.parentService.findById(parentId)),
+		)
 
 		return parents
 	}
@@ -80,7 +82,10 @@ export class StudentService extends Service<typeof Student> {
 		return student
 	}
 
-	async updateMedications(id: string, medications: NonNullable<StudentCreationType['medications']>) {
+	async updateMedications(
+		id: string,
+		medications: NonNullable<StudentCreationType['medications']>,
+	) {
 		const student = await this.findById(id)
 		student.medications?.push(...medications)
 		await this.repository.save(student)

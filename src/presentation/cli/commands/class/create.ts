@@ -36,5 +36,7 @@ export async function createClassHandler(service: ClassService) {
 		spinner: 'bouncingBar',
 		failText: (err) => `Failed to create class: ${err.message}`,
 		successText: chalk.green(`Class ${chalk.underline(newClass.id)} created successfully`),
-	}).then((classCreated) => console.log(inspect(classCreated.toObject(), { depth: null, colors: true })))
+	}).then((classCreated) =>
+		console.log(inspect(classCreated.toObject(), { depth: null, colors: true })),
+	)
 }

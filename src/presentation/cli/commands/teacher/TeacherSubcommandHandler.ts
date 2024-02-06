@@ -6,7 +6,11 @@ import { findTeacherHandler } from './find.js'
 import { listTeacherHandler } from './list.js'
 import { updateTeacherHandler } from './update.js'
 
-export function TeacherSubcommandHandler(services: ServiceList, subcommand: string, options?: { id?: string }) {
+export function TeacherSubcommandHandler(
+	services: ServiceList,
+	subcommand: string,
+	options?: { id?: string; page?: number; perPage?: number },
+) {
 	const teacherService = services.teacher
 
 	switch (subcommand) {
@@ -20,12 +24,16 @@ export function TeacherSubcommandHandler(services: ServiceList, subcommand: stri
 			findTeacherHandler(teacherService, options?.id)
 			break
 		case 'list':
-			listTeacherHandler(teacherService)
+			listTeacherHandler(teacherService, options?.page, options?.perPage)
 			break
 		case 'update':
 			updateTeacherHandler(teacherService, options?.id)
 			break
 		default:
-			return console.log(chalk.red('Subcommand not found try to run "school teacher --help" to list all subcommands'))
+			return console.log(
+				chalk.red(
+					'Subcommand not found try to run "school teacher --help" to list all subcommands',
+				),
+			)
 	}
 }

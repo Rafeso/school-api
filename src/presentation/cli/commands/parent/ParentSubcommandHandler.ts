@@ -6,7 +6,11 @@ import { findParentHandler } from './find.js'
 import { listParentHandler } from './list.js'
 import { updateParentHandler } from './update/update.js'
 
-export function ParentSubcommandHandler(services: ServiceList, subcommand: string, options?: { id?: string }) {
+export function ParentSubcommandHandler(
+	services: ServiceList,
+	subcommand: string,
+	options?: { id?: string; page?: number; perPage?: number },
+) {
 	const service = services
 
 	switch (subcommand) {
@@ -20,12 +24,14 @@ export function ParentSubcommandHandler(services: ServiceList, subcommand: strin
 			findParentHandler(service.parent, options?.id)
 			break
 		case 'list':
-			listParentHandler(service.parent)
+			listParentHandler(service.parent, options?.page)
 			break
 		case 'update':
 			updateParentHandler(service.parent, options?.id)
 			break
 		default:
-			return console.log(chalk.red('Subcommand not found try to run "school parent --help" to list all subcommands'))
+			return console.log(
+				chalk.red('Subcommand not found try to run "school parent --help" to list all subcommands'),
+			)
 	}
 }

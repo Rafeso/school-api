@@ -4,7 +4,10 @@ import { oraPromise } from 'ora'
 import { StudentCreationSchema, StudentCreationType } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
 
-export async function deleteStudentHandler(service: StudentService, id?: StudentCreationType['id']) {
+export async function deleteStudentHandler(
+	service: StudentService,
+	id?: StudentCreationType['id'],
+) {
 	let StudentId: Required<StudentCreationType['id']>
 	if (id) {
 		StudentId = id
@@ -23,7 +26,9 @@ export async function deleteStudentHandler(service: StudentService, id?: Student
 	const response = await inquirer.prompt<{ confirm: boolean }>({
 		type: 'confirm',
 		name: 'confirm',
-		message: `Are you sure you want to delete student: ${chalk.underline.bold.yellowBright(StudentId)} ?`,
+		message: `Are you sure you want to delete student: ${chalk.underline.bold.yellowBright(
+			StudentId,
+		)} ?`,
 	})
 
 	if (response.confirm === false) {

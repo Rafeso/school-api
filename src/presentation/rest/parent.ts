@@ -9,19 +9,22 @@ export function parentRouterFactory(parentService: ParentService, studentService
 	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
-		router.post('/', { schema: { body: ParentCreationSchema.omit({ id: true }) } }, async (req, res) => {
-			const parentEntity = await parentService.create(req.body)
-			return res.status(201).send(parentEntity.toObject())
-		})
+		router.post(
+			'/',
+			{ schema: { body: ParentCreationSchema.omit({ id: true }) } },
+			async (req, res) => {
+				const parent = await parentService.create(req.body)
+				return res.status(201).send(parent.toObject())
+			},
+		)
 
 		router.get('/', async (_, res) => {
-			const parents = await parentService.listAll()
-			return res.send(parents.map((parentEntity) => parentEntity.toObject()))
+			const parents = await parentService.list()
+			return res.send(parents.map((p) => p.toObject()))
 		})
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			const studentsEntity = await studentService.listBy('parents', [id])
 
 			const parentEntity = await parentService.findById(id)
 			return res.send(parentEntity.toObject())
@@ -56,12 +59,17 @@ export function parentRouterFactory(parentService: ParentService, studentService
 		router.get('/:id/students', onlyIdParam, async (req, res) => {
 			const { id } = req.params
 			const students = await studentService.listBy('parents', [id])
-			return res.send(students.map((studentEntity) => studentEntity.toObject()))
+			return res.send(students.map((s) => s.toObject()))
 		})
 
 		router.patch(
 			'/:id/emails',
-			{ schema: { params: onlyIdParam.schema.params, body: ParentUpdateSchema.pick({ emails: true }) } },
+			{
+				schema: {
+					params: onlyIdParam.schema.params,
+					body: ParentUpdateSchema.pick({ emails: true }),
+				},
+			},
 			async (req, res) => {
 				const { id } = req.params
 				const { emails } = req.body
@@ -79,7 +87,12 @@ export function parentRouterFactory(parentService: ParentService, studentService
 
 		router.patch(
 			'/:id/phones',
-			{ schema: { params: onlyIdParam.schema.params, body: ParentUpdateSchema.pick({ phones: true }) } },
+			{
+				schema: {
+					params: onlyIdParam.schema.params,
+					body: ParentUpdateSchema.pick({ phones: true }),
+				},
+			},
 			async (req, res) => {
 				const { id } = req.params
 				const { phones } = req.body

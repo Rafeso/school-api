@@ -23,7 +23,9 @@ export async function deleteClassHandler(service: ClassService, id?: ClassCreati
 	const response = await inquirer.prompt<{ confirm: boolean }>({
 		type: 'confirm',
 		name: 'confirm',
-		message: `Are you sure you want to delete class: ${chalk.underline.bold.yellowBright(classId)} ?`,
+		message: `Are you sure you want to delete class: ${chalk.underline.bold.yellowBright(
+			classId,
+		)} ?`,
 	})
 
 	if (response.confirm === false) {

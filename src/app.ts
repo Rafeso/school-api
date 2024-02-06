@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S node --no-warnings
 
 import { AppConfig, appConfig } from './config.js'
 import { connectToDatabase } from './data/connection.js'

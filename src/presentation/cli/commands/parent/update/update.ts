@@ -2,7 +2,11 @@ import { inspect } from 'node:util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import { ParentCreationSchema, ParentCreationType, ParentUpdateType } from '../../../../../domain/parent/types.js'
+import {
+	ParentCreationSchema,
+	ParentCreationType,
+	ParentUpdateType,
+} from '../../../../../domain/parent/types.js'
 import { ParentService } from '../../../../../service/ParentService.js'
 import { updateAddress, updateEmail, updatePhone } from './propmt.js'
 

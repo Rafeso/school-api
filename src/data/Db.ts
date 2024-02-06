@@ -1,7 +1,10 @@
 import { Collection, Db } from 'mongodb'
 import { Serializable, SerializableStatic } from '../domain/types.js'
 
-export abstract class Database<S extends SerializableStatic, I extends Serializable = InstanceType<S>> {
+export abstract class Database<
+	S extends SerializableStatic,
+	I extends Serializable = InstanceType<S>,
+> {
 	readonly db: Collection
 	readonly dbEntity: S
 
@@ -17,7 +20,7 @@ export abstract class Database<S extends SerializableStatic, I extends Serializa
 		return this.dbEntity.fromObject(document)
 	}
 
-	async listAll() {
+	async list() {
 		const documents = await this.db.find().toArray()
 		return documents.map<I>((document) => this.dbEntity.fromObject(document))
 	}
@@ -31,7 +34,6 @@ export abstract class Database<S extends SerializableStatic, I extends Serializa
 		const documents = await this.db.find(command).toArray()
 		return documents.map((document) => this.dbEntity.fromObject(document))
 	}
-
 	async remove(id: string) {
 		await this.db.deleteOne({ id })
 	}

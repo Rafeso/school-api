@@ -29,14 +29,22 @@ export async function deleteParentHandler(
 	const students = await studentService.listBy('parents', [parentId])
 
 	if (students.length > 1) {
-		console.log(chalk.red(`Cannot delete parent with id ${chalk.underline(parentId)} because it has students assigned`))
+		console.log(
+			chalk.red(
+				`Cannot delete parent with id ${chalk.underline(
+					parentId,
+				)} because it has students assigned`,
+			),
+		)
 		return
 	}
 
 	const response = await inquirer.prompt<{ confirm: boolean }>({
 		type: 'confirm',
 		name: 'confirm',
-		message: `Are you sure you want to delete parent: ${chalk.underline.bold.yellowBright(parentId)} ?`,
+		message: `Are you sure you want to delete parent: ${chalk.underline.bold.yellowBright(
+			parentId,
+		)} ?`,
 	})
 
 	if (response.confirm === false) {

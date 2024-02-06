@@ -9,16 +9,20 @@ export function studentRouterFactory(studentService: StudentService, classServic
 	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
-		router.post('/', { schema: { body: StudentCreationSchema.omit({ id: true }) } }, async (req, res) => {
-			const studentEntity = await studentService.create(req.body)
-			const classEntity = await classService.findById(req.body.class)
+		router.post(
+			'/',
+			{ schema: { body: StudentCreationSchema.omit({ id: true }) } },
+			async (req, res) => {
+				const studentEntity = await studentService.create(req.body)
+				const classEntity = await classService.findById(req.body.class)
 
-			return res.status(201).send({ ...studentEntity.toObject(), Class: classEntity.toObject() })
-		})
+				return res.status(201).send({ ...studentEntity.toObject(), Class: classEntity.toObject() })
+			},
+		)
 
 		router.get('/', async (_, res) => {
-			const students = await studentService.listAll()
-			return res.send(students.map((studentEntity) => studentEntity.toObject()))
+			const students = await studentService.list()
+			return res.send(students.map((s) => s.toObject()))
 		})
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
@@ -59,7 +63,7 @@ export function studentRouterFactory(studentService: StudentService, classServic
 			const { id } = req.params
 			const parents = await studentService.getParents(id)
 
-			return res.send(parents.map((parentEntity) => parentEntity.toObject()))
+			return res.send(parents.map((p) => p.toObject()))
 		})
 
 		router.delete('/:id/parents/:parentId', StudentAndParentId, async (req, res) => {
@@ -72,6 +76,7 @@ export function studentRouterFactory(studentService: StudentService, classServic
 					message: `Cannot delete parent with id ${parentId} because studends must have at least one parent`,
 				})
 			}
+
 			return res.status(204).send()
 		})
 

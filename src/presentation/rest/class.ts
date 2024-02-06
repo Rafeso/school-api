@@ -9,27 +9,29 @@ export function classRouterFactory(classService: ClassService, teacherService: T
 	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
-		router.post('/', { schema: { body: ClassCreationSchema.omit({ id: true }) } }, async (req, res) => {
-			const classEntity = (await classService.create(req.body)).toObject()
-			const teacherEntity = (await teacherService.findById(classEntity.teacher)).toObject()
+		router.post(
+			'/',
+			{ schema: { body: ClassCreationSchema.omit({ id: true }) } },
+			async (req, res) => {
+				const Class = await classService.create(req.body)
 
-			return res.status(201).send({ classEntity, teacherEntity })
-		})
+				return res.status(201).send(Class.toObject())
+			},
+		)
 
 		router.get('/', async (_, res) => {
-			const classEntities = await classService.listAll()
-
-			return res.send(classEntities.map(async (Class) => Class.toObject()))
+			const classEntities = await classService.list()
+			return res.send(classEntities.map((c) => c.toObject()))
 		})
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			const classEntity = (await classService.findById(id)).toObject()
-			const teacher = (await teacherService.findById(classEntity.teacher)).toObject()
+			const Class = await classService.findById(id)
+			const teacher = await teacherService.findById(Class.teacher)
 
 			return res.send({
-				classEntity,
-				teacher: teacher,
+				...Class.toObject(),
+				teacher: teacher.toObject(),
 			})
 		})
 

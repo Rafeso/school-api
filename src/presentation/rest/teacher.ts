@@ -5,7 +5,7 @@ import { TeacherCreationSchema, TeacherUpdateSchema } from '../../domain/teacher
 import { ClassService } from '../../service/ClassService.js'
 import { StudentService } from '../../service/StudentService.js'
 import { TeacherService } from '../../service/TeacherService.js'
-import { onlyIdParam } from './index.js'
+import { onlyIdParam, queryPage } from './index.js'
 
 export function teacherRouterFactory(
 	teacherService: TeacherService,
@@ -15,23 +15,28 @@ export function teacherRouterFactory(
 	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
-		router.post('/', { schema: { body: TeacherCreationSchema.omit({ id: true }) } }, async (req, res) => {
-			const teacherEntity = await teacherService.create(req.body)
+		router.post(
+			'/',
+			{ schema: { body: TeacherCreationSchema.omit({ id: true }) } },
+			async (req, res) => {
+				const teacher = await teacherService.create(req.body)
 
-			return res.status(201).send(teacherEntity.toObject())
-		})
+				return res.status(201).send(teacher.toObject())
+			},
+		)
 
-		router.get('/', async (_, res) => {
-			const teachers = await teacherService.listAll()
-			return res.send(teachers.map((teacherEntity) => teacherEntity.toObject()))
+		router.get('/', { schema: { querystring: queryPage.schema.querystring } }, async (req, res) => {
+			const page = req.query.page
+			const perPage = req.query.perPage
+			const teachers = await teacherService.list(Number(page), Number(perPage))
+			return res.send(teachers.map((t) => t.toObject()))
 		})
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			const classEntity = await classService.listBy('teacher', id)
 
-			const teacherEntity = await teacherService.findById(id)
-			return res.send(teacherEntity.toObject())
+			const teacher = await teacherService.findById(id)
+			return res.send(teacher.toObject())
 		})
 
 		router.put(
@@ -60,12 +65,12 @@ export function teacherRouterFactory(
 			}
 
 			let totalStudents: Student[] = []
-			for (const classEntity of classes) {
-				const students = await studentService.listBy('class', classEntity.id)
+			for (const Class of classes) {
+				const students = await studentService.listBy('class', Class.id)
 				totalStudents = [...totalStudents, ...students]
 			}
 
-			return res.send(totalStudents.map((studentEntity) => studentEntity.toObject()))
+			return res.send(totalStudents.map((s) => s.toObject()))
 		})
 
 		router.get('/:id/classes', onlyIdParam, async (req, res) => {
@@ -74,7 +79,7 @@ export function teacherRouterFactory(
 
 			const classes = await classService.listBy('teacher', id)
 
-			res.send(classes.map((classEntity) => classEntity.toObject()))
+			res.send(classes.map((c) => c.toObject()))
 		})
 
 		router.delete('/:id', onlyIdParam, async (req, res) => {

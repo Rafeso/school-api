@@ -2,7 +2,10 @@ import { Database } from '../data/Db.js'
 import { NotFoundError } from '../domain/@errors/NotFound.js'
 import { Serializable, SerializableStatic } from '../domain/types.js'
 
-export abstract class Service<S extends SerializableStatic, I extends Serializable = InstanceType<S>> {
+export abstract class Service<
+	S extends SerializableStatic,
+	I extends Serializable = InstanceType<S>,
+> {
 	constructor(protected repository: Database<S>) {}
 
 	async findById(id: string) {
@@ -11,8 +14,8 @@ export abstract class Service<S extends SerializableStatic, I extends Serializab
 		return entity
 	}
 
-	async listAll() {
-		return await this.repository.listAll()
+	async list(page = 1, perPage = 10) {
+		return (await this.repository.list()).slice((page - 1) * perPage, page * perPage)
 	}
 
 	async listBy<L extends keyof I>(property: L, value: I[L]) {

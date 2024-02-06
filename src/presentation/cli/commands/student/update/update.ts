@@ -2,7 +2,11 @@ import { inspect } from 'node:util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import { StudentCreationSchema, StudentCreationType, StudentUpdateType } from '../../../../../domain/student/types.js'
+import {
+	StudentCreationSchema,
+	StudentCreationType,
+	StudentUpdateType,
+} from '../../../../../domain/student/types.js'
 import { StudentService } from '../../../../../service/StudentService.js'
 import { updateAllergies, updateMedications, updateStudentParentsHandler } from './prompt.js'
 
@@ -61,7 +65,9 @@ export async function updateStudentHandler(service: StudentService, id?: string)
 				text: 'Updating student...',
 				spinner: 'bouncingBar',
 				failText: (err) => `Failed to update student ${chalk.underline(StudentId)}: ${err.message}`,
-				successText: chalk.green.underline.bold(`\nStudent ${response.field} updated successfully!`),
+				successText: chalk.green.underline.bold(
+					`\nStudent ${response.field} updated successfully!`,
+				),
 			}).then((updated) => console.log(inspect(updated.toObject(), { depth: null, colors: true })))
 		}
 	}
