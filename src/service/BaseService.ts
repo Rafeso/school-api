@@ -14,8 +14,9 @@ export abstract class Service<
 		return entity
 	}
 
-	async list(page = 1, perPage = 10) {
-		return (await this.repository.list()).slice((page - 1) * perPage, page * perPage)
+	async list(page = 1, pageLength = 10) {
+		const entity = await this.repository.list()
+		return entity.slice((page - 1) * pageLength, page * pageLength)
 	}
 
 	async listBy<L extends keyof I>(property: L, value: I[L]) {
@@ -24,6 +25,8 @@ export abstract class Service<
 	}
 
 	async remove(id: string) {
+		const entity = await this.findById(id)
+		if (!entity) throw new NotFoundError(id, this.repository.dbEntity)
 		await this.repository.remove(id)
 		return
 	}
