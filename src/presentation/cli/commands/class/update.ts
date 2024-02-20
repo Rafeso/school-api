@@ -27,7 +27,7 @@ export async function updateClassHandler(service: ClassService, id?: string) {
 	const response = await inquirer.prompt<{ field: string }>({
 		type: 'list',
 		name: 'field',
-		message: 'What field do you want to update?',
+		message: chalk.cyan('What field do you want to update?'),
 		choices: [{ name: 'code' }, { name: 'teacher' }],
 	})
 
@@ -38,9 +38,9 @@ export async function updateClassHandler(service: ClassService, id?: string) {
 	})
 
 	await oraPromise(service.update(ClassId, updated), {
-		text: `Updating ${response.field}...`,
-		failText: (err) => `Failed to update ${response.field}: ${err.message}`,
+		text: chalk.cyan(`Updating ${response.field}...`),
 		spinner: 'bouncingBar',
-		successText: `Updated class ${response.field} successfully!`,
-	}).then((updated) => console.log(inspect(updated, { depth: null, colors: true })))
+		failText: (err) => chalk.red(`Failed to create class: ${err.message}`),
+		successText: chalk.magentaBright.bold(`Updated class ${response.field} successfully!`),
+	}).then((updated) => console.log(inspect(updated.toObject(), { depth: null, colors: true })))
 }

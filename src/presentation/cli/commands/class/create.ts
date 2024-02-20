@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise, spinners } from 'ora'
 import { Class } from '../../../../domain/class/Class.js'
-import { ClassCreationSchema } from '../../../../domain/class/types.js'
+import { ClassCreationSchema, ClassCreationType } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
 
 export async function createClassHandler(service: ClassService) {
@@ -11,7 +11,7 @@ export async function createClassHandler(service: ClassService) {
 		{
 			name: 'code',
 			type: 'input',
-			message: 'Class Code (Ex: 1A-M):',
+			message: 'Class code (Ex: 1A-M):',
 			required: true,
 			validate(value) {
 				return ClassCreationSchema.shape.code.safeParse(value).success
@@ -20,7 +20,7 @@ export async function createClassHandler(service: ClassService) {
 		{
 			name: 'teacher',
 			type: 'input',
-			message: 'Class Teacher:',
+			message: 'Class teacher (id):',
 			validate(value) {
 				return ClassCreationSchema.shape.teacher.safeParse(value).success
 			},
@@ -32,10 +32,13 @@ export async function createClassHandler(service: ClassService) {
 	})
 
 	await oraPromise(service.create(newClass), {
-		text: 'Creating class...',
+		text: chalk.cyan('Creating class...'),
 		spinner: 'bouncingBar',
-		failText: (err) => `Failed to create class: ${err.message}`,
-		successText: chalk.green(`Class ${chalk.underline(newClass.id)} created successfully`),
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to create class: ${err.message}`)
+		},
+		successText: chalk.magentaBright.bold('Class created successfully!\n'),
 	}).then((classCreated) =>
 		console.log(inspect(classCreated.toObject(), { depth: null, colors: true })),
 	)

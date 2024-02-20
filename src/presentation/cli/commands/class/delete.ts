@@ -5,7 +5,7 @@ import { ClassCreationSchema, ClassCreationType } from '../../../../domain/class
 import { ClassService } from '../../../../service/ClassService.js'
 
 export async function deleteClassHandler(service: ClassService, id?: ClassCreationType['id']) {
-	let classId: Required<ClassCreationType['id']>
+	let classId: NonNullable<ClassCreationType['id']>
 	if (id) {
 		classId = id
 	} else {
@@ -29,14 +29,17 @@ export async function deleteClassHandler(service: ClassService, id?: ClassCreati
 	})
 
 	if (response.confirm === false) {
-		console.log(chalk.yellow('\nClass deletion aborted!'))
+		console.log(chalk.yellow('\nClass deletion aborted, you can exit safely now.'))
 		return
 	}
 
 	await oraPromise(service.remove(classId), {
-		text: 'Deleting class...',
+		text: chalk.cyan('Deleting class...'),
 		spinner: 'bouncingBar',
-		failText: (err) => `Failed to delete class ${chalk.underline(classId)}: ${err.message}`,
-		successText: chalk.green(`Class ${chalk.underline(classId)} deleted`),
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to delete class ${chalk.underline(classId)}: ${err.message}\n`)
+		},
+		successText: chalk.magentaBright.bold(`Class ${chalk.underline(classId)} was deleted.`),
 	})
 }

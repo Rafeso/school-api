@@ -2,95 +2,121 @@ import { inspect } from 'util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import { StudentCreationSchema } from '../../../../../domain/student/types.js'
+import { StudentCreationSchema, StudentUpdateType } from '../../../../../domain/student/types.js'
 import { StudentService } from '../../../../../service/StudentService.js'
 
 export async function updateAllergies(id: string, service: StudentService) {
-	const response = await inquirer.prompt<{ allergies: string }>({
+	const { allergies } = await inquirer.prompt<{ allergies: string }>({
 		type: 'input',
 		name: 'allergies',
 		message: 'New allergies:',
-		validate(value) {
+		validate(value: string) {
 			return StudentCreationSchema.shape.allergies.safeParse([value]).success
 		},
 	})
 
-	await oraPromise(service.updateAllergies(id, [response.allergies]), {
+	await oraPromise(service.updateAllergies(id, [allergies]), {
 		text: 'Updating student allergies...',
 		spinner: 'bouncingBar',
-		failText: (err) => `Failed to update student allergies: ${err.message}`,
-		successText: chalk.green.underline.bold('Student allergies updated successfully!'),
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.bold.red(`Failed to update student allergies: ${err.message}`)
+		},
+		successText: chalk.magentaBright.bold('Student allergies updated successfully!'),
 	}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
 }
 
 export async function updateMedications(id: string, service: StudentService) {
-	const response = await inquirer.prompt<{ medications: string }>({
+	const { medications } = await inquirer.prompt<{ medications: string }>({
 		type: 'input',
 		name: 'medications',
 		message: 'New medications:',
-		validate(value) {
+		validate(value: string) {
 			return StudentCreationSchema.shape.medications.safeParse([value]).success
 		},
 	})
 
-	await oraPromise(service.updateMedications(id, [response.medications]), {
+	await oraPromise(service.updateMedications(id, [medications]), {
 		text: 'Updating student medications...',
 		spinner: 'bouncingBar',
-		failText: (err) => `Failed to update student medications: ${err.message}`,
-		successText: chalk.green.underline.bold('Student medications updated successfully!'),
-	}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
-}
-
-export async function linkParent(service: StudentService, studentId: string) {
-	const response = await inquirer.prompt<{ parents: string }>({
-		type: 'input',
-		name: 'parents',
-		message: 'Id of parent to add:',
-		validate(value) {
-			return StudentCreationSchema.shape.parents.safeParse([value]).success
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.bold.red(`Failed to update student medications: ${err.message}`)
 		},
-	})
-
-	await oraPromise(service.linkParents(studentId, [response.parents]), {
-		text: 'Linking parents...',
-		spinner: 'bouncingBar',
-		failText: (err) => `Failed to link parents: ${err.message}`,
-		successText: chalk.green.underline.bold('Student parents updated successfully!'),
+		successText: chalk.magentaBright.bold('Student medications updated successfully!'),
 	}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
 }
 
-export async function unlinkParent(service: StudentService, studentId: string) {
-	const response = await inquirer.prompt<{ parents: string }>({
-		type: 'input',
-		name: 'parents',
-		message: 'Id of parent to remove:',
-		validate(value) {
-			return StudentCreationSchema.shape.parents.safeParse([value]).success
-		},
-	})
-
-	await oraPromise(service.unlinkParent(studentId, [response.parents]), {
-		text: 'Unlinking parents...',
-		spinner: 'bouncingBar',
-		failText: (err) => `Failed to unlink parents: ${err.message}`,
-		successText: chalk.green.underline.bold('Student parents updated successfully!'),
-	}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
-}
-
-export async function updateStudentParentsHandler(StudentId: string, service: StudentService) {
-	const response = await inquirer.prompt<{ field: string }>({
+export async function updateStudentParentsHandler(studentId: string, service: StudentService) {
+	const { choice } = await inquirer.prompt<{ choice: string }>({
 		type: 'list',
-		name: 'field',
+		name: 'choice',
 		message: 'What action do you want to perform?',
 		choices: [{ name: 'Add new parent' }, { name: 'Remove parent' }],
 	})
 
-	switch (response.field) {
+	switch (choice) {
 		case 'Add new parent':
-			await linkParent(service, StudentId)
+			await linkParent(service, studentId)
 			break
 		case 'Remove parent':
-			await unlinkParent(service, StudentId)
+			await unlinkParent(service, studentId)
 			break
+	}
+
+	async function linkParent(service: StudentService, studentId: string) {
+		const { parent } = await inquirer.prompt<{ parent: string }>({
+			type: 'input',
+			name: 'parent',
+			message: 'Id of parent to add:',
+			validate(value: string) {
+				return StudentCreationSchema.shape.parents.safeParse([value]).success
+			},
+		})
+
+		await oraPromise(service.linkParents(studentId, [parent]), {
+			text: 'Linking parents...',
+			spinner: 'bouncingBar',
+			failText: (err) => {
+				process.exitCode = 1
+				return chalk.bold.red(`Failed to link parent: ${err.message}\n`)
+			},
+			successText: chalk.magentaBright.bold('Student parents updated successfully!\n'),
+		}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
+	}
+
+	async function unlinkParent(service: StudentService, studentId: string) {
+		const { parent } = await inquirer.prompt<{ parent: string }>({
+			type: 'input',
+			name: 'parent',
+			message: 'Id of parent to remove:',
+			validate(value: string) {
+				return StudentCreationSchema.shape.parents.safeParse([value]).success
+			},
+		})
+
+		const response = await inquirer.prompt<{ choice: boolean }>({
+			type: 'confirm',
+			name: 'choice',
+			message: `Are you sure you want to unlink parent: ${chalk.underline.bold.yellowBright(
+				parent,
+			)} ?`,
+		})
+
+		if (response.choice === false) {
+			process.exitCode = 0
+			console.info(chalk.yellowBright('Parent unlink proccess aborted you can exit safely now!'))
+			return
+		}
+
+		await oraPromise(service.unlinkParent(studentId, [parent]), {
+			text: 'Unlinking parents...',
+			spinner: 'bouncingBar',
+			failText: (err) => {
+				process.exitCode = 1
+				return chalk.bold.red(`Failed to unlink parents: ${err.message}`)
+			},
+			successText: chalk.magentaBright.bold('Student parents updated successfully!'),
+		}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
 	}
 }

@@ -1,14 +1,16 @@
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
+import { DependencyConflictError } from '../../../../domain/@errors/DependencyConflict.js'
+import { Parent } from '../../../../domain/parent/Parent.js'
 import { ParentCreationSchema, ParentCreationType } from '../../../../domain/parent/types.js'
+import { Student } from '../../../../domain/student/Student.js'
 import { ParentService } from '../../../../service/ParentService.js'
 import { StudentService } from '../../../../service/StudentService.js'
 
 export async function deleteParentHandler(
 	parentService: ParentService,
 	studentService: StudentService,
-
 	id?: ParentCreationType['id'],
 ) {
 	let parentId: Required<ParentCreationType['id']>
@@ -26,40 +28,37 @@ export async function deleteParentHandler(
 		parentId = id
 	}
 
-	const students = await studentService.listBy('parents', [parentId])
-
-	if (students.length > 1) {
-		console.log(
-			chalk.red(
-				`Cannot delete parent with id ${chalk.underline(
-					parentId,
-				)} because it has students assigned`,
-			),
-		)
-		return
-	}
-
-	const response = await inquirer.prompt<{ confirm: boolean }>({
+	const response = await inquirer.prompt<{ choice: boolean }>({
 		type: 'confirm',
-		name: 'confirm',
+		name: 'choice',
 		message: `Are you sure you want to delete parent: ${chalk.underline.bold.yellowBright(
 			parentId,
 		)} ?`,
 	})
 
-	if (response.confirm === false) {
-		console.log(chalk.yellow('\nParent deletion aborted!'))
+	if (response.choice === false) {
+		console.info(chalk.yellow('\nParent deletion aborted you can exit safely now!'))
 		return
 	}
 
+	const checkStudents = await studentService.listBy('parents', [parentId])
+	if (checkStudents.length > 0) {
+		process.exitCode = 1
+		throw new DependencyConflictError(
+			Parent,
+			parentId,
+			Student,
+			checkStudents.map((s) => s.id),
+		)
+	}
+
 	await oraPromise(parentService.remove(parentId), {
-		text: 'Deleting parent...',
+		text: chalk.cyan('Deleting parent...'),
 		spinner: 'bouncingBar',
-		failText(err) {
-			return `Failed to delete parent ${chalk.underline(parentId)}: ${err.message}`
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to delete parent: ${err.message}\n`)
 		},
-		successText() {
-			return `Parent ${chalk.underline(parentId)} was deleted!`
-		},
+		successText: chalk.green('Parent was deleted.'),
 	})
 }

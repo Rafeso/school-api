@@ -8,7 +8,7 @@ import { listClassHandler } from './list.js'
 export function ClassSubcommandHandler(
 	services: ServiceList,
 	subcommand: string,
-	options?: { id?: string; page?: number; perPage?: number },
+	options?: { id?: string; page?: number; pageLength?: number },
 ) {
 	const classService = services.class
 
@@ -23,11 +23,16 @@ export function ClassSubcommandHandler(
 			findClassHandler(classService, options?.id)
 			break
 		case 'list':
-			listClassHandler(classService, options?.page, options?.perPage)
+			listClassHandler(classService, options?.page, options?.pageLength)
 			break
 		default:
-			return console.log(
-				chalk.red('Subcommand not found try to run "school class --help" to list all subcommands'),
+			console.error(
+				chalk.red(
+					`Error: Subcommand "${chalk.underline(
+						subcommand,
+					)}" not found try to run "school class --help" to list all subcommands`,
+				),
 			)
+			process.exit(1)
 	}
 }

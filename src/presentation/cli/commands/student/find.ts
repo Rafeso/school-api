@@ -5,8 +5,8 @@ import { oraPromise } from 'ora'
 import { StudentCreationSchema, StudentCreationType } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
 
-export async function findStudentHandler(service: StudentService, id?: string) {
-	let StudentId: StudentCreationType['id']
+export async function findStudentHandler(service: StudentService, id?: StudentCreationType['id']) {
+	let StudentId: NonNullable<StudentCreationType['id']>
 	if (id) {
 		StudentId = id
 	} else {
@@ -24,7 +24,10 @@ export async function findStudentHandler(service: StudentService, id?: string) {
 	await oraPromise(service.findById(StudentId), {
 		text: 'Finding student...',
 		spinner: 'bouncingBar',
-		failText: (err) => `Failed to find student ${StudentId}: ${err.message}`,
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to find student ${StudentId}: ${err.message}`)
+		},
 		successText: chalk.green('Student found!'),
 	}).then((student) => {
 		console.log(inspect(student.toObject(), { depth: null, colors: true }))

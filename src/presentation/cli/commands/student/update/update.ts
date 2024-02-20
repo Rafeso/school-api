@@ -11,7 +11,7 @@ import { StudentService } from '../../../../../service/StudentService.js'
 import { updateAllergies, updateMedications, updateStudentParentsHandler } from './prompt.js'
 
 export async function updateStudentHandler(service: StudentService, id?: string) {
-	let StudentId: Required<StudentCreationType['id']>
+	let StudentId: NonNullable<StudentCreationType['id']>
 	if (id) {
 		StudentId = id
 	} else {
@@ -19,7 +19,7 @@ export async function updateStudentHandler(service: StudentService, id?: string)
 			type: 'input',
 			name: 'id',
 			message: 'Student id:',
-			validate(value) {
+			validate(value: NonNullable<StudentCreationType['id']>) {
 				return StudentCreationSchema.shape.id.safeParse(value).success
 			},
 		})
@@ -55,7 +55,9 @@ export async function updateStudentHandler(service: StudentService, id?: string)
 			await updateAllergies(StudentId, service)
 			break
 		default: {
-			const updated = await inquirer.prompt<StudentUpdateType>({
+			const updated = await inquirer.prompt<
+				Omit<StudentUpdateType, 'medications' | 'parents' | 'allergies'>
+			>({
 				type: 'input',
 				name: response.field,
 				message: `New ${response.field}:`,
@@ -64,10 +66,13 @@ export async function updateStudentHandler(service: StudentService, id?: string)
 			await oraPromise(service.update(StudentId, updated), {
 				text: 'Updating student...',
 				spinner: 'bouncingBar',
-				failText: (err) => `Failed to update student ${chalk.underline(StudentId)}: ${err.message}`,
-				successText: chalk.green.underline.bold(
-					`\nStudent ${response.field} updated successfully!`,
-				),
+				failText: (err) => {
+					process.exitCode = 1
+					return chalk.red.bold(
+						`Failed to update student ${chalk.underline(StudentId)}: ${err.message}\n`,
+					)
+				},
+				successText: chalk.bold.magentaBright(`Student ${response.field} updated successfully!\n`),
 			}).then((updated) => console.log(inspect(updated.toObject(), { depth: null, colors: true })))
 		}
 	}

@@ -117,7 +117,10 @@ export async function createStudentHandler(service: StudentService) {
 	await oraPromise(service.create(student.toObject()), {
 		text: 'Creating student...',
 		spinner: 'bouncingBar',
-		failText: (err) => `Failed to create student: ${err.message}`,
-		successText: 'Student created!',
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to create student: ${err.message}`)
+		},
+		successText: chalk.green('Student created successfully!'),
 	}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
 }

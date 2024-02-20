@@ -9,7 +9,7 @@ import { updateStudentHandler } from './update/update.js'
 export function StudentSubcommandHandler(
 	services: ServiceList,
 	subcommand: string,
-	options?: { id?: string; page?: number; perPage?: number },
+	options?: { id?: string; page?: number; pageLength?: number },
 ) {
 	const studentService = services.student
 
@@ -24,16 +24,19 @@ export function StudentSubcommandHandler(
 			findStudentHandler(studentService, options?.id)
 			break
 		case 'list':
-			listStudentHandler(studentService, options?.page)
+			listStudentHandler(studentService, options?.page, options?.pageLength)
 			break
 		case 'update':
 			updateStudentHandler(studentService, options?.id)
 			break
 		default:
-			return console.log(
+			console.error(
 				chalk.red(
-					'Subcommand not found try to run "school student --help" to list all subcommands',
+					`Error: Subcommand "${chalk.underline(
+						subcommand,
+					)}" not found try to run "school student --help" to list all subcommands`,
 				),
 			)
+			process.exit(1)
 	}
 }

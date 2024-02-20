@@ -97,11 +97,10 @@ export async function createTeacherHandler(service: TeacherService) {
 	await oraPromise(service.create(teacher.toObject()), {
 		text: chalk.cyan('Creating teacher...'),
 		spinner: 'bouncingBar',
-		failText(err) {
-			return chalk.red(
-				`Failed to create teacher ${chalk.underline.bold(teacher.id)}: ${err.message}`,
-			)
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to create teacher: ${err.message}\n`)
 		},
-		successText: chalk.green('Teacher created!'),
+		successText: chalk.green('Teacher created successfully!\n'),
 	}).then((teacher) => console.log(inspect(teacher.toObject(), { depth: null, colors: true })))
 }

@@ -4,12 +4,12 @@ import { createTeacherHandler } from './create.js'
 import { deleteTeacherHandler } from './delete.js'
 import { findTeacherHandler } from './find.js'
 import { listTeacherHandler } from './list.js'
-import { updateTeacherHandler } from './update.js'
+import { updateTeacherHandler } from './update/update.js'
 
 export function TeacherSubcommandHandler(
 	services: ServiceList,
 	subcommand: string,
-	options?: { id?: string; page?: number; perPage?: number },
+	options?: { id?: string; page?: number; pageLength?: number },
 ) {
 	const teacherService = services.teacher
 
@@ -24,16 +24,19 @@ export function TeacherSubcommandHandler(
 			findTeacherHandler(teacherService, options?.id)
 			break
 		case 'list':
-			listTeacherHandler(teacherService, options?.page, options?.perPage)
+			listTeacherHandler(teacherService, options?.page, options?.pageLength)
 			break
 		case 'update':
 			updateTeacherHandler(teacherService, options?.id)
 			break
 		default:
-			return console.log(
+			console.error(
 				chalk.red(
-					'Subcommand not found try to run "school teacher --help" to list all subcommands',
+					`Error: Subcommand "${chalk.underline(
+						subcommand,
+					)}" not found try to run "school teacher --help" to list all subcommands`,
 				),
 			)
+			process.exit(1)
 	}
 }

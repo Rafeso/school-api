@@ -2,13 +2,13 @@ import { inspect } from 'node:util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import { ZodError } from 'zod'
 import {
 	TeacherCreationSchema,
 	TeacherCreationType,
 	TeacherUpdateType,
-} from '../../../../domain/teacher/types.js'
-import { TeacherService } from '../../../../service/TeacherService.js'
+} from '../../../../../domain/teacher/types.js'
+import { TeacherService } from '../../../../../service/TeacherService.js'
+import { updateSalaryHandler } from './prompt.js'
 export async function updateTeacherHandler(service: TeacherService, id?: string) {
 	let TeacherId: Required<TeacherCreationType['id']>
 	if (id) {
@@ -18,7 +18,7 @@ export async function updateTeacherHandler(service: TeacherService, id?: string)
 			type: 'input',
 			name: 'id',
 			message: 'Teacher id:',
-			validate(value) {
+			validate(value: string) {
 				return TeacherCreationSchema.shape.id.safeParse(value).success
 			},
 		})
@@ -41,40 +41,25 @@ export async function updateTeacherHandler(service: TeacherService, id?: string)
 		],
 	})
 
-	async function updateSalary(id: string) {
-		const response = await inquirer.prompt<{ salary: number }>({
-			type: 'number',
-			name: 'salary',
-			message: 'New salary:',
-			validate(value) {
-				return TeacherCreationSchema.shape.salary.safeParse(value).success
-			},
-		})
-
-		const teacher = await service.update(id, {
-			salary: response.salary,
-		})
-
-		console.log(chalk.green.underline.bold('\nTeacher salary updated successfully!'))
-		console.log(inspect(teacher.toObject(), { depth: null, colors: true }))
-	}
-
 	switch (response.field) {
 		case 'salary':
-			updateSalary(TeacherId)
+			updateSalaryHandler(TeacherId, service)
 			break
 		default: {
-			const updated = await inquirer.prompt<TeacherUpdateType>({
+			const updated = await inquirer.prompt<Omit<TeacherUpdateType, 'salary'>>({
 				type: 'input',
 				name: response.field,
 				message: `New ${response.field}:`,
 			})
 
 			await oraPromise(service.update(TeacherId, updated), {
-				text: 'Updating teacher...',
+				text: chalk.cyan('Updating teacher...'),
 				spinner: 'bouncingBar',
-				failText: (err) => chalk.red.underline.bold(err.message),
-				successText: chalk.green.underline.bold(`Teacher ${response.field} updated successfully!`),
+				failText: (err) => {
+					process.exitCode = 1
+					return chalk.red(`Failed to update teacher ${response.field}: ${err.message}\n`)
+				},
+				successText: chalk.green(`Teacher ${response.field} updated successfully!\n`),
 			}).then((teacher) => console.log(inspect(teacher.toObject(), { depth: null, colors: true })))
 		}
 	}

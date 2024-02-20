@@ -1,11 +1,12 @@
 import { inspect } from 'util'
+import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { ParentCreationSchema, ParentCreationType } from '../../../../domain/parent/types.js'
 import { ParentService } from '../../../../service/ParentService.js'
 
-export async function findParentHandler(service: ParentService, id?: string) {
-	let parentId: ParentCreationType['id']
+export async function findParentHandler(service: ParentService, id?: ParentCreationType['id']) {
+	let parentId: NonNullable<ParentCreationType['id']>
 	if (id) {
 		parentId = id
 	} else {
@@ -21,10 +22,13 @@ export async function findParentHandler(service: ParentService, id?: string) {
 	}
 
 	await oraPromise(service.findById(parentId), {
-		text: 'Finding parent...',
+		text: chalk.cyan('Finding parent...'),
 		spinner: 'bouncingBar',
-		failText: (err) => `Failed to find parent ${parentId}: ${err.message}`,
-		successText: 'Parent found!',
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to find parent: ${err.message}\n`)
+		},
+		successText: chalk.green('Parent was found.\n'),
 	}).then((parent) => {
 		console.log(inspect(parent.toObject(), { depth: null, colors: true }))
 	})

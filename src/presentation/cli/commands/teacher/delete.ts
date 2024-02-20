@@ -23,17 +23,17 @@ export async function deleteTeacherHandler(
 		teacherId = id
 	}
 
-	const response = await inquirer.prompt<{ confirm: boolean }>({
+	const reponse = await inquirer.prompt<{ choice: boolean }>({
 		type: 'confirm',
-		name: 'confirm',
+		name: 'choice',
 		message: `Are you sure you want to delete teacher: ${chalk.underline.bold.yellowBright(
 			teacherId,
 		)} ?`,
 	})
 
-	if (response.confirm === false) {
-		console.log(chalk.yellow('\nTeacher deletion aborted!'))
-		return
+	if (reponse.choice === false) {
+		process.exitCode = 1
+		return console.warn(chalk.yellow('\nTeacher deletion aborted. You can exit safely now.'))
 	}
 
 	await oraPromise(service.remove(teacherId), {

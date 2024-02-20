@@ -1,4 +1,5 @@
 import { inspect } from 'util'
+import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { ClassCreationSchema, ClassCreationType } from '../../../../domain/class/types.js'
@@ -23,8 +24,11 @@ export async function findClassHandler(service: ClassService, id?: ClassCreation
 	await oraPromise(service.findById(classId), {
 		text: 'Finding class...',
 		spinner: 'bouncingBar',
-		failText: (err) => `Failed to find class ${classId}: ${err.message}`,
-		successText: 'Class found!',
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to find class ${classId}: ${err.message}\n`)
+		},
+		successText: chalk.green('Class was found.\n'),
 	}).then((classFound) => {
 		console.log(inspect(classFound.toObject(), { depth: null, colors: true }))
 	})

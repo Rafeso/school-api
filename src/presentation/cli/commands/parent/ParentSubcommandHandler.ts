@@ -9,29 +9,32 @@ import { updateParentHandler } from './update/update.js'
 export function ParentSubcommandHandler(
 	services: ServiceList,
 	subcommand: string,
-	options?: { id?: string; page?: number; perPage?: number },
+	options?: { id?: string; page?: number; pageLength?: number },
 ) {
-	const service = services
-
 	switch (subcommand) {
 		case 'create':
-			createParentHandler(service.parent)
+			createParentHandler(services.parent)
 			break
 		case 'delete':
-			deleteParentHandler(service.parent, service.student, options?.id)
+			deleteParentHandler(services.parent, services.student, options?.id)
 			break
 		case 'find':
-			findParentHandler(service.parent, options?.id)
+			findParentHandler(services.parent, options?.id)
 			break
 		case 'list':
-			listParentHandler(service.parent, options?.page)
+			listParentHandler(services.parent, options?.page)
 			break
 		case 'update':
-			updateParentHandler(service.parent, options?.id)
+			updateParentHandler(services.parent, options?.id)
 			break
 		default:
-			return console.log(
-				chalk.red('Subcommand not found try to run "school parent --help" to list all subcommands'),
+			console.error(
+				chalk.red(
+					`Error: Subcommand "${chalk.underline(
+						subcommand,
+					)}" not found try to run "school parent --help" to list all subcommands`,
+				),
 			)
+			process.exit(1)
 	}
 }

@@ -110,9 +110,12 @@ export async function createParentHandler(service: ParentService) {
 	})
 
 	await oraPromise(service.create(parent), {
-		text: 'Creating parent...',
+		text: chalk.cyan('Creating parent...'),
 		spinner: 'bouncingBar',
-		failText: (err) => `Failed to create parent: ${err.message}`,
-		successText: 'Parent created!',
-	}).then((parent) => console.log(inspect(parent, { depth: null, colors: true })))
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to create parent: ${err.message}\n`)
+		},
+		successText: chalk.green('Parent created successfully!\n'),
+	}).then((parent) => console.log(inspect(parent.toObject(), { depth: null, colors: true })))
 }
