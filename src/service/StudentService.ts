@@ -25,6 +25,7 @@ export class StudentService extends Service<typeof Student> {
 
 		return updated
 	}
+
 	async create(creationData: StudentCreationType) {
 		const existing = await this.repository.listBy('document', creationData.document)
 
@@ -65,7 +66,7 @@ export class StudentService extends Service<typeof Student> {
 
 		const checkIfisTheOnlyParent = await this.getParents(id)
 		if (checkIfisTheOnlyParent.length === 1) {
-			throw new StudentMustHaveAtLeastOneParentError(Student, id, Parent)
+			throw new StudentMustHaveAtLeastOneParentError(Student, parentToDelete.toString(), Parent)
 		}
 
 		student.parents = student.parents.filter(
@@ -75,7 +76,7 @@ export class StudentService extends Service<typeof Student> {
 		return student
 	}
 
-	async updateAllergies(id: string, allergies: NonNullable<StudentCreationType['allergies']>) {
+	async updateAllergies(id: string, allergies: NonNullable<StudentUpdateType['allergies']>) {
 		const student = await this.findById(id)
 		student.allergies?.push(...allergies)
 		await this.repository.save(student)
