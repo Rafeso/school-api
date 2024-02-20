@@ -24,13 +24,6 @@ export class ParentService extends Service<typeof Parent> {
 		return updated
 	}
 
-	async updateAddress(id: string, address: NonNullable<ParentUpdateType['address']>) {
-		const parent = await this.findById(id)
-		parent.address.push(...address)
-		await this.repository.save(parent)
-		return parent
-	}
-
 	async updateEmail(id: string, emails: NonNullable<ParentUpdateType['emails']>) {
 		const parent = await this.findById(id)
 		parent.emails.push(...emails)
@@ -38,7 +31,7 @@ export class ParentService extends Service<typeof Parent> {
 		return parent
 	}
 
-	async updatePhone(id: string, phone: NonNullable<ParentCreationType['phones']>) {
+	async updatePhone(id: string, phone: NonNullable<ParentUpdateType['phones']>) {
 		const parent = await this.findById(id)
 		parent.phones.push(...phone)
 		await this.repository.save(parent)
