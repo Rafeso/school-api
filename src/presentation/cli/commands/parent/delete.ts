@@ -3,7 +3,10 @@ import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
 import { DependencyConflictError } from '../../../../domain/@errors/DependencyConflict.js'
 import { Parent } from '../../../../domain/parent/Parent.js'
-import { ParentCreationSchema, ParentCreationType } from '../../../../domain/parent/types.js'
+import {
+	ParentCreationSchema,
+	ParentCreationType,
+} from '../../../../domain/parent/types.js'
 import { Student } from '../../../../domain/student/Student.js'
 import { ParentService } from '../../../../service/ParentService.js'
 import { StudentService } from '../../../../service/StudentService.js'
@@ -37,7 +40,9 @@ export async function deleteParentHandler(
 	})
 
 	if (response.choice === false) {
-		console.info(chalk.yellow('\nParent deletion aborted you can exit safely now!'))
+		console.info(
+			chalk.yellow('\nParent deletion aborted you can exit safely now!'),
+		)
 		return
 	}
 

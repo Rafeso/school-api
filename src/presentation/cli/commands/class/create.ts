@@ -3,7 +3,10 @@ import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise, spinners } from 'ora'
 import { Class } from '../../../../domain/class/Class.js'
-import { ClassCreationSchema, ClassCreationType } from '../../../../domain/class/types.js'
+import {
+	ClassCreationSchema,
+	ClassCreationType,
+} from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
 
 export async function createClassHandler(service: ClassService) {
@@ -40,6 +43,8 @@ export async function createClassHandler(service: ClassService) {
 		},
 		successText: chalk.magentaBright.bold('Class created successfully!\n'),
 	}).then((classCreated) =>
-		console.log(inspect(classCreated.toObject(), { depth: null, colors: true })),
+		console.log(
+			inspect(classCreated.toObject(), { depth: null, colors: true }),
+		),
 	)
 }

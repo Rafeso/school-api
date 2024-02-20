@@ -2,7 +2,10 @@ import { inspect } from 'node:util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import { TeacherCreationSchema, TeacherUpdateType } from '../../../../../domain/teacher/types.js'
+import {
+	TeacherCreationSchema,
+	TeacherUpdateType,
+} from '../../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../../service/TeacherService.js'
 
 export async function updateSalaryHandler(id: string, service: TeacherService) {
@@ -24,7 +27,11 @@ export async function updateSalaryHandler(id: string, service: TeacherService) {
 				process.exitCode = 1
 				return chalk.red(`Failed to update teacher: ${err.message}`)
 			},
-			successText: chalk.magentaBright.bold('Teacher salary updated successfully!'),
+			successText: chalk.magentaBright.bold(
+				'Teacher salary updated successfully!',
+			),
 		},
-	).then((teacher) => console.log(inspect(teacher.toObject(), { depth: null, colors: true })))
+	).then((teacher) =>
+		console.log(inspect(teacher.toObject(), { depth: null, colors: true })),
+	)
 }

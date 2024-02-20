@@ -2,10 +2,16 @@ import { inspect } from 'util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import { ParentCreationSchema, ParentCreationType } from '../../../../domain/parent/types.js'
+import {
+	ParentCreationSchema,
+	ParentCreationType,
+} from '../../../../domain/parent/types.js'
 import { ParentService } from '../../../../service/ParentService.js'
 
-export async function findParentHandler(service: ParentService, id?: ParentCreationType['id']) {
+export async function findParentHandler(
+	service: ParentService,
+	id?: ParentCreationType['id'],
+) {
 	let parentId: NonNullable<ParentCreationType['id']>
 	if (id) {
 		parentId = id

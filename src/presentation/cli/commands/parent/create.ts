@@ -117,5 +117,7 @@ export async function createParentHandler(service: ParentService) {
 			return chalk.red(`Failed to create parent: ${err.message}\n`)
 		},
 		successText: chalk.green('Parent created successfully!\n'),
-	}).then((parent) => console.log(inspect(parent.toObject(), { depth: null, colors: true })))
+	}).then((parent) =>
+		console.log(inspect(parent.toObject(), { depth: null, colors: true })),
+	)
 }

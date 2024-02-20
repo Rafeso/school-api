@@ -22,8 +22,12 @@ export async function updatePhone(service: ParentService, id: string) {
 			process.exitCode = 1
 			return chalk.red(`Failed to update parent phone: ${err.message}`)
 		},
-		successText: chalk.magentaBright.bold('Parent phones updated successfully!'),
-	}).then((parent) => console.log(inspect(parent.toObject(), { depth: null, colors: true })))
+		successText: chalk.magentaBright.bold(
+			'Parent phones updated successfully!',
+		),
+	}).then((parent) =>
+		console.log(inspect(parent.toObject(), { depth: null, colors: true })),
+	)
 }
 
 export async function updateEmail(service: ParentService, id: string) {
@@ -43,6 +47,10 @@ export async function updateEmail(service: ParentService, id: string) {
 			process.exitCode = 1
 			return chalk.red(`Failed to update parent email: ${err.message}`)
 		},
-		successText: chalk.magentaBright.bold('Parent emails updated successfully!'),
-	}).then((parent) => console.log(inspect(parent.toObject(), { depth: null, colors: true })))
+		successText: chalk.magentaBright.bold(
+			'Parent emails updated successfully!',
+		),
+	}).then((parent) =>
+		console.log(inspect(parent.toObject(), { depth: null, colors: true })),
+	)
 }

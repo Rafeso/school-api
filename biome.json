@@ -14,7 +14,7 @@
 		"formatter": {
 			"semicolons": "asNeeded",
 			"quoteStyle": "single",
-			"lineWidth": 100
+			"lineWidth": 80
 		}
 	}
 }

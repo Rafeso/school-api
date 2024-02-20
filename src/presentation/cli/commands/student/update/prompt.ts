@@ -2,7 +2,10 @@ import { inspect } from 'util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import { StudentCreationSchema, StudentUpdateType } from '../../../../../domain/student/types.js'
+import {
+	StudentCreationSchema,
+	StudentUpdateType,
+} from '../../../../../domain/student/types.js'
 import { StudentService } from '../../../../../service/StudentService.js'
 
 export async function updateAllergies(id: string, service: StudentService) {
@@ -20,10 +23,16 @@ export async function updateAllergies(id: string, service: StudentService) {
 		spinner: 'bouncingBar',
 		failText: (err) => {
 			process.exitCode = 1
-			return chalk.bold.red(`Failed to update student allergies: ${err.message}`)
+			return chalk.bold.red(
+				`Failed to update student allergies: ${err.message}`,
+			)
 		},
-		successText: chalk.magentaBright.bold('Student allergies updated successfully!'),
-	}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
+		successText: chalk.magentaBright.bold(
+			'Student allergies updated successfully!',
+		),
+	}).then((student) =>
+		console.log(inspect(student.toObject(), { depth: null, colors: true })),
+	)
 }
 
 export async function updateMedications(id: string, service: StudentService) {
@@ -41,13 +50,22 @@ export async function updateMedications(id: string, service: StudentService) {
 		spinner: 'bouncingBar',
 		failText: (err) => {
 			process.exitCode = 1
-			return chalk.bold.red(`Failed to update student medications: ${err.message}`)
+			return chalk.bold.red(
+				`Failed to update student medications: ${err.message}`,
+			)
 		},
-		successText: chalk.magentaBright.bold('Student medications updated successfully!'),
-	}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
+		successText: chalk.magentaBright.bold(
+			'Student medications updated successfully!',
+		),
+	}).then((student) =>
+		console.log(inspect(student.toObject(), { depth: null, colors: true })),
+	)
 }
 
-export async function updateStudentParentsHandler(studentId: string, service: StudentService) {
+export async function updateStudentParentsHandler(
+	studentId: string,
+	service: StudentService,
+) {
 	const { choice } = await inquirer.prompt<{ choice: string }>({
 		type: 'list',
 		name: 'choice',
@@ -81,8 +99,12 @@ export async function updateStudentParentsHandler(studentId: string, service: St
 				process.exitCode = 1
 				return chalk.bold.red(`Failed to link parent: ${err.message}\n`)
 			},
-			successText: chalk.magentaBright.bold('Student parents updated successfully!\n'),
-		}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
+			successText: chalk.magentaBright.bold(
+				'Student parents updated successfully!\n',
+			),
+		}).then((student) =>
+			console.log(inspect(student.toObject(), { depth: null, colors: true })),
+		)
 	}
 
 	async function unlinkParent(service: StudentService, studentId: string) {
@@ -105,7 +127,11 @@ export async function updateStudentParentsHandler(studentId: string, service: St
 
 		if (response.choice === false) {
 			process.exitCode = 0
-			console.info(chalk.yellowBright('Parent unlink proccess aborted you can exit safely now!'))
+			console.info(
+				chalk.yellowBright(
+					'Parent unlink proccess aborted you can exit safely now!',
+				),
+			)
 			return
 		}
 
@@ -116,7 +142,11 @@ export async function updateStudentParentsHandler(studentId: string, service: St
 				process.exitCode = 1
 				return chalk.bold.red(`Failed to unlink parents: ${err.message}`)
 			},
-			successText: chalk.magentaBright.bold('Student parents updated successfully!'),
-		}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
+			successText: chalk.magentaBright.bold(
+				'Student parents updated successfully!',
+			),
+		}).then((student) =>
+			console.log(inspect(student.toObject(), { depth: null, colors: true })),
+		)
 	}
 }

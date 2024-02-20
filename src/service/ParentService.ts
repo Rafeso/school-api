@@ -5,7 +5,10 @@ import { Service } from './BaseService.js'
 
 export class ParentService extends Service<typeof Parent> {
 	async create(creationData: ParentCreationType) {
-		const existing = await this.repository.listBy('document', creationData.document)
+		const existing = await this.repository.listBy(
+			'document',
+			creationData.document,
+		)
 		if (existing.length > 0) {
 			throw new ConflictError(Parent, creationData.document)
 		}
@@ -24,14 +27,20 @@ export class ParentService extends Service<typeof Parent> {
 		return updated
 	}
 
-	async updateEmail(id: string, emails: NonNullable<ParentUpdateType['emails']>) {
+	async updateEmail(
+		id: string,
+		emails: NonNullable<ParentUpdateType['emails']>,
+	) {
 		const parent = await this.findById(id)
 		parent.emails.push(...emails)
 		await this.repository.save(parent)
 		return parent
 	}
 
-	async updatePhone(id: string, phone: NonNullable<ParentUpdateType['phones']>) {
+	async updatePhone(
+		id: string,
+		phone: NonNullable<ParentUpdateType['phones']>,
+	) {
 		const parent = await this.findById(id)
 		parent.phones.push(...phone)
 		await this.repository.save(parent)

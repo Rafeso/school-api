@@ -1,7 +1,7 @@
 {
 	"name": "school-api",
 	"version": "0.1.0",
-	"description": "",
+	"description": "School API for managing students, teachers, parents, and classes",
 	"main": "build/app.js",
 	"bin": {
 		"school": "build/app.js"
@@ -13,8 +13,8 @@
 	"scripts": {
 		"prestart": "npm run build",
 		"start": "npm run infra:up && IS_WEB=1 node --env-file=.env build/app.js",
-		"dev:rest": "IS_WEB=1 tsx watch src/app.ts",
-		"dev:cli": "tsx src/app.ts",
+		"dev:rest": "npm run infra:up && IS_WEB=1 tsx watch src/app.ts",
+		"dev:cli": "npm run infra:up && tsx src/app.ts",
 		"build": "tsc",
 		"build:clean": "npm run clean && npm run build",
 		"clean": "rm -rf build",

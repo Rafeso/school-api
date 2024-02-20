@@ -7,15 +7,19 @@ export class DependencyConflictError extends BaseError {
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		locator: any,
 		dependecy: SerializableStatic,
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		dependencyLocator?: any,
 	) {
 		super(
 			`${entity.name} with locator ${JSON.stringify(
 				locator,
-			)} cannot be removed because it depends on ${dependecy.name}`,
+			)} cannot be removed because it depends on ${dependecy.name}${
+				dependencyLocator ? `: ${JSON.stringify(dependencyLocator)}` : ''
+			}.`,
 			entity,
 			{
 				code: 'DEPENDENCY_LOCK',
-				status: 404,
+				status: 409,
 			},
 		)
 	}

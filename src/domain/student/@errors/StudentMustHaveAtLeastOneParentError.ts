@@ -9,9 +9,11 @@ export class StudentMustHaveAtLeastOneParentError extends BaseError {
 		parentEntity: SerializableStatic,
 	) {
 		super(
-			`${parentEntity.name} with locator ${JSON.stringify(locator)} could not be removed from ${
+			`${parentEntity.name} with locator ${JSON.stringify(
+				locator,
+			)} could not be removed from because ${
 				studentEntity.name
-			} because students must have at least one parent.`,
+			} must have at least one parent.`,
 			studentEntity,
 			{
 				code: 'STUDENT_MUST_HAVE_AT_LEAST_ONE_PARENT',

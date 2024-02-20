@@ -10,7 +10,10 @@ import {
 import { ParentService } from '../../../../../service/ParentService.js'
 import { updateEmail, updatePhone } from './prompt.js'
 
-export async function updateParentHandler(service: ParentService, id?: ParentCreationType['id']) {
+export async function updateParentHandler(
+	service: ParentService,
+	id?: ParentCreationType['id'],
+) {
 	let ParentId: NonNullable<ParentCreationType['id']>
 	if (id) {
 		ParentId = id
@@ -49,7 +52,9 @@ export async function updateParentHandler(service: ParentService, id?: ParentCre
 			updateEmail(service, ParentId)
 			break
 		default: {
-			const updated = await inquirer.prompt<Omit<ParentUpdateType, 'phones' | 'emails'>>({
+			const updated = await inquirer.prompt<
+				Omit<ParentUpdateType, 'phones' | 'emails'>
+			>({
 				type: 'input',
 				name: response.field,
 				message: `New ${response.field}:`,
@@ -60,10 +65,16 @@ export async function updateParentHandler(service: ParentService, id?: ParentCre
 				spinner: 'bouncingBar',
 				failText: (err) => {
 					process.exitCode = 1
-					return chalk.red(`Failed to update parent ${response.field}: ${err.message}\n`)
+					return chalk.red(
+						`Failed to update parent ${response.field}: ${err.message}\n`,
+					)
 				},
-				successText: chalk.magentaBright.bold(`\nParent ${response.field} updated successfully!`),
-			}).then((parent) => console.log(inspect(parent.toObject(), { depth: null, colors: true })))
+				successText: chalk.magentaBright.bold(
+					`\nParent ${response.field} updated successfully!`,
+				),
+			}).then((parent) =>
+				console.log(inspect(parent.toObject(), { depth: null, colors: true })),
+			)
 		}
 	}
 }

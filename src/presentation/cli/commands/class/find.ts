@@ -2,10 +2,16 @@ import { inspect } from 'util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import { ClassCreationSchema, ClassCreationType } from '../../../../domain/class/types.js'
+import {
+	ClassCreationSchema,
+	ClassCreationType,
+} from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
 
-export async function findClassHandler(service: ClassService, id?: ClassCreationType['id']) {
+export async function findClassHandler(
+	service: ClassService,
+	id?: ClassCreationType['id'],
+) {
 	let classId: Required<ClassCreationType['id']>
 	if (id) {
 		classId = id

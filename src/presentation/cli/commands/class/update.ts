@@ -41,6 +41,10 @@ export async function updateClassHandler(service: ClassService, id?: string) {
 		text: chalk.cyan(`Updating ${response.field}...`),
 		spinner: 'bouncingBar',
 		failText: (err) => chalk.red(`Failed to create class: ${err.message}`),
-		successText: chalk.magentaBright.bold(`Updated class ${response.field} successfully!`),
-	}).then((updated) => console.log(inspect(updated.toObject(), { depth: null, colors: true })))
+		successText: chalk.magentaBright.bold(
+			`Updated class ${response.field} successfully!`,
+		),
+	}).then((updated) =>
+		console.log(inspect(updated.toObject(), { depth: null, colors: true })),
+	)
 }

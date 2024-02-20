@@ -1,7 +1,10 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { Student } from '../../domain/student/Student.js'
-import { TeacherCreationSchema, TeacherUpdateSchema } from '../../domain/teacher/types.js'
+import {
+	TeacherCreationSchema,
+	TeacherUpdateSchema,
+} from '../../domain/teacher/types.js'
 import { ClassService } from '../../service/ClassService.js'
 import { StudentService } from '../../service/StudentService.js'
 import { TeacherService } from '../../service/TeacherService.js'
@@ -12,7 +15,11 @@ export function teacherRouterFactory(
 	classService: ClassService,
 	studentService: StudentService,
 ) {
-	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
+	return (
+		app: FastifyInstance,
+		_: FastifyPluginOptions,
+		done: (err?: Error) => void,
+	) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
 		router.post(
@@ -25,12 +32,19 @@ export function teacherRouterFactory(
 			},
 		)
 
-		router.get('/', { schema: { querystring: queryPage.schema.querystring } }, async (req, res) => {
-			const page = req.query.page
-			const perPage = req.query.perPage
-			const teachers = await teacherService.list(Number(page), Number(perPage))
-			return res.send(teachers.map((t) => t.toObject()))
-		})
+		router.get(
+			'/',
+			{ schema: { querystring: queryPage.schema.querystring } },
+			async (req, res) => {
+				const page = req.query.page
+				const pageLength = req.query.pageLength
+				const teachers = await teacherService.list(
+					Number(page),
+					Number(pageLength),
+				)
+				return res.send(teachers.map((t) => t.toObject()))
+			},
+		)
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params

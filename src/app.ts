@@ -13,7 +13,9 @@ import { ParentService } from './service/ParentService.js'
 import { StudentService } from './service/StudentService.js'
 import { TeacherService } from './service/TeacherService.js'
 
-export type ServiceList = Awaited<ReturnType<typeof initDependencies>>['services']
+export type ServiceList = Awaited<
+	ReturnType<typeof initDependencies>
+>['services']
 
 export type Application = (
 	config: AppConfig,
@@ -35,7 +37,11 @@ async function initDependencies(config: AppConfig) {
 	const teacherService = new TeacherService(repositories.teacher)
 	const parentService = new ParentService(repositories.parent)
 	const studentService = new StudentService(repositories.student, parentService)
-	const classService = new ClassService(repositories.class, teacherService, studentService)
+	const classService = new ClassService(
+		repositories.class,
+		teacherService,
+		studentService,
+	)
 
 	return {
 		repositories,

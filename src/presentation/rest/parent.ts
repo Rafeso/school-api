@@ -1,12 +1,22 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
-import { ParentCreationSchema, ParentUpdateSchema } from '../../domain/parent/types.js'
+import {
+	ParentCreationSchema,
+	ParentUpdateSchema,
+} from '../../domain/parent/types.js'
 import { ParentService } from '../../service/ParentService.js'
 import { StudentService } from '../../service/StudentService.js'
 import { onlyIdParam } from './index.js'
 
-export function parentRouterFactory(parentService: ParentService, studentService: StudentService) {
-	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
+export function parentRouterFactory(
+	parentService: ParentService,
+	studentService: StudentService,
+) {
+	return (
+		app: FastifyInstance,
+		_: FastifyPluginOptions,
+		done: (err?: Error) => void,
+	) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
 		router.post(
@@ -104,29 +114,6 @@ export function parentRouterFactory(parentService: ParentService, studentService
 				}
 
 				const updated = await parentService.updatePhone(id, [...phones])
-				return res.send(updated.toObject())
-			},
-		)
-
-		router.patch(
-			'/:id/address',
-			{
-				schema: {
-					params: onlyIdParam.schema.params,
-					body: ParentUpdateSchema.pick({ address: true }),
-				},
-			},
-			async (req, res) => {
-				const { id } = req.params
-				const { address } = req.body
-
-				if (!address) {
-					return res.code(400).send({
-						message: 'Address is required',
-					})
-				}
-
-				const updated = await parentService.updateAddress(id, [...address])
 				return res.send(updated.toObject())
 			},
 		)

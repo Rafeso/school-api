@@ -9,7 +9,10 @@ import {
 } from '../../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../../service/TeacherService.js'
 import { updateSalaryHandler } from './prompt.js'
-export async function updateTeacherHandler(service: TeacherService, id?: string) {
+export async function updateTeacherHandler(
+	service: TeacherService,
+	id?: string,
+) {
 	let TeacherId: Required<TeacherCreationType['id']>
 	if (id) {
 		TeacherId = id
@@ -57,10 +60,16 @@ export async function updateTeacherHandler(service: TeacherService, id?: string)
 				spinner: 'bouncingBar',
 				failText: (err) => {
 					process.exitCode = 1
-					return chalk.red(`Failed to update teacher ${response.field}: ${err.message}\n`)
+					return chalk.red(
+						`Failed to update teacher ${response.field}: ${err.message}\n`,
+					)
 				},
-				successText: chalk.green(`Teacher ${response.field} updated successfully!\n`),
-			}).then((teacher) => console.log(inspect(teacher.toObject(), { depth: null, colors: true })))
+				successText: chalk.green(
+					`Teacher ${response.field} updated successfully!\n`,
+				),
+			}).then((teacher) =>
+				console.log(inspect(teacher.toObject(), { depth: null, colors: true })),
+			)
 		}
 	}
 }

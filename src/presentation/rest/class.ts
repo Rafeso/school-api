@@ -1,12 +1,22 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
-import { ClassCreationSchema, ClassUpdateSchema } from '../../domain/class/types.js'
+import {
+	ClassCreationSchema,
+	ClassUpdateSchema,
+} from '../../domain/class/types.js'
 import { ClassService } from '../../service/ClassService.js'
 import { TeacherService } from '../../service/TeacherService.js'
 import { onlyIdParam } from './index.js'
 
-export function classRouterFactory(classService: ClassService, teacherService: TeacherService) {
-	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
+export function classRouterFactory(
+	classService: ClassService,
+	teacherService: TeacherService,
+) {
+	return (
+		app: FastifyInstance,
+		_: FastifyPluginOptions,
+		done: (err?: Error) => void,
+	) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
 		router.post(

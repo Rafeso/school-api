@@ -8,9 +8,16 @@ import {
 	StudentUpdateType,
 } from '../../../../../domain/student/types.js'
 import { StudentService } from '../../../../../service/StudentService.js'
-import { updateAllergies, updateMedications, updateStudentParentsHandler } from './prompt.js'
+import {
+	updateAllergies,
+	updateMedications,
+	updateStudentParentsHandler,
+} from './prompt.js'
 
-export async function updateStudentHandler(service: StudentService, id?: string) {
+export async function updateStudentHandler(
+	service: StudentService,
+	id?: string,
+) {
 	let StudentId: NonNullable<StudentCreationType['id']>
 	if (id) {
 		StudentId = id
@@ -69,11 +76,17 @@ export async function updateStudentHandler(service: StudentService, id?: string)
 				failText: (err) => {
 					process.exitCode = 1
 					return chalk.red.bold(
-						`Failed to update student ${chalk.underline(StudentId)}: ${err.message}\n`,
+						`Failed to update student ${chalk.underline(StudentId)}: ${
+							err.message
+						}\n`,
 					)
 				},
-				successText: chalk.bold.magentaBright(`Student ${response.field} updated successfully!\n`),
-			}).then((updated) => console.log(inspect(updated.toObject(), { depth: null, colors: true })))
+				successText: chalk.bold.magentaBright(
+					`Student ${response.field} updated successfully!\n`,
+				),
+			}).then((updated) =>
+				console.log(inspect(updated.toObject(), { depth: null, colors: true })),
+			)
 		}
 	}
 }

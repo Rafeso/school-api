@@ -48,7 +48,8 @@ export class ClassService extends Service<typeof Class> {
 
 	async getTeacher(classId: string) {
 		const classEntity = await this.findById(classId)
-		if (!classEntity.teacher) throw new MissingDependecyError(Teacher, classId, Class)
+		if (!classEntity.teacher)
+			throw new MissingDependecyError(Teacher, classId, Class)
 
 		const teacher = await this.teacherService.findById(classEntity.id)
 		return teacher
@@ -56,7 +57,8 @@ export class ClassService extends Service<typeof Class> {
 
 	async remove(id: string) {
 		const students = await this.studentService.listBy('class', id)
-		if (students.length > 0) throw new DependencyConflictError(Class, id, Student)
+		if (students.length > 0)
+			throw new DependencyConflictError(Class, id, Student)
 
 		await this.repository.remove(id)
 	}

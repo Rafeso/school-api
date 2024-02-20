@@ -72,7 +72,8 @@ export async function createStudentHandler(service: StudentService) {
 			name: 'medications',
 			message: 'Medications:',
 			validate(value) {
-				return StudentCreationSchema.shape.medications.safeParse([value]).success
+				return StudentCreationSchema.shape.medications.safeParse([value])
+					.success
 			},
 		},
 		{
@@ -122,5 +123,7 @@ export async function createStudentHandler(service: StudentService) {
 			return chalk.red(`Failed to create student: ${err.message}`)
 		},
 		successText: chalk.green('Student created successfully!'),
-	}).then((student) => console.log(inspect(student.toObject(), { depth: null, colors: true })))
+	}).then((student) =>
+		console.log(inspect(student.toObject(), { depth: null, colors: true })),
+	)
 }

@@ -2,10 +2,16 @@ import { inspect } from 'util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import { StudentCreationSchema, StudentCreationType } from '../../../../domain/student/types.js'
+import {
+	StudentCreationSchema,
+	StudentCreationType,
+} from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
 
-export async function findStudentHandler(service: StudentService, id?: StudentCreationType['id']) {
+export async function findStudentHandler(
+	service: StudentService,
+	id?: StudentCreationType['id'],
+) {
 	let StudentId: NonNullable<StudentCreationType['id']>
 	if (id) {
 		StudentId = id

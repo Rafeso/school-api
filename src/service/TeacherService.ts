@@ -1,6 +1,9 @@
 import { ConflictError } from '../domain/@errors/Conflict.js'
 import { Teacher } from '../domain/teacher/Teacher.js'
-import { TeacherCreationType, TeacherUpdateType } from '../domain/teacher/types.js'
+import {
+	TeacherCreationType,
+	TeacherUpdateType,
+} from '../domain/teacher/types.js'
 import { Service } from './BaseService.js'
 
 export class TeacherService extends Service<typeof Teacher> {
@@ -15,7 +18,10 @@ export class TeacherService extends Service<typeof Teacher> {
 	}
 
 	async create(creationData: TeacherCreationType) {
-		const existing = await this.repository.listBy('document', creationData.document)
+		const existing = await this.repository.listBy(
+			'document',
+			creationData.document,
+		)
 		if (existing.length > 0) {
 			throw new ConflictError(Teacher, creationData.document)
 		}

@@ -2,7 +2,10 @@ import { inspect } from 'util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import { TeacherCreationSchema, TeacherCreationType } from '../../../../domain/teacher/types.js'
+import {
+	TeacherCreationSchema,
+	TeacherCreationType,
+} from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
 
 export async function findTeacherHandler(service: TeacherService, id?: string) {

@@ -1,7 +1,10 @@
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import { StudentCreationSchema, StudentCreationType } from '../../../../domain/student/types.js'
+import {
+	StudentCreationSchema,
+	StudentCreationType,
+} from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
 
 export async function deleteStudentHandler(
@@ -33,7 +36,9 @@ export async function deleteStudentHandler(
 
 	if (response.choice === false) {
 		return console.info(
-			chalk.yellow('\nStudent deletion process aborted. You can exit safely now!'),
+			chalk.yellow(
+				'\nStudent deletion process aborted. You can exit safely now!',
+			),
 		)
 	}
 
@@ -41,7 +46,13 @@ export async function deleteStudentHandler(
 		text: 'Deleting student...',
 		spinner: 'bouncingBar',
 		failText: (err) =>
-			chalk.red(`Failed to delete student ${chalk.underline(StudentId)}: ${err.message}`),
-		successText: chalk.cyan(`Student ${chalk.underline(StudentId)} was deleted!`),
+			chalk.red(
+				`Failed to delete student ${chalk.underline(StudentId)}: ${
+					err.message
+				}`,
+			),
+		successText: chalk.cyan(
+			`Student ${chalk.underline(StudentId)} was deleted!`,
+		),
 	})
 }

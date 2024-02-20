@@ -102,5 +102,7 @@ export async function createTeacherHandler(service: TeacherService) {
 			return chalk.red(`Failed to create teacher: ${err.message}\n`)
 		},
 		successText: chalk.green('Teacher created successfully!\n'),
-	}).then((teacher) => console.log(inspect(teacher.toObject(), { depth: null, colors: true })))
+	}).then((teacher) =>
+		console.log(inspect(teacher.toObject(), { depth: null, colors: true })),
+	)
 }
