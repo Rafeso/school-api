@@ -2,45 +2,15 @@ import { inspect } from 'util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { oraPromise } from 'ora'
-import {
-	StudentCreationSchema,
-	StudentUpdateType,
-} from '../../../../../domain/student/types.js'
+import { StudentCreationSchema } from '../../../../../domain/student/types.js'
 import { StudentService } from '../../../../../service/StudentService.js'
-
-export async function updateAllergies(id: string, service: StudentService) {
-	const { allergies } = await inquirer.prompt<{ allergies: string }>({
-		type: 'input',
-		name: 'allergies',
-		message: 'New allergies:',
-		validate(value: string) {
-			return StudentCreationSchema.shape.allergies.safeParse([value]).success
-		},
-	})
-
-	await oraPromise(service.updateAllergies(id, [allergies]), {
-		text: 'Updating student allergies...',
-		spinner: 'bouncingBar',
-		failText: (err) => {
-			process.exitCode = 1
-			return chalk.bold.red(
-				`Failed to update student allergies: ${err.message}`,
-			)
-		},
-		successText: chalk.magentaBright.bold(
-			'Student allergies updated successfully!',
-		),
-	}).then((student) =>
-		console.log(inspect(student.toObject(), { depth: null, colors: true })),
-	)
-}
 
 export async function updateMedications(id: string, service: StudentService) {
 	const { medications } = await inquirer.prompt<{ medications: string }>({
 		type: 'input',
 		name: 'medications',
 		message: 'New medications:',
-		validate(value: string) {
+		validate(value) {
 			return StudentCreationSchema.shape.medications.safeParse([value]).success
 		},
 	})
@@ -51,11 +21,11 @@ export async function updateMedications(id: string, service: StudentService) {
 		failText: (err) => {
 			process.exitCode = 1
 			return chalk.bold.red(
-				`Failed to update student medications: ${err.message}`,
+				`Failed to update student medications: ${err.message}\n`,
 			)
 		},
 		successText: chalk.magentaBright.bold(
-			'Student medications updated successfully!',
+			'Student medications updated successfully!\n',
 		),
 	}).then((student) =>
 		console.log(inspect(student.toObject(), { depth: null, colors: true })),
@@ -87,7 +57,7 @@ export async function updateStudentParentsHandler(
 			type: 'input',
 			name: 'parent',
 			message: 'Id of parent to add:',
-			validate(value: string) {
+			validate(value) {
 				return StudentCreationSchema.shape.parents.safeParse([value]).success
 			},
 		})
@@ -112,7 +82,7 @@ export async function updateStudentParentsHandler(
 			type: 'input',
 			name: 'parent',
 			message: 'Id of parent to remove:',
-			validate(value: string) {
+			validate(value) {
 				return StudentCreationSchema.shape.parents.safeParse([value]).success
 			},
 		})
@@ -129,7 +99,7 @@ export async function updateStudentParentsHandler(
 			process.exitCode = 0
 			console.info(
 				chalk.yellowBright(
-					'Parent unlink proccess aborted you can exit safely now!',
+					'\nParent unlink proccess aborted you can exit safely now!',
 				),
 			)
 			return
@@ -140,13 +110,11 @@ export async function updateStudentParentsHandler(
 			spinner: 'bouncingBar',
 			failText: (err) => {
 				process.exitCode = 1
-				return chalk.bold.red(`Failed to unlink parents: ${err.message}`)
+				return chalk.bold.red(`Failed to unlink parents: ${err.message}\n`)
 			},
 			successText: chalk.magentaBright.bold(
-				'Student parents updated successfully!',
+				'Student parent removed successfully!',
 			),
-		}).then((student) =>
-			console.log(inspect(student.toObject(), { depth: null, colors: true })),
-		)
+		})
 	}
 }

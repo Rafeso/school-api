@@ -28,7 +28,7 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 			'the subcommand to be executed: find, create, delete, list.',
 		)
 		.option(
-			'-i,--id [id]',
+			'-i, --id [id]',
 			'If subcommand is find or delete, the id of the parent to be found or deleted.',
 		)
 		.option(
@@ -36,12 +36,12 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 			'If subcommand is list, the page number to be returned.',
 		)
 		.option(
-			'-l, --pageLength [pageLength]',
+			'-l, --perPage [perPage]',
 			'If subcommand is list, the max number of items to be returned in page.',
 		)
 		.addHelpText(
 			'after',
-			'\nExample call: \n $ school parent create \n $ school parent find -i <id> \n $ school parent list -p <page> -l <pageLength> \n $ school parent delete -i <id> \n $ school parent update -i <id>',
+			'\nExample call: \n $ school parent create \n $ school parent find -i <id> \n $ school parent list -p <page> -l <perPage> \n $ school parent delete -i <id> \n $ school parent update -i <id>',
 		)
 		.action((subcommand, options) =>
 			ParentSubcommandHandler(services, subcommand, options),
@@ -55,7 +55,7 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 			'the subcommand to be executed: find, create, delete, list.',
 		)
 		.option(
-			'-i,--id [id]',
+			'-i, --id [id]',
 			'If subcommand is find or delete, the id of the parent to be found or deleted.',
 		)
 		.option(
@@ -63,12 +63,12 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 			'If subcommand is list, the page number to be returned.',
 		)
 		.option(
-			'-l, --pageLength [pageLength]',
+			'-l, --perPage [perPage]',
 			'If subcommand is list, the max number of items to be returned in page.',
 		)
 		.addHelpText(
 			'after',
-			'\nExample call: \n $ school student create \n $ school student find -i <id> \n $ school student list -p <page> -l <pageLength> \n $ school student delete -i <id> \n $ school student update -i <id>',
+			'\nExample call: \n $ school student create \n $ school student find -i <id> \n $ school student list -p <page> -l <perPage> \n $ school student delete -i <id> \n $ school student update -i <id>',
 		)
 		.action((subcommand, options) =>
 			StudentSubcommandHandler(services, subcommand, options),
@@ -82,7 +82,7 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 			'the subcommand to be executed: find, create, delete, list.',
 		)
 		.option(
-			'-i,--id [id]',
+			'-i, --id [id]',
 			'If subcommand is find or delete, the id of the parent to be found or deleted.',
 		)
 		.option(
@@ -90,12 +90,12 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 			'If subcommand is list, the page number to be returned.',
 		)
 		.option(
-			'-l, --pageLength [pageLength]',
+			'-l, --perPage [perPage]',
 			'If subcommand is list, the max number of items to be returned in page.',
 		)
 		.addHelpText(
 			'after',
-			'\nExample call: \n $ school teacher create \n $ school teacher find -i <id> \n $ school teacher list -p <page> -l <pageLength> \n $ school teacher delete -i <id> \n $ school teacher update -i <id>',
+			'\nExample call: \n $ school teacher create \n $ school teacher find -i <id> \n $ school teacher list -p <page> -l <perPage> \n $ school teacher delete -i <id> \n $ school teacher update -i <id>',
 		)
 		.action((subcommand, options) =>
 			TeacherSubcommandHandler(services, subcommand, options),
@@ -117,12 +117,12 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 			'If subcommand is list, the page number to be returned.',
 		)
 		.option(
-			'-l, --pageLength [pageLength]',
+			'-l, --perPage [perPage]',
 			'If subcommand is list, the max number of items to be returned in page.',
 		)
 		.addHelpText(
 			'after',
-			'\nExample call: \n $ school class create \n $ school class find -i <id> \n $ school class list -p <page> -l <pageLength> \n $ school class delete -i <id> \n $ school class update -i <id>',
+			'\nExample call: \n $ school class create \n $ school class find -i <id> \n $ school class list -p <page> -l <perPage> \n $ school class delete -i <id> \n $ school class update -i <id>',
 		)
 		.action((subcommand, options) =>
 			ClassSubcommandHandler(services, subcommand, options),

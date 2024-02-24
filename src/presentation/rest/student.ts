@@ -1,12 +1,13 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
+import { z } from 'zod'
 import {
 	StudentCreationSchema,
 	StudentUpdateSchema,
 } from '../../domain/student/types.js'
 import { ClassService } from '../../service/ClassService.js'
 import { StudentService } from '../../service/StudentService.js'
-import { StudentAndParentId, onlyIdParam } from './index.js'
+import { StudentAndParentId, onlyIdParam, queryPage } from './index.js'
 
 export function studentRouterFactory(
 	studentService: StudentService,
@@ -24,26 +25,35 @@ export function studentRouterFactory(
 			{ schema: { body: StudentCreationSchema.omit({ id: true }) } },
 			async (req, res) => {
 				const student = await studentService.create(req.body)
-				const classEntity = await classService.findById(req.body.class)
+				const Class = await classService.findById(req.body.class)
 
 				return res
 					.status(201)
-					.send({ ...student.toObject(), Class: classEntity.toObject() })
+					.send({ ...student.toObject(), class: Class.toObject() })
 			},
 		)
 
-		router.get('/', async (_, res) => {
-			const students = await studentService.list()
+		router.get(
+			'/',
+			{ schema: { querystring: queryPage.schema.querystring } },
+			async (req, res) => {
+				const students = await studentService.list(
+					Number(req.query.page),
+					Number(req.query.perPage ?? 20), // If perPage parameter is not provided, default to 20 results per page
+				)
 
-			return res.send(students.map((s) => s.toObject()))
-		})
+				return res.send(students.map((s) => s.toObject()))
+			},
+		)
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
 			const student = await studentService.findById(id)
-			const classEntity = await classService.findById(student.class)
+			const Class = (await classService.listBy('id', student.class)).map((c) =>
+				c.toObject(),
+			)
 
-			return res.send({ ...student.toObject(), Class: classEntity.toObject() })
+			return res.send({ ...student.toObject(), class: Class })
 		})
 
 		router.put(
@@ -73,9 +83,11 @@ export function studentRouterFactory(
 
 		router.get('/:id/parents', onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			const parents = await studentService.getParents(id)
+			const parents = (await studentService.getParents(id)).map((p) =>
+				p.toObject(),
+			)
 
-			return res.send(parents.map((p) => p.toObject()))
+			return res.send(parents)
 		})
 
 		router.delete(
@@ -83,14 +95,6 @@ export function studentRouterFactory(
 			StudentAndParentId,
 			async (req, res) => {
 				const { id, parentId } = req.params
-
-				const checkIfisTheOnlyParent = await studentService.getParents(id)
-				if (checkIfisTheOnlyParent.length === 1) {
-					return res.code(409).send({
-						message: `Cannot delete parent with id ${parentId} because studends must have at least one parent`,
-					})
-				}
-
 				studentService.unlinkParent(id, [parentId])
 				return res.status(204).send()
 			},
@@ -100,7 +104,7 @@ export function studentRouterFactory(
 			'/:id/parents',
 			{
 				schema: {
-					body: StudentCreationSchema.pick({ parents: true }),
+					body: StudentUpdateSchema.pick({ parents: true }).required(),
 					params: onlyIdParam.schema.params,
 				},
 			},
@@ -108,33 +112,7 @@ export function studentRouterFactory(
 				const { id } = req.params
 				const { parents } = req.body
 
-				if (!parents) {
-					return res.code(400).send({ message: 'Parents is required' })
-				}
-
 				const updated = await studentService.linkParents(id, parents)
-
-				return res.send(updated.toObject())
-			},
-		)
-
-		router.patch(
-			'/:id/allergies',
-			{
-				schema: {
-					body: StudentCreationSchema.pick({ allergies: true }),
-					params: onlyIdParam.schema.params,
-				},
-			},
-			async (req, res) => {
-				const { id } = req.params
-				const { allergies } = req.body
-
-				if (!allergies) {
-					return res.code(400).send({ message: 'Allergies is required' })
-				}
-
-				const updated = await studentService.updateAllergies(id, allergies)
 				return res.send(updated.toObject())
 			},
 		)
@@ -143,7 +121,24 @@ export function studentRouterFactory(
 			'/:id/medications',
 			{
 				schema: {
-					body: StudentCreationSchema.pick({ medications: true }),
+					body: StudentUpdateSchema.pick({ medications: true }),
+					params: onlyIdParam.schema.params,
+				},
+			},
+			async (req, res) => {
+				const { id } = req.params
+				const { medications } = req.body
+
+				const updated = await studentService.updateMedications(id, medications)
+				return res.send(updated.toObject())
+			},
+		)
+
+		router.delete(
+			'/:id/medications',
+			{
+				schema: {
+					body: StudentUpdateSchema.pick({ medications: true }),
 					params: onlyIdParam.schema.params,
 				},
 			},
@@ -152,11 +147,13 @@ export function studentRouterFactory(
 				const { medications } = req.body
 
 				if (!medications) {
-					return res.code(400).send({ message: 'Medications is required' })
+					return res.code(400).send({
+						message: 'medications is required',
+					})
 				}
 
-				const updated = await studentService.updateMedications(id, medications)
-				return res.send(updated.toObject())
+				await studentService.removeMedications(id, medications)
+				return res.status(204).send()
 			},
 		)
 

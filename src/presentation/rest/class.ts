@@ -6,7 +6,7 @@ import {
 } from '../../domain/class/types.js'
 import { ClassService } from '../../service/ClassService.js'
 import { TeacherService } from '../../service/TeacherService.js'
-import { onlyIdParam } from './index.js'
+import { onlyIdParam, queryPage } from './index.js'
 
 export function classRouterFactory(
 	classService: ClassService,
@@ -29,10 +29,17 @@ export function classRouterFactory(
 			},
 		)
 
-		router.get('/', async (_, res) => {
-			const classEntities = await classService.list()
-			return res.send(classEntities.map((c) => c.toObject()))
-		})
+		router.get(
+			'/',
+			{ schema: { querystring: queryPage.schema.querystring } },
+			async (req, res) => {
+				const classEntities = await classService.list(
+					Number(req.query.page),
+					Number(req.query.perPage ?? 20), // If perPage parameter is not provided, default to 20 results per page.
+				)
+				return res.send(classEntities.map((c) => c.toObject()))
+			},
+		)
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
@@ -56,12 +63,8 @@ export function classRouterFactory(
 			async (req, res) => {
 				const { id } = req.params
 				const updated = await classService.update(id, req.body)
-				const teacher = await teacherService.findById(updated.teacher)
 
-				return res.send({
-					...updated.toObject(),
-					teacher: teacher,
-				})
+				return res.send(updated.toObject())
 			},
 		)
 

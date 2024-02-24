@@ -6,9 +6,14 @@ import {
 	TeacherCreationSchema,
 	TeacherCreationType,
 } from '../../../../domain/teacher/types.js'
+import { ClassService } from '../../../../service/ClassService.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
 
-export async function findTeacherHandler(service: TeacherService, id?: string) {
+export async function findTeacherHandler(
+	service: TeacherService,
+	classService: ClassService,
+	id?: string,
+) {
 	let TeacherId: TeacherCreationType['id']
 	if (id) {
 		TeacherId = id
@@ -32,7 +37,15 @@ export async function findTeacherHandler(service: TeacherService, id?: string) {
 			return chalk.red(`Failed to find teacher ${TeacherId}: ${err.message}\n`)
 		},
 		successText: chalk.green('Teacher was found!\n'),
-	}).then((teacher) => {
-		console.log(inspect(teacher.toObject(), { depth: null, colors: true }))
+	}).then(async (teacher) => {
+		const Class = (await classService.listBy('teacher', teacher.id)).map((c) =>
+			c.toObject(),
+		)
+		console.log(
+			inspect(
+				{ teacher: teacher.toObject(), classes: Class },
+				{ depth: null, colors: true },
+			),
+		)
 	})
 }

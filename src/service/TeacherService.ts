@@ -1,6 +1,6 @@
 import { ConflictError } from '../domain/@errors/Conflict.js'
 import { Teacher } from '../domain/teacher/Teacher.js'
-import {
+import type {
 	TeacherCreationType,
 	TeacherUpdateType,
 } from '../domain/teacher/types.js'
@@ -13,6 +13,7 @@ export class TeacherService extends Service<typeof Teacher> {
 			...entity.toObject(),
 			...newData,
 		})
+
 		await this.repository.save(updated)
 		return updated
 	}

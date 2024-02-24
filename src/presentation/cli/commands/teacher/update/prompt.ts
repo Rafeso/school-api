@@ -13,7 +13,7 @@ export async function updateSalaryHandler(id: string, service: TeacherService) {
 		type: 'number',
 		name: 'salary',
 		message: 'New salary:',
-		validate(value: number) {
+		validate(value) {
 			return TeacherCreationSchema.shape.salary.safeParse(value).success
 		},
 	})
@@ -25,10 +25,10 @@ export async function updateSalaryHandler(id: string, service: TeacherService) {
 		{
 			failText: (err) => {
 				process.exitCode = 1
-				return chalk.red(`Failed to update teacher: ${err.message}`)
+				return chalk.red(`Failed to update teacher: ${err.message}\n`)
 			},
 			successText: chalk.magentaBright.bold(
-				'Teacher salary updated successfully!',
+				'Teacher salary updated successfully!\n',
 			),
 		},
 	).then((teacher) =>

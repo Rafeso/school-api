@@ -9,25 +9,23 @@ import { updateTeacherHandler } from './update/update.js'
 export function TeacherSubcommandHandler(
 	services: ServiceList,
 	subcommand: string,
-	options?: { id?: string; page?: number; pageLength?: number },
+	options?: { id?: string; page?: number; perPage?: number },
 ) {
-	const teacherService = services.teacher
-
 	switch (subcommand) {
 		case 'create':
-			createTeacherHandler(teacherService)
+			createTeacherHandler(services.teacher)
 			break
 		case 'delete':
-			deleteTeacherHandler(teacherService, options?.id)
+			deleteTeacherHandler(services.teacher, options?.id)
 			break
 		case 'find':
-			findTeacherHandler(teacherService, options?.id)
+			findTeacherHandler(services.teacher, services.class, options?.id)
 			break
 		case 'list':
-			listTeacherHandler(teacherService, options?.page, options?.pageLength)
+			listTeacherHandler(services.teacher, options?.page, options?.perPage)
 			break
 		case 'update':
-			updateTeacherHandler(teacherService, options?.id)
+			updateTeacherHandler(services.teacher, options?.id)
 			break
 		default:
 			console.error(

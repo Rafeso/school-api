@@ -3,7 +3,10 @@ import { ConflictError } from '../domain/@errors/Conflict.js'
 import { DependencyConflictError } from '../domain/@errors/DependencyConflict.js'
 import { MissingDependecyError } from '../domain/@errors/MissingDependecy.js'
 import { Class } from '../domain/class/Class.js'
-import { ClassCreationType, ClassUpdateType } from '../domain/class/types.js'
+import type {
+	ClassCreationType,
+	ClassUpdateType,
+} from '../domain/class/types.js'
 import { Student } from '../domain/student/Student.js'
 import { Teacher } from '../domain/teacher/Teacher.js'
 import { Service } from './BaseService.js'

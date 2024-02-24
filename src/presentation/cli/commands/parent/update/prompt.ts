@@ -20,35 +20,10 @@ export async function updatePhone(service: ParentService, id: string) {
 		spinner: 'bouncingBar',
 		failText: (err) => {
 			process.exitCode = 1
-			return chalk.red(`Failed to update parent phone: ${err.message}`)
+			return chalk.red(`Failed to update parent phone: ${err.message}\n`)
 		},
 		successText: chalk.magentaBright.bold(
-			'Parent phones updated successfully!',
-		),
-	}).then((parent) =>
-		console.log(inspect(parent.toObject(), { depth: null, colors: true })),
-	)
-}
-
-export async function updateEmail(service: ParentService, id: string) {
-	const { email } = await inquirer.prompt<{ email: string }>({
-		type: 'input',
-		name: 'email',
-		message: 'New email:',
-		validate(value) {
-			return ParentCreationSchema.shape.emails.safeParse([value]).success
-		},
-	})
-
-	await oraPromise(service.updateEmail(id, [email]), {
-		text: 'Updating parent email...',
-		spinner: 'bouncingBar',
-		failText: (err) => {
-			process.exitCode = 1
-			return chalk.red(`Failed to update parent email: ${err.message}`)
-		},
-		successText: chalk.magentaBright.bold(
-			'Parent emails updated successfully!',
+			'Parent phones updated successfully!\n',
 		),
 	}).then((parent) =>
 		console.log(inspect(parent.toObject(), { depth: null, colors: true })),

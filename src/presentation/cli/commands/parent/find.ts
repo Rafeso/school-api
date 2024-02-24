@@ -7,9 +7,11 @@ import {
 	ParentCreationType,
 } from '../../../../domain/parent/types.js'
 import { ParentService } from '../../../../service/ParentService.js'
+import { StudentService } from '../../../../service/StudentService.js'
 
 export async function findParentHandler(
 	service: ParentService,
+	studentService: StudentService,
 	id?: ParentCreationType['id'],
 ) {
 	let parentId: NonNullable<ParentCreationType['id']>
@@ -35,7 +37,15 @@ export async function findParentHandler(
 			return chalk.red(`Failed to find parent: ${err.message}\n`)
 		},
 		successText: chalk.green('Parent was found.\n'),
-	}).then((parent) => {
-		console.log(inspect(parent.toObject(), { depth: null, colors: true }))
+	}).then(async (parent) => {
+		const Student = (await studentService.listBy('parents', [parent.id])).map(
+			(s) => s.toObject(),
+		)
+		console.log(
+			inspect(
+				{ parent: parent.toObject(), student: Student },
+				{ depth: null, colors: true },
+			),
+		)
 	})
 }

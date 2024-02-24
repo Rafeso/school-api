@@ -1,9 +1,10 @@
 import { Database } from '../data/Db.js'
+import { BadRequestError } from '../domain/@errors/BadRequest.js'
 import { ConflictError } from '../domain/@errors/Conflict.js'
 import { Parent } from '../domain/parent/Parent.js'
 import { StudentMustHaveAtLeastOneParentError } from '../domain/student/@errors/StudentMustHaveAtLeastOneParentError.js'
 import { Student } from '../domain/student/Student.js'
-import {
+import type {
 	StudentCreationType,
 	StudentUpdateType,
 } from '../domain/student/types.js'
@@ -30,13 +31,14 @@ export class StudentService extends Service<typeof Student> {
 	}
 
 	async create(creationData: StudentCreationType) {
-		const existing = await this.repository.listBy(
+		const studentAlreadyExists = await this.repository.listBy(
 			'document',
 			creationData.document,
 		)
 
-		if (existing.length > 0)
+		if (studentAlreadyExists.length > 0) {
 			throw new ConflictError(Student, creationData.document)
+		}
 
 		creationData.parents.map((parentId) =>
 			this.parentService.findById(parentId),
@@ -64,11 +66,12 @@ export class StudentService extends Service<typeof Student> {
 	) {
 		const student = await this.findById(id)
 
-		const checkParent = await this.getParents(id)
-		if (checkParent.length > 1) {
+		const checkIfParentIsAlreadyLinked = await this.getParents(id)
+		if (checkIfParentIsAlreadyLinked.length > 0) {
 			throw new ConflictError(Parent, parentsToUpdate)
 		}
-		parentsToUpdate.map((parentId) => this.parentService.findById(parentId))
+
+		parentsToUpdate.map((parentId) => this.parentService.findById(parentId)) // Check in parent service if parent exists, and throw an NotFoundError if not.
 
 		student.parents.push(...parentsToUpdate)
 		await this.repository.save(student)
@@ -77,7 +80,7 @@ export class StudentService extends Service<typeof Student> {
 
 	async unlinkParent(
 		id: string,
-		parentToDelete: StudentCreationType['parents'],
+		parentToDelete: NonNullable<StudentUpdateType['parents']>,
 	) {
 		const student = await this.findById(id)
 
@@ -90,30 +93,43 @@ export class StudentService extends Service<typeof Student> {
 			)
 		}
 
+		parentToDelete.map((parentId) => this.parentService.findById(parentId)) // Check in parent service if parent exists, and throw an NotFoundError if not.
+
 		student.parents = student.parents.filter(
 			(parent) => !parentToDelete.includes(parent),
-		) as StudentCreationType['parents']
+		) as NonNullable<StudentUpdateType['parents']>
 		await this.repository.save(student)
-		return student
-	}
-
-	async updateAllergies(
-		id: string,
-		allergies: NonNullable<StudentUpdateType['allergies']>,
-	) {
-		const student = await this.findById(id)
-		student.allergies?.push(...allergies)
-		await this.repository.save(student)
-		return student
+		return
 	}
 
 	async updateMedications(
 		id: string,
-		medications: NonNullable<StudentCreationType['medications']>,
+		medicationsToUpdate: StudentUpdateType['medications'],
 	) {
 		const student = await this.findById(id)
-		student.medications?.push(...medications)
+
+		if (!medicationsToUpdate || medicationsToUpdate.length === 0) {
+			throw new BadRequestError(Student, "Medications can't be empty")
+		}
+
+		student.medications?.push(...medicationsToUpdate)
 		await this.repository.save(student)
 		return student
+	}
+
+	async removeMedications(
+		id: string,
+		medicationsToRemove: StudentCreationType['medications'],
+	) {
+		if (!medicationsToRemove || medicationsToRemove.length === 0) {
+			throw new BadRequestError(Student, "Medications can't be empty")
+		}
+
+		const student = await this.findById(id)
+		student.medications = student.medications?.filter(
+			(medication) => !medicationsToRemove.includes(medication),
+		) as NonNullable<StudentCreationType['medications']>
+		await this.repository.save(student)
+		return
 	}
 }

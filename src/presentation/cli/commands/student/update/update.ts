@@ -8,11 +8,7 @@ import {
 	StudentUpdateType,
 } from '../../../../../domain/student/types.js'
 import { StudentService } from '../../../../../service/StudentService.js'
-import {
-	updateAllergies,
-	updateMedications,
-	updateStudentParentsHandler,
-} from './prompt.js'
+import { updateMedications, updateStudentParentsHandler } from './prompt.js'
 
 export async function updateStudentHandler(
 	service: StudentService,
@@ -58,12 +54,9 @@ export async function updateStudentHandler(
 		case 'parents':
 			await updateStudentParentsHandler(StudentId, service)
 			break
-		case 'allergies':
-			await updateAllergies(StudentId, service)
-			break
 		default: {
 			const updated = await inquirer.prompt<
-				Omit<StudentUpdateType, 'medications' | 'parents' | 'allergies'>
+				Omit<StudentUpdateType, 'medications' | 'parents'>
 			>({
 				type: 'input',
 				name: response.field,
@@ -75,11 +68,7 @@ export async function updateStudentHandler(
 				spinner: 'bouncingBar',
 				failText: (err) => {
 					process.exitCode = 1
-					return chalk.red.bold(
-						`Failed to update student ${chalk.underline(StudentId)}: ${
-							err.message
-						}\n`,
-					)
+					return chalk.red.bold(`Failed to update student: ${err.message}\n`)
 				},
 				successText: chalk.bold.magentaBright(
 					`Student ${response.field} updated successfully!\n`,

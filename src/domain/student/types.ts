@@ -9,9 +9,9 @@ export const StudentCreationSchema = z.object({
 		.datetime()
 		.refine((date) => !Number.isNaN(new Date(date).getTime())),
 	parents: z.array(z.string().uuid()).nonempty(),
-	allergies: z.array(z.string()).nullable().optional().default([]),
+	allergies: z.array(z.string().min(1)).nullable().optional().default([]),
 	bloodType: z.string().max(3).min(2),
-	medications: z.array(z.string()).nullable().optional().default([]),
+	medications: z.array(z.string().min(1)).nullable().optional().default([]),
 	startDate: z
 		.string()
 		.datetime()
@@ -21,7 +21,6 @@ export const StudentCreationSchema = z.object({
 })
 
 export type StudentCreationType = z.infer<typeof StudentCreationSchema>
-
 export const StudentUpdateSchema = StudentCreationSchema.partial().omit({
 	id: true,
 })

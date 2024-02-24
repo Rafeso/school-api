@@ -8,7 +8,7 @@ import {
 	ParentUpdateType,
 } from '../../../../../domain/parent/types.js'
 import { ParentService } from '../../../../../service/ParentService.js'
-import { updateEmail, updatePhone } from './prompt.js'
+import { updatePhone } from './prompt.js'
 
 export async function updateParentHandler(
 	service: ParentService,
@@ -48,13 +48,8 @@ export async function updateParentHandler(
 		case 'phones':
 			updatePhone(service, ParentId)
 			break
-		case 'emails':
-			updateEmail(service, ParentId)
-			break
 		default: {
-			const updated = await inquirer.prompt<
-				Omit<ParentUpdateType, 'phones' | 'emails'>
-			>({
+			const updated = await inquirer.prompt<Omit<ParentUpdateType, 'phones'>>({
 				type: 'input',
 				name: response.field,
 				message: `New ${response.field}:`,
@@ -70,7 +65,7 @@ export async function updateParentHandler(
 					)
 				},
 				successText: chalk.magentaBright.bold(
-					`\nParent ${response.field} updated successfully!`,
+					`Parent ${response.field} updated successfully!\n`,
 				),
 			}).then((parent) =>
 				console.log(inspect(parent.toObject(), { depth: null, colors: true })),

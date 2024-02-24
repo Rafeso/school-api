@@ -60,9 +60,7 @@ export async function updateTeacherHandler(
 				spinner: 'bouncingBar',
 				failText: (err) => {
 					process.exitCode = 1
-					return chalk.red(
-						`Failed to update teacher ${response.field}: ${err.message}\n`,
-					)
+					return chalk.red(`Failed to update teacher: ${err.message}\n`)
 				},
 				successText: chalk.green(
 					`Teacher ${response.field} updated successfully!\n`,

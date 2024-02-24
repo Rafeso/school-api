@@ -4,9 +4,9 @@ import { ParentService } from '../../../../service/ParentService.js'
 export async function listParentHandler(
 	service: ParentService,
 	page?: number,
-	pageLength?: number,
+	perPage?: number,
 ) {
-	const parents = await service.list(page, pageLength)
+	const parents = await service.list(page, perPage)
 	console.log(
 		inspect(
 			parents.map((p) => p.toObject()),

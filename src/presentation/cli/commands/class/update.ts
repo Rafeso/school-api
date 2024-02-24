@@ -40,9 +40,9 @@ export async function updateClassHandler(service: ClassService, id?: string) {
 	await oraPromise(service.update(ClassId, updated), {
 		text: chalk.cyan(`Updating ${response.field}...`),
 		spinner: 'bouncingBar',
-		failText: (err) => chalk.red(`Failed to create class: ${err.message}`),
+		failText: (err) => chalk.red(`Failed to update class: ${err.message}\n`),
 		successText: chalk.magentaBright.bold(
-			`Updated class ${response.field} successfully!`,
+			`Updated class ${response.field} successfully!\n`,
 		),
 	}).then((updated) =>
 		console.log(inspect(updated.toObject(), { depth: null, colors: true })),

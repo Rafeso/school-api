@@ -6,7 +6,7 @@ import {
 } from '../../domain/parent/types.js'
 import { ParentService } from '../../service/ParentService.js'
 import { StudentService } from '../../service/StudentService.js'
-import { onlyIdParam } from './index.js'
+import { onlyIdParam, queryPage } from './index.js'
 
 export function parentRouterFactory(
 	parentService: ParentService,
@@ -28,16 +28,26 @@ export function parentRouterFactory(
 			},
 		)
 
-		router.get('/', async (_, res) => {
-			const parents = await parentService.list()
-			return res.send(parents.map((p) => p.toObject()))
-		})
+		router.get(
+			'/',
+			{ schema: { querystring: queryPage.schema.querystring } },
+			async (req, res) => {
+				const parents = await parentService.list(
+					Number(req.query.page),
+					Number(req.query.perPage ?? 20), // If perPage parameter is not provided, default to 20 results per page
+				)
+				return res.send(parents.map((p) => p.toObject()))
+			},
+		)
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
 
 			const parentEntity = await parentService.findById(id)
-			return res.send(parentEntity.toObject())
+			const students = (await studentService.listBy('parents', [id])).map((s) =>
+				s.toObject(),
+			)
+			return res.send({ ...parentEntity.toObject(), students: students })
 		})
 
 		router.put(
@@ -58,7 +68,10 @@ export function parentRouterFactory(
 			const students = await studentService.listBy('parents', [id])
 			if (students.length > 0) {
 				return res.code(403).send({
-					message: `Cannot delete parent with id ${id} because it has students assigned`,
+					status: 403,
+					code: 'PARENT_HAS_STUDENTS',
+					error: 'Forbidden',
+					message: 'Cannot delete parent because it has students assigned',
 				})
 			}
 
@@ -73,29 +86,6 @@ export function parentRouterFactory(
 		})
 
 		router.patch(
-			'/:id/emails',
-			{
-				schema: {
-					params: onlyIdParam.schema.params,
-					body: ParentUpdateSchema.pick({ emails: true }),
-				},
-			},
-			async (req, res) => {
-				const { id } = req.params
-				const { emails } = req.body
-
-				if (!emails) {
-					return res.code(400).send({
-						message: 'Emails is required',
-					})
-				}
-
-				const updated = await parentService.updateEmail(id, [...emails])
-				return res.send(updated.toObject())
-			},
-		)
-
-		router.patch(
 			'/:id/phones',
 			{
 				schema: {
@@ -107,13 +97,7 @@ export function parentRouterFactory(
 				const { id } = req.params
 				const { phones } = req.body
 
-				if (!phones) {
-					return res.code(400).send({
-						message: 'Phones is required',
-					})
-				}
-
-				const updated = await parentService.updatePhone(id, [...phones])
+				const updated = await parentService.updatePhone(id, phones)
 				return res.send(updated.toObject())
 			},
 		)

@@ -1,6 +1,10 @@
+import { BadRequestError } from '../domain/@errors/BadRequest.js'
 import { ConflictError } from '../domain/@errors/Conflict.js'
 import { Parent } from '../domain/parent/Parent.js'
-import { ParentCreationType, ParentUpdateType } from '../domain/parent/types.js'
+import type {
+	ParentCreationType,
+	ParentUpdateType,
+} from '../domain/parent/types.js'
 import { Service } from './BaseService.js'
 
 export class ParentService extends Service<typeof Parent> {
@@ -27,20 +31,10 @@ export class ParentService extends Service<typeof Parent> {
 		return updated
 	}
 
-	async updateEmail(
-		id: string,
-		emails: NonNullable<ParentUpdateType['emails']>,
-	) {
-		const parent = await this.findById(id)
-		parent.emails.push(...emails)
-		await this.repository.save(parent)
-		return parent
-	}
-
-	async updatePhone(
-		id: string,
-		phone: NonNullable<ParentUpdateType['phones']>,
-	) {
+	async updatePhone(id: string, phone: ParentUpdateType['phones']) {
+		if (!phone || phone.length === 0) {
+			throw new BadRequestError(Parent, 'Phone cannot be empty')
+		}
 		const parent = await this.findById(id)
 		parent.phones.push(...phone)
 		await this.repository.save(parent)

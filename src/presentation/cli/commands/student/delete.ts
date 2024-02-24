@@ -19,7 +19,7 @@ export async function deleteStudentHandler(
 			type: 'input',
 			name: 'id',
 			message: 'Student id:',
-			validate(value: NonNullable<StudentCreationType['id']>) {
+			validate(value) {
 				return StudentCreationSchema.shape.id.safeParse(value).success
 			},
 		})
@@ -49,7 +49,7 @@ export async function deleteStudentHandler(
 			chalk.red(
 				`Failed to delete student ${chalk.underline(StudentId)}: ${
 					err.message
-				}`,
+				}\n`,
 			),
 		successText: chalk.cyan(
 			`Student ${chalk.underline(StudentId)} was deleted!`,

@@ -36,11 +36,9 @@ export function teacherRouterFactory(
 			'/',
 			{ schema: { querystring: queryPage.schema.querystring } },
 			async (req, res) => {
-				const page = req.query.page
-				const pageLength = req.query.pageLength
 				const teachers = await teacherService.list(
-					Number(page),
-					Number(pageLength),
+					Number(req.query.page),
+					Number(req.query.perPage ?? 20), // If perPage parameter is not provided, default to 20 results per page
 				)
 				return res.send(teachers.map((t) => t.toObject()))
 			},
@@ -50,7 +48,10 @@ export function teacherRouterFactory(
 			const { id } = req.params
 
 			const teacher = await teacherService.findById(id)
-			return res.send(teacher.toObject())
+			const Class = (await classService.listBy('teacher', teacher.id)).map(
+				(c) => c.toObject(),
+			)
+			return res.send({ ...teacher.toObject(), class: Class })
 		})
 
 		router.put(

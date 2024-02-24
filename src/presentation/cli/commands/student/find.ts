@@ -28,14 +28,22 @@ export async function findStudentHandler(
 	}
 
 	await oraPromise(service.findById(StudentId), {
-		text: 'Finding student...',
+		text: chalk.cyan('Finding student...'),
 		spinner: 'bouncingBar',
 		failText: (err) => {
 			process.exitCode = 1
-			return chalk.red(`Failed to find student ${StudentId}: ${err.message}`)
+			return chalk.red(`Failed to find student: ${err.message}\n`)
 		},
-		successText: chalk.green('Student found!'),
-	}).then((student) => {
-		console.log(inspect(student.toObject(), { depth: null, colors: true }))
+		successText: chalk.green('Student found!\n'),
+	}).then(async (student) => {
+		const Parents = (await service.getParents(student.id)).map((p) =>
+			p.toObject(),
+		)
+		console.log(
+			inspect(
+				{ student: student.toObject(), parents: Parents },
+				{ depth: null, colors: true },
+			),
+		)
 	})
 }

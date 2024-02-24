@@ -14,9 +14,9 @@ export abstract class Service<
 		return entity
 	}
 
-	async list(page = 1, pageLength = 10) {
+	async list(page = 1, perPage = 20) {
 		const entity = await this.repository.list()
-		return entity.slice((page - 1) * pageLength, page * pageLength)
+		return entity.slice((page - 1) * perPage, page * perPage)
 	}
 
 	async listBy<L extends keyof I>(property: L, value: I[L]) {

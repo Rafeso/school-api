@@ -120,9 +120,9 @@ export async function createStudentHandler(service: StudentService) {
 		spinner: 'bouncingBar',
 		failText: (err) => {
 			process.exitCode = 1
-			return chalk.red(`Failed to create student: ${err.message}`)
+			return chalk.red(`Failed to create student: ${err.message}\n`)
 		},
-		successText: chalk.green('Student created successfully!'),
+		successText: chalk.green('Student created successfully!\n'),
 	}).then((student) =>
 		console.log(inspect(student.toObject(), { depth: null, colors: true })),
 	)

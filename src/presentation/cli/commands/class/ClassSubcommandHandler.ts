@@ -8,22 +8,20 @@ import { listClassHandler } from './list.js'
 export function ClassSubcommandHandler(
 	services: ServiceList,
 	subcommand: string,
-	options?: { id?: string; page?: number; pageLength?: number },
+	options?: { id?: string; page?: number; perPage?: number },
 ) {
-	const classService = services.class
-
 	switch (subcommand) {
 		case 'create':
-			createClassHandler(classService)
+			createClassHandler(services.class)
 			break
 		case 'delete':
-			deleteClassHandler(classService, options?.id)
+			deleteClassHandler(services.class, options?.id)
 			break
 		case 'find':
-			findClassHandler(classService, options?.id)
+			findClassHandler(services.class, services.teacher, options?.id)
 			break
 		case 'list':
-			listClassHandler(classService, options?.page, options?.pageLength)
+			listClassHandler(services.class, options?.page, options?.perPage)
 			break
 		default:
 			console.error(
