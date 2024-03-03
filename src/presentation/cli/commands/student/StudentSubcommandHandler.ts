@@ -9,7 +9,7 @@ import { updateStudentHandler } from './update/update.js'
 export function StudentSubcommandHandler(
 	services: ServiceList,
 	subcommand: string,
-	options?: { id?: string; page?: number; perPage?: number },
+	options?: { id?: string; page?: number },
 ) {
 	switch (subcommand) {
 		case 'create':
@@ -22,7 +22,7 @@ export function StudentSubcommandHandler(
 			findStudentHandler(services.student, options?.id)
 			break
 		case 'list':
-			listStudentHandler(services.student, options?.page, options?.perPage)
+			listStudentHandler(services.student, options?.page)
 			break
 		case 'update':
 			updateStudentHandler(services.student, options?.id)

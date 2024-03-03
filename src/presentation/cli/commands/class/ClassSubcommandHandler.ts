@@ -8,7 +8,7 @@ import { listClassHandler } from './list.js'
 export function ClassSubcommandHandler(
 	services: ServiceList,
 	subcommand: string,
-	options?: { id?: string; page?: number; perPage?: number },
+	options?: { id?: string; page?: number },
 ) {
 	switch (subcommand) {
 		case 'create':
@@ -21,7 +21,7 @@ export function ClassSubcommandHandler(
 			findClassHandler(services.class, services.teacher, options?.id)
 			break
 		case 'list':
-			listClassHandler(services.class, options?.page, options?.perPage)
+			listClassHandler(services.class, options?.page)
 			break
 		default:
 			console.error(

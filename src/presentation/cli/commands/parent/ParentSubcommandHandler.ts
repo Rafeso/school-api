@@ -9,7 +9,7 @@ import { updateParentHandler } from './update/update.js'
 export function ParentSubcommandHandler(
 	services: ServiceList,
 	subcommand: string,
-	options?: { id?: string; page?: number; perPage?: number },
+	options?: { id?: string; page?: number },
 ) {
 	switch (subcommand) {
 		case 'create':
@@ -22,7 +22,7 @@ export function ParentSubcommandHandler(
 			findParentHandler(services.parent, services.student, options?.id)
 			break
 		case 'list':
-			listParentHandler(services.parent, options?.page, options?.perPage)
+			listParentHandler(services.parent, options?.page)
 			break
 		case 'update':
 			updateParentHandler(services.parent, options?.id)
