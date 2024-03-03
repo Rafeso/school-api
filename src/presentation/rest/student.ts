@@ -37,10 +37,9 @@ export function studentRouterFactory(
 			'/',
 			{ schema: { querystring: queryPage.schema.querystring } },
 			async (req, res) => {
-				const students = await studentService.list(
-					Number(req.query.page),
-					Number(req.query.perPage ?? 20), // If perPage parameter is not provided, default to 20 results per page
-				)
+				const students = await studentService.list({
+					page: Number(req.query.page),
+				})
 
 				return res.send(students.map((s) => s.toObject()))
 			},

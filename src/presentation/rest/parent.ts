@@ -32,10 +32,9 @@ export function parentRouterFactory(
 			'/',
 			{ schema: { querystring: queryPage.schema.querystring } },
 			async (req, res) => {
-				const parents = await parentService.list(
-					Number(req.query.page),
-					Number(req.query.perPage ?? 20), // If perPage parameter is not provided, default to 20 results per page
-				)
+				const parents = await parentService.list({
+					page: Number(req.query.page),
+				})
 				return res.send(parents.map((p) => p.toObject()))
 			},
 		)

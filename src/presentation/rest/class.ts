@@ -33,10 +33,9 @@ export function classRouterFactory(
 			'/',
 			{ schema: { querystring: queryPage.schema.querystring } },
 			async (req, res) => {
-				const classEntities = await classService.list(
-					Number(req.query.page),
-					Number(req.query.perPage ?? 20), // If perPage parameter is not provided, default to 20 results per page.
-				)
+				const classEntities = await classService.list({
+					page: Number(req.query.page),
+				})
 				return res.send(classEntities.map((c) => c.toObject()))
 			},
 		)

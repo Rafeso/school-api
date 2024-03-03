@@ -28,7 +28,6 @@ export const queryPage = {
 	schema: {
 		querystring: z.object({
 			page: z.string(),
-			perPage: z.string().optional(),
 		}),
 	},
 }

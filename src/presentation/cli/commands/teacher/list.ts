@@ -4,9 +4,8 @@ import { TeacherService } from '../../../../service/TeacherService.js'
 export async function listTeacherHandler(
 	service: TeacherService,
 	page?: number,
-	perPage?: number,
 ) {
-	const teachers = await service.list(page, perPage)
+	const teachers = await service.list({ page: page })
 	console.log(
 		inspect(
 			teachers.map((t) => t.toObject()),
