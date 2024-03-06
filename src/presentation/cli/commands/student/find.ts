@@ -8,10 +8,7 @@ import {
 } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
 
-export async function findStudentHandler(
-	service: StudentService,
-	id?: StudentCreationType['id'],
-) {
+export async function findStudentHandler(service: StudentService, id?: string) {
 	let StudentId: NonNullable<StudentCreationType['id']>
 	if (id) {
 		StudentId = id

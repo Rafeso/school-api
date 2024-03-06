@@ -10,10 +10,7 @@ import {
 import { ParentService } from '../../../../../service/ParentService.js'
 import { updatePhone } from './prompt.js'
 
-export async function updateParentHandler(
-	service: ParentService,
-	id?: ParentCreationType['id'],
-) {
+export async function updateParentHandler(service: ParentService, id?: string) {
 	let ParentId: NonNullable<ParentCreationType['id']>
 	if (id) {
 		ParentId = id
@@ -29,6 +26,15 @@ export async function updateParentHandler(
 
 		ParentId = id
 	}
+
+	await oraPromise(service.findById(ParentId), {
+		text: chalk.cyan('Finding parent...'),
+		spinner: 'bouncingBar',
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to find parent: ${err.message}\n`)
+		},
+	})
 
 	const response = await inquirer.prompt<{ field: string }>({
 		type: 'list',

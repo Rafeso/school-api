@@ -9,9 +9,9 @@ import { TeacherService } from '../../../../service/TeacherService.js'
 
 export async function deleteTeacherHandler(
 	service: TeacherService,
-	id?: TeacherCreationType['id'],
+	id?: string,
 ) {
-	let teacherId: Required<TeacherCreationType['id']>
+	let teacherId: NonNullable<TeacherCreationType['id']>
 	if (id) {
 		teacherId = id
 	} else {
@@ -26,15 +26,17 @@ export async function deleteTeacherHandler(
 		teacherId = id
 	}
 
-	const reponse = await inquirer.prompt<{ confirm: boolean }>({
+	const { confirmDeletion } = await inquirer.prompt<{
+		confirmDeletion: boolean
+	}>({
 		type: 'confirm',
-		name: 'confirm',
+		name: 'confirmDeletion',
 		message: `Are you sure you want to delete teacher: ${chalk.underline.bold.yellowBright(
 			teacherId,
 		)} ?`,
 	})
 
-	if (reponse.confirm === false) {
+	if (!confirmDeletion) {
 		process.exitCode = 1
 		return console.warn(
 			chalk.yellow('\nTeacher deletion aborted. You can exit safely now.'),

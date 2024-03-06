@@ -9,7 +9,7 @@ import {
 } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
 export async function updateClassHandler(service: ClassService, id?: string) {
-	let ClassId: Required<ClassCreationType['id']>
+	let ClassId: NonNullable<ClassCreationType['id']>
 	if (id) {
 		ClassId = id
 	} else {
@@ -23,6 +23,12 @@ export async function updateClassHandler(service: ClassService, id?: string) {
 		})
 		ClassId = id
 	}
+
+	await oraPromise(service.findById(ClassId), {
+		text: chalk.cyan('Finding class...'),
+		spinner: 'bouncingBar',
+		failText: (err) => chalk.red(`Failed to find class: ${err.message}\n`),
+	})
 
 	const response = await inquirer.prompt<{ field: string }>({
 		type: 'list',

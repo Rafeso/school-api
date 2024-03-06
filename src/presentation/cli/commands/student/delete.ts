@@ -9,7 +9,7 @@ import { StudentService } from '../../../../service/StudentService.js'
 
 export async function deleteStudentHandler(
 	service: StudentService,
-	id?: StudentCreationType['id'],
+	id?: string,
 ) {
 	let StudentId: NonNullable<StudentCreationType['id']>
 	if (id) {
@@ -26,15 +26,26 @@ export async function deleteStudentHandler(
 		StudentId = id
 	}
 
-	const response = await inquirer.prompt<{ choice: boolean }>({
+	await oraPromise(service.findById(StudentId), {
+		text: chalk.cyan('Finding student...'),
+		spinner: 'bouncingBar',
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to find student: ${err.message}\n`)
+		},
+	})
+
+	const { confirmDeletion } = await inquirer.prompt<{
+		confirmDeletion: boolean
+	}>({
 		type: 'confirm',
-		name: 'choice',
+		name: 'confirmDeletion',
 		message: `Are you sure you want to delete student: ${chalk.underline.bold.yellowBright(
 			StudentId,
 		)} ?`,
 	})
 
-	if (response.choice === false) {
+	if (!confirmDeletion) {
 		return console.info(
 			chalk.yellow(
 				'\nStudent deletion process aborted. You can exit safely now!',

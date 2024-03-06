@@ -14,9 +14,9 @@ import { StudentService } from '../../../../service/StudentService.js'
 export async function deleteParentHandler(
 	parentService: ParentService,
 	studentService: StudentService,
-	id?: ParentCreationType['id'],
+	id?: string,
 ) {
-	let parentId: Required<ParentCreationType['id']>
+	let parentId: NonNullable<ParentCreationType['id']>
 	if (id) {
 		parentId = id
 	} else {
@@ -31,20 +31,14 @@ export async function deleteParentHandler(
 		parentId = id
 	}
 
-	const response = await inquirer.prompt<{ choice: boolean }>({
-		type: 'confirm',
-		name: 'choice',
-		message: `Are you sure you want to delete parent: ${chalk.underline.bold.yellowBright(
-			parentId,
-		)} ?`,
+	await oraPromise(parentService.findById(parentId), {
+		text: chalk.cyan('Finding parent...'),
+		spinner: 'bouncingBar',
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to find parent: ${err.message}\n`)
+		},
 	})
-
-	if (response.choice === false) {
-		console.info(
-			chalk.yellow('\nParent deletion aborted you can exit safely now!'),
-		)
-		return
-	}
 
 	const checkStudents = await studentService.listBy('parents', [parentId])
 	if (checkStudents.length > 0) {
@@ -55,6 +49,23 @@ export async function deleteParentHandler(
 			Student,
 			checkStudents.map((s) => s.id),
 		)
+	}
+
+	const { confirmDeletion } = await inquirer.prompt<{
+		confirmDeletion: boolean
+	}>({
+		type: 'confirm',
+		name: 'confirmDeletion',
+		message: `Are you sure you want to delete parent: ${chalk.underline.bold.yellowBright(
+			parentId,
+		)} ?`,
+	})
+
+	if (!confirmDeletion) {
+		console.info(
+			chalk.yellow('\nParent deletion aborted you can exit safely now!'),
+		)
+		return
 	}
 
 	await oraPromise(parentService.remove(parentId), {

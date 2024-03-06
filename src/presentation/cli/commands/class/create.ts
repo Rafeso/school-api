@@ -1,12 +1,9 @@
 import { inspect } from 'node:util'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
-import { oraPromise, spinners } from 'ora'
+import { oraPromise } from 'ora'
 import { Class } from '../../../../domain/class/Class.js'
-import {
-	ClassCreationSchema,
-	ClassCreationType,
-} from '../../../../domain/class/types.js'
+import { ClassCreationSchema } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
 
 export async function createClassHandler(service: ClassService) {

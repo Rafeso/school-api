@@ -14,7 +14,7 @@ export async function findTeacherHandler(
 	classService: ClassService,
 	id?: string,
 ) {
-	let TeacherId: TeacherCreationType['id']
+	let TeacherId: NonNullable<TeacherCreationType['id']>
 	if (id) {
 		TeacherId = id
 	} else {
@@ -34,7 +34,7 @@ export async function findTeacherHandler(
 		spinner: 'bouncingBar',
 		failText: (err) => {
 			process.exitCode = 1
-			return chalk.red(`Failed to find teacher ${TeacherId}: ${err.message}\n`)
+			return chalk.red(`Failed to find teacher: ${err.message}\n`)
 		},
 		successText: chalk.green('Teacher was found!\n'),
 	}).then(async (teacher) => {

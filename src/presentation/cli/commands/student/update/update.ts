@@ -29,6 +29,15 @@ export async function updateStudentHandler(
 		StudentId = id
 	}
 
+	await oraPromise(service.findById(StudentId), {
+		text: chalk.cyan('Finding student...'),
+		spinner: 'bouncingBar',
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to find student: ${err.message}\n`)
+		},
+	})
+
 	const response = await inquirer.prompt<{ field: string }>({
 		type: 'list',
 		name: 'field',

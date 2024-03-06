@@ -7,10 +7,7 @@ import {
 } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
 
-export async function deleteClassHandler(
-	service: ClassService,
-	id?: ClassCreationType['id'],
-) {
+export async function deleteClassHandler(service: ClassService, id?: string) {
 	let classId: NonNullable<ClassCreationType['id']>
 	if (id) {
 		classId = id
@@ -26,7 +23,18 @@ export async function deleteClassHandler(
 		classId = id
 	}
 
-	const response = await inquirer.prompt<{ confirm: boolean }>({
+	await oraPromise(service.findById(classId), {
+		text: 'Finding class...',
+		spinner: 'bouncingBar',
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to find class: ${err.message}\n`)
+		},
+	})
+
+	const { confirmDeletion } = await inquirer.prompt<{
+		confirmDeletion: boolean
+	}>({
 		type: 'confirm',
 		name: 'confirm',
 		message: `Are you sure you want to delete class: ${chalk.underline.bold.yellowBright(
@@ -34,7 +42,7 @@ export async function deleteClassHandler(
 		)} ?`,
 	})
 
-	if (response.confirm === false) {
+	if (!confirmDeletion) {
 		console.log(
 			chalk.yellow('\nClass deletion aborted, you can exit safely now.'),
 		)

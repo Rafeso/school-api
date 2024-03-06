@@ -13,7 +13,7 @@ export async function updateTeacherHandler(
 	service: TeacherService,
 	id?: string,
 ) {
-	let TeacherId: Required<TeacherCreationType['id']>
+	let TeacherId: NonNullable<TeacherCreationType['id']>
 	if (id) {
 		TeacherId = id
 	} else {
@@ -27,6 +27,15 @@ export async function updateTeacherHandler(
 		})
 		TeacherId = id
 	}
+
+	await oraPromise(service.findById(TeacherId), {
+		text: chalk.cyan('Finding teacher...'),
+		spinner: 'bouncingBar',
+		failText: (err) => {
+			process.exitCode = 1
+			return chalk.red(`Failed to find teacher: ${err.message}\n`)
+		},
+	})
 
 	const response = await inquirer.prompt<{ field: string }>({
 		type: 'list',

@@ -12,9 +12,9 @@ import { TeacherService } from '../../../../service/TeacherService.js'
 export async function findClassHandler(
 	service: ClassService,
 	teacherService: TeacherService,
-	id?: ClassCreationType['id'],
+	id?: string,
 ) {
-	let classId: Required<ClassCreationType['id']>
+	let classId: NonNullable<ClassCreationType['id']>
 	if (id) {
 		classId = id
 	} else {

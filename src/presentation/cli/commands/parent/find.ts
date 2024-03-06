@@ -12,7 +12,7 @@ import { StudentService } from '../../../../service/StudentService.js'
 export async function findParentHandler(
 	service: ParentService,
 	studentService: StudentService,
-	id?: ParentCreationType['id'],
+	id?: string,
 ) {
 	let parentId: NonNullable<ParentCreationType['id']>
 	if (id) {
