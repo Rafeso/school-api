@@ -120,7 +120,7 @@ export function studentRouterFactory(
 			'/:id/medications',
 			{
 				schema: {
-					body: StudentUpdateSchema.pick({ medications: true }),
+					body: StudentUpdateSchema.required({ medications: true }),
 					params: onlyIdParam.schema.params,
 				},
 			},
@@ -137,19 +137,13 @@ export function studentRouterFactory(
 			'/:id/medications',
 			{
 				schema: {
-					body: StudentUpdateSchema.pick({ medications: true }),
+					body: StudentUpdateSchema.required({ medications: true }),
 					params: onlyIdParam.schema.params,
 				},
 			},
 			async (req, res) => {
 				const { id } = req.params
 				const { medications } = req.body
-
-				if (!medications) {
-					return res.code(400).send({
-						message: 'medications is required',
-					})
-				}
 
 				await studentService.removeMedications(id, medications)
 				return res.status(204).send()

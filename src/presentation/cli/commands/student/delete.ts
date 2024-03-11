@@ -6,6 +6,7 @@ import {
 	StudentCreationType,
 } from '../../../../domain/student/types.js'
 import { StudentService } from '../../../../service/StudentService.js'
+import { logger } from '../../../../utils/logger.js'
 
 export async function deleteStudentHandler(
 	service: StudentService,
@@ -46,11 +47,8 @@ export async function deleteStudentHandler(
 	})
 
 	if (!confirmDeletion) {
-		return console.info(
-			chalk.yellow(
-				'\nStudent deletion process aborted. You can exit safely now!',
-			),
-		)
+		logger.info('\nStudent deletion process aborted. exiting...')
+		process.exit(0)
 	}
 
 	await oraPromise(service.remove(StudentId), {

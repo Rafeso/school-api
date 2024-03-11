@@ -71,8 +71,6 @@ export class StudentService extends Service<typeof Student> {
 			throw new ConflictError(Parent, parentsToUpdate)
 		}
 
-		parentsToUpdate.map((parentId) => this.parentService.findById(parentId)) // Check in parent service if parent exists, and throw an NotFoundError if not.
-
 		student.parents.push(...parentsToUpdate)
 		await this.repository.save(student)
 		return student
@@ -93,8 +91,6 @@ export class StudentService extends Service<typeof Student> {
 			)
 		}
 
-		parentToDelete.map((parentId) => this.parentService.findById(parentId)) // Check in parent service if parent exists, and throw an NotFoundError if not.
-
 		student.parents = student.parents.filter(
 			(parent) => !parentToDelete.includes(parent),
 		) as NonNullable<StudentUpdateType['parents']>
@@ -106,11 +102,11 @@ export class StudentService extends Service<typeof Student> {
 		id: string,
 		medicationsToUpdate: StudentUpdateType['medications'],
 	) {
-		const student = await this.findById(id)
-
 		if (!medicationsToUpdate || medicationsToUpdate.length === 0) {
 			throw new BadRequestError(Student, "Medications can't be empty")
 		}
+
+		const student = await this.findById(id)
 
 		student.medications?.push(...medicationsToUpdate)
 		await this.repository.save(student)

@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import { ServiceList } from '../../../../app.js'
+import { logger } from '../../../../utils/logger.js'
 import { createClassHandler } from './create.js'
 import { deleteClassHandler } from './delete.js'
 import { findClassHandler } from './find.js'
@@ -24,13 +25,12 @@ export function ClassSubcommandHandler(
 			listClassHandler(services.class, options?.page)
 			break
 		default:
-			console.error(
-				chalk.red(
-					`Error: Subcommand "${chalk.underline(
-						subcommand,
-					)}" not found try to run "school class --help" to list all subcommands`,
-				),
+			logger.error(
+				`Error: Subcommand "${chalk.underline(
+					subcommand,
+				)}" not found try to run "school class --help" to list all subcommands`,
 			)
+
 			process.exit(1)
 	}
 }

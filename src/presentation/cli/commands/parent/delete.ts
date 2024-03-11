@@ -10,6 +10,7 @@ import {
 import { Student } from '../../../../domain/student/Student.js'
 import { ParentService } from '../../../../service/ParentService.js'
 import { StudentService } from '../../../../service/StudentService.js'
+import { logger } from '../../../../utils/logger.js'
 
 export async function deleteParentHandler(
 	parentService: ParentService,
@@ -62,10 +63,8 @@ export async function deleteParentHandler(
 	})
 
 	if (!confirmDeletion) {
-		console.info(
-			chalk.yellow('\nParent deletion aborted you can exit safely now!'),
-		)
-		return
+		logger.info('\nParent deletion aborted. exiting...')
+		process.exit(0)
 	}
 
 	await oraPromise(parentService.remove(parentId), {

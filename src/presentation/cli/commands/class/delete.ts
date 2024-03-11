@@ -6,6 +6,7 @@ import {
 	ClassCreationType,
 } from '../../../../domain/class/types.js'
 import { ClassService } from '../../../../service/ClassService.js'
+import { logger } from '../../../../utils/logger.js'
 
 export async function deleteClassHandler(service: ClassService, id?: string) {
 	let classId: NonNullable<ClassCreationType['id']>
@@ -43,10 +44,8 @@ export async function deleteClassHandler(service: ClassService, id?: string) {
 	})
 
 	if (!confirmDeletion) {
-		console.log(
-			chalk.yellow('\nClass deletion aborted, you can exit safely now.'),
-		)
-		return
+		logger.warn('\nClass deletion aborted, exiting...')
+		process.exit(0)
 	}
 
 	await oraPromise(service.remove(classId), {

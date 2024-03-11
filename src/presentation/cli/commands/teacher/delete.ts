@@ -6,6 +6,7 @@ import {
 	TeacherCreationType,
 } from '../../../../domain/teacher/types.js'
 import { TeacherService } from '../../../../service/TeacherService.js'
+import { logger } from '../../../../utils/logger.js'
 
 export async function deleteTeacherHandler(
 	service: TeacherService,
@@ -37,10 +38,8 @@ export async function deleteTeacherHandler(
 	})
 
 	if (!confirmDeletion) {
-		process.exitCode = 1
-		return console.warn(
-			chalk.yellow('\nTeacher deletion aborted. You can exit safely now.'),
-		)
+		logger.info('\nTeacher deletion aborted. exiting...')
+		process.exit(0)
 	}
 
 	await oraPromise(service.remove(teacherId), {

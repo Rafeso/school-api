@@ -52,7 +52,7 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 		)
 		.option(
 			'-i, --id [id]',
-			'If subcommand is find or delete, the id of the parent to be found or deleted.',
+			'If subcommand is find or delete, the id of the student to be found or deleted.',
 		)
 		.option(
 			'-p, --page [page]',
@@ -75,7 +75,7 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 		)
 		.option(
 			'-i, --id [id]',
-			'If subcommand is find or delete, the id of the parent to be found or deleted.',
+			'If subcommand is find or delete, the id of the teacher to be found or deleted.',
 		)
 		.option(
 			'-p, --page [page]',
@@ -98,7 +98,7 @@ export async function CLILayer(_config: AppConfig, services: ServiceList) {
 		)
 		.option(
 			'-i, --id [id]',
-			'If subcommand is find or delete, the id of the parent to be found or deleted.',
+			'If subcommand is find or delete, the id of the class to be found or deleted.',
 		)
 		.option(
 			'-p, --page [page]',
