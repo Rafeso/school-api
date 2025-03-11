@@ -16,6 +16,7 @@
 		"dev:rest": "npm run infra:up && IS_WEB=1 tsx watch src/app.ts",
 		"dev:cli": "npm run infra:up && tsx src/app.ts",
 		"build": "tsc",
+		"test": "NODE_ENV='test' tsx --no-warnings=ExperimentalWarnings --test --experimental-test-coverage './src/**/*.test.*'",
 		"build:clean": "npm run clean && npm run build",
 		"clean": "rm -rf build",
 		"fix": "npx @biomejs/biome check --apply src/",

@@ -43,11 +43,9 @@ export function classRouterFactory(
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
 			const Class = await classService.findById(id)
-			const teacher = await teacherService.findById(Class.teacher)
 
 			return res.send({
 				...Class.toObject(),
-				teacher: teacher.toObject(),
 			})
 		})
 

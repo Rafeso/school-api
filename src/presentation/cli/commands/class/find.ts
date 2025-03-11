@@ -38,12 +38,8 @@ export async function findClassHandler(
 		},
 		successText: chalk.green('Class was found.\n'),
 	}).then(async (Class) => {
-		const teacher = await teacherService.findById(Class.teacher)
 		console.log(
-			inspect(
-				{ class: Class.toObject(), teacher: teacher.toObject() },
-				{ depth: null, colors: true },
-			),
+			inspect({ class: Class.toObject() }, { depth: null, colors: true }),
 		)
 	})
 }

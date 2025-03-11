@@ -34,6 +34,7 @@ export abstract class Database<
 		const documents = await this.db.find(command).toArray()
 		return documents.map((document) => this.dbEntity.fromObject(document))
 	}
+
 	async remove(id: string) {
 		await this.db.deleteOne({ id })
 	}
