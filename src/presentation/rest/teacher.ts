@@ -47,10 +47,8 @@ export function teacherRouterFactory(
 			const { id } = req.params
 
 			const teacher = await teacherService.findById(id)
-			const Class = (await classService.listBy('teacher', teacher.id)).map(
-				(c) => c.toObject(),
-			)
-			return res.send({ ...teacher.toObject(), class: Class })
+
+			return res.send({ ...teacher.toObject() })
 		})
 
 		router.put(
@@ -98,8 +96,13 @@ export function teacherRouterFactory(
 
 		router.delete('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			teacherService.remove(id)
-			return res.status(204).send()
+			const classes = await classService.listBy('teacher', id)
+
+			for (const classEntity of classes) {
+				classService.update(classEntity.id, { teacher: null })
+			}
+
+			return res.status(204).send(teacherService.remove(id))
 		})
 
 		done()
