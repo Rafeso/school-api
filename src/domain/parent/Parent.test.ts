@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import { describe, it } from 'node:test'
 import { ZodError } from 'zod'
 import { Parent } from './Parent.js'
-import { ParentCreationType } from './types.js'
+import type { ParentCreationType } from './types.js'
 
 const ParentEntityObj: ParentCreationType = {
 	firstName: 'Lucas',
@@ -37,10 +37,7 @@ describe('Parent Domain', () => {
 
 	it('should return the correct data on toJSON', () => {
 		const ParentEntity = new Parent(ParentEntityObj)
-		assert.strictEqual(
-			ParentEntity.toJSON(),
-			JSON.stringify(ParentEntity.toObject()),
-		)
+		assert.strictEqual(ParentEntity.toJSON(), JSON.stringify(ParentEntity.toObject()))
 	})
 
 	it('should return the correct data on fromObject', () => {
@@ -53,27 +50,24 @@ describe('Parent Domain', () => {
 	})
 
 	it('should return an error when trying to create a Parent with invalid data', () => {
-		assert.throws(
-			() => new Parent({ ...ParentEntityObj, firstName: '', surname: '' }),
-			ZodError,
-		)
+		assert.throws(() => new Parent({ ...ParentEntityObj, firstName: '', surname: '' }), ZodError)
+
+		assert.throws(() => new Parent({ ...ParentEntityObj, document: '' }), ZodError)
 
 		assert.throws(
-			() => new Parent({ ...ParentEntityObj, document: '' }),
-			ZodError,
-		)
-
-		assert.throws(
+			// @ts-ignore
 			() => new Parent({ ...ParentEntityObj, emails: [] }),
 			ZodError,
 		)
 
 		assert.throws(
+			// @ts-ignore
 			() => new Parent({ ...ParentEntityObj, phones: [] }),
 			ZodError,
 		)
 
 		assert.throws(
+			// @ts-ignore
 			() => new Parent({ ...ParentEntityObj, address: [] }),
 			ZodError,
 		)

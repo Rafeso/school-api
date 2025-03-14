@@ -7,14 +7,15 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"suspicious": { "noExplicitAny": "warn" }
 		}
 	},
 	"javascript": {
 		"formatter": {
 			"semicolons": "asNeeded",
 			"quoteStyle": "single",
-			"lineWidth": 80
+			"lineWidth": 100
 		}
 	}
 }

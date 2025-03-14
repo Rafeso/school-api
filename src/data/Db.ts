@@ -1,5 +1,5 @@
-import { Collection, Db } from 'mongodb'
-import { Serializable, SerializableStatic } from '../domain/types.js'
+import type { Collection, Db } from 'mongodb'
+import type { Serializable, SerializableStatic } from '../domain/types.js'
 
 export abstract class Database<
 	S extends SerializableStatic,
@@ -25,9 +25,8 @@ export abstract class Database<
 		return documents.map<I>((document) => this.dbEntity.fromObject(document))
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	async listBy<L extends keyof I>(property: L, value: I[any]) {
-		const command = { [property]: value }
+	async listBy<L extends keyof I>(property: L, value: I[L]) {
+		const command: Record<string, unknown> = { [property as string]: value }
 		if (Array.isArray(value)) {
 			command[property as string] = { $in: value }
 		}

@@ -16,7 +16,7 @@
 		"dev:rest": "npm run infra:up && IS_WEB=1 tsx watch src/app.ts",
 		"dev:cli": "npm run infra:up && tsx src/app.ts",
 		"build": "tsc",
-		"test": "NODE_ENV='test' tsx --no-warnings=ExperimentalWarnings --test --experimental-test-coverage './src/**/*.test.*'",
+		"test": "NODE_ENV='test' tsx --no-warnings=ExperimentalWarnings --test  --experimental-test-coverage './src/**/*.test.*'",
 		"build:clean": "npm run clean && npm run build",
 		"clean": "rm -rf build",
 		"fix": "npx @biomejs/biome check --apply src/",
@@ -25,7 +25,7 @@
 		"cm": "cz"
 	},
 	"lint-staged": {
-		"*.ts": "npm run fix"
+		"*": "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
 	},
 	"keywords": [],
 	"author": "Rafael Feitosa <rafaefeitosa@gmail.com> (https://rafaelfeitosa.vercel.app)",
@@ -40,11 +40,11 @@
 		"zod": "^3.22.4"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.5.1",
+		"@biomejs/biome": "^1.9.4",
 		"@commitlint/cli": "^18.6.0",
 		"@commitlint/config-conventional": "^18.6.0",
 		"@types/inquirer": "^9.0.7",
-		"@types/node": "^20.11.5",
+		"@types/node": "^20.17.24",
 		"cz-conventional-changelog": "^3.3.0",
 		"fastify-type-provider-zod": "^1.1.9",
 		"husky": "^8.0.3",

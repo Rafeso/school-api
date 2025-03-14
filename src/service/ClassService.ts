@@ -1,17 +1,14 @@
-import { Database } from '../data/Db.js'
+import type { Database } from '../data/Db.js'
 import { ConflictError } from '../domain/@errors/Conflict.js'
 import { DependencyConflictError } from '../domain/@errors/DependencyConflict.js'
 import { MissingDependecyError } from '../domain/@errors/MissingDependecy.js'
 import { Class } from '../domain/class/Class.js'
-import type {
-	ClassCreationType,
-	ClassUpdateType,
-} from '../domain/class/types.js'
+import type { ClassCreationType, ClassUpdateType } from '../domain/class/types.js'
 import { Student } from '../domain/student/Student.js'
 import { Teacher } from '../domain/teacher/Teacher.js'
 import { Service } from './BaseService.js'
-import { StudentService } from './StudentService.js'
-import { TeacherService } from './TeacherService.js'
+import type { StudentService } from './StudentService.js'
+import type { TeacherService } from './TeacherService.js'
 
 export class ClassService extends Service<typeof Class> {
 	constructor(
@@ -30,7 +27,7 @@ export class ClassService extends Service<typeof Class> {
 
 	async update(id: string, newData: ClassUpdateType) {
 		const entity = await this.findById(id)
-		this.#assertTeacherExists(newData.teacher)
+		await this.#assertTeacherExists(newData.teacher)
 
 		const updated = new Class({ ...entity.toObject(), ...newData })
 		await this.repository.save(updated)
@@ -51,17 +48,15 @@ export class ClassService extends Service<typeof Class> {
 
 	async getTeacher(classId: string) {
 		const classEntity = await this.findById(classId)
-		if (!classEntity.teacher)
-			throw new MissingDependecyError(Teacher, classId, Class)
+		if (!classEntity.teacher) throw new MissingDependecyError(Teacher, classId, Class)
 
-		const teacher = await this.teacherService.findById(classEntity.id)
+		const teacher = await this.teacherService.findById(classEntity.teacher)
 		return teacher
 	}
 
 	async remove(id: string) {
 		const students = await this.studentService.listBy('class', id)
-		if (students.length > 0)
-			throw new DependencyConflictError(Class, id, Student)
+		if (students.length > 0) throw new DependencyConflictError(Class, id, Student)
 
 		await this.repository.remove(id)
 	}
