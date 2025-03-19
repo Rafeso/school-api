@@ -1,4 +1,4 @@
-import { Db } from 'mongodb'
+import type { Db } from 'mongodb'
 import { Student } from '../../domain/student/Student.js'
 import { Database } from '../Db.js'
 

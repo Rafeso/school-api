@@ -1,4 +1,4 @@
-import { SerializableStatic } from '../types.js'
+import type { SerializableStatic } from '../types.js'
 import { BaseError } from './BaseError.js'
 
 export class DependencyConflictError extends BaseError {

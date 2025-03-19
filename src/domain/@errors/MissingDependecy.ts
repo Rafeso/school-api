@@ -1,4 +1,4 @@
-import { SerializableStatic } from '../types.js'
+import type { SerializableStatic } from '../types.js'
 import { BaseError } from './BaseError.js'
 
 export class MissingDependecyError extends BaseError {
@@ -9,9 +9,7 @@ export class MissingDependecyError extends BaseError {
 		dependent: SerializableStatic,
 	) {
 		super(
-			`${searched.name} could not be found in ${
-				dependent.name
-			} with locator ${JSON.stringify(locator)}.`,
+			`${searched.name} could not be found in ${dependent.name} with locator ${JSON.stringify(locator)}.`,
 			searched,
 			{
 				code: 'MISSING_DEPENDENCY',

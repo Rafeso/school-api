@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 import { after, afterEach, before, describe, it } from 'node:test'
 import { appConfig } from '../../config.js'
 import { Teacher } from '../../domain/teacher/Teacher.js'

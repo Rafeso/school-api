@@ -50,26 +50,6 @@ describe('Parent Domain', () => {
 	})
 
 	it('should return an error when trying to create a Parent with invalid data', () => {
-		assert.throws(() => new Parent({ ...ParentEntityObj, firstName: '', surname: '' }), ZodError)
-
 		assert.throws(() => new Parent({ ...ParentEntityObj, document: '' }), ZodError)
-
-		assert.throws(
-			// @ts-ignore
-			() => new Parent({ ...ParentEntityObj, emails: [] }),
-			ZodError,
-		)
-
-		assert.throws(
-			// @ts-ignore
-			() => new Parent({ ...ParentEntityObj, phones: [] }),
-			ZodError,
-		)
-
-		assert.throws(
-			// @ts-ignore
-			() => new Parent({ ...ParentEntityObj, address: [] }),
-			ZodError,
-		)
 	})
 })

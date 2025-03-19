@@ -5,6 +5,7 @@ export const ClassCreationSchema = z.object({
 	code: z.string().regex(/^[0-9]{1}[A-H]{1}-[MTN]$/),
 	teacher: z.string().uuid().nullable(),
 })
+
 export type ClassCreationType = z.infer<typeof ClassCreationSchema>
 
 export const ClassUpdateSchema = ClassCreationSchema.partial().omit({

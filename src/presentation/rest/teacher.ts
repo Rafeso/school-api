@@ -1,13 +1,10 @@
-import { FastifyInstance, FastifyPluginOptions } from 'fastify'
-import { ZodTypeProvider } from 'fastify-type-provider-zod'
-import { Student } from '../../domain/student/Student.js'
-import {
-	TeacherCreationSchema,
-	TeacherUpdateSchema,
-} from '../../domain/teacher/types.js'
-import { ClassService } from '../../service/ClassService.js'
-import { StudentService } from '../../service/StudentService.js'
-import { TeacherService } from '../../service/TeacherService.js'
+import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
+import type { ZodTypeProvider } from 'fastify-type-provider-zod'
+import type { Student } from '../../domain/student/Student.js'
+import { TeacherCreationSchema, TeacherUpdateSchema } from '../../domain/teacher/types.js'
+import type { ClassService } from '../../service/ClassService.js'
+import type { StudentService } from '../../service/StudentService.js'
+import type { TeacherService } from '../../service/TeacherService.js'
 import { onlyIdParam, queryPage } from './index.js'
 
 export function teacherRouterFactory(
@@ -15,33 +12,23 @@ export function teacherRouterFactory(
 	classService: ClassService,
 	studentService: StudentService,
 ) {
-	return (
-		app: FastifyInstance,
-		_: FastifyPluginOptions,
-		done: (err?: Error) => void,
-	) => {
+	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
-		router.post(
-			'/',
-			{ schema: { body: TeacherCreationSchema.omit({ id: true }) } },
-			async (req, res) => {
-				const teacher = await teacherService.create(req.body)
+		router.post('/', { schema: { body: TeacherCreationSchema.omit({ id: true }) } }, async (req, res) => {
+			const teacher = await teacherService.create(req.body)
 
-				return res.status(201).send(teacher.toObject())
-			},
-		)
+			return res.status(201).send(teacher.toObject())
+		})
 
-		router.get(
-			'/',
-			{ schema: { querystring: queryPage.schema.querystring } },
-			async (req, res) => {
-				const teachers = await teacherService.list({
-					page: Number(req.query.page),
-				})
-				return res.send(teachers.map((t) => t.toObject()))
-			},
-		)
+		router.get('/', { schema: { querystring: queryPage.schema.querystring } }, async (req, res) => {
+			const { page } = req.query
+			const teachers = await teacherService.list({
+				page: Number(page ?? 1),
+			})
+
+			return res.send(teachers.map((t) => t.toObject()))
+		})
 
 		router.get('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params

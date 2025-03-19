@@ -1,15 +1,11 @@
-import { Database } from '../data/Db.js'
-import { BadRequestError } from '../domain/@errors/BadRequest.js'
+import type { Database } from '../data/Db.js'
 import { ConflictError } from '../domain/@errors/Conflict.js'
 import { Parent } from '../domain/parent/Parent.js'
-import { StudentMustHaveAtLeastOneParentError } from '../domain/student/@errors/StudentMustHaveAtLeastOneParentError.js'
 import { Student } from '../domain/student/Student.js'
-import type {
-	StudentCreationType,
-	StudentUpdateType,
-} from '../domain/student/types.js'
+import { StudentMustHaveAtLeastOneParentError } from '../domain/student/errors/StudentMustHaveAtLeastOneParentError.js'
+import type { StudentCreationType, StudentUpdateType } from '../domain/student/types.js'
 import { Service } from './BaseService.js'
-import { ParentService } from './ParentService.js'
+import type { ParentService } from './ParentService.js'
 
 export class StudentService extends Service<typeof Student> {
 	constructor(
@@ -19,31 +15,39 @@ export class StudentService extends Service<typeof Student> {
 		super(repository)
 	}
 
-	async update(id: string, newData: StudentUpdateType) {
+	async #assertParentExists(parents?: string[]) {
+		if (parents) {
+			await Promise.all(parents.map((parentId: string) => this.parentService.findById(parentId)))
+		}
+	}
+
+	async update(id: string, newData: Omit<StudentUpdateType, 'parents'>) {
 		const entity = await this.findById(id)
+
+		const entityObj = entity.toObject()
 		const updated = new Student({
-			...entity.toObject(),
+			...entityObj,
 			...newData,
+			allergies: newData.allergies ? [...entityObj.allergies, ...newData.allergies] : [...entityObj.allergies],
+			medications: newData.medications
+				? [...entityObj.medications, ...newData.medications]
+				: [...entityObj.medications],
 		})
 		await this.repository.save(updated)
 
 		return updated
 	}
 
-	async create(creationData: StudentCreationType) {
-		const studentAlreadyExists = await this.repository.listBy(
-			'document',
-			creationData.document,
-		)
+	async create(data: StudentCreationType) {
+		const studentAlreadyExists = await this.repository.listBy('document', data.document)
 
 		if (studentAlreadyExists.length > 0) {
-			throw new ConflictError(Student, creationData.document)
+			throw new ConflictError(Student, data.document)
 		}
 
-		creationData.parents.map((parentId) =>
-			this.parentService.findById(parentId),
-		)
-		const entity = new Student(creationData)
+		await this.#assertParentExists(data.parents)
+
+		const entity = new Student(data)
 		await this.repository.save(entity)
 
 		return entity
@@ -51,81 +55,39 @@ export class StudentService extends Service<typeof Student> {
 
 	async getParents(studentId: string) {
 		const student = await this.findById(studentId)
-		const parents = await Promise.all(
-			student.parents.map((parentId: string) =>
-				this.parentService.findById(parentId),
-			),
-		)
+		const parents = await Promise.all(student.parents.map((parentId: string) => this.parentService.findById(parentId)))
 
 		return parents
 	}
 
-	async linkParents(
-		id: string,
-		parentsToUpdate: StudentCreationType['parents'],
-	) {
+	async linkParents(id: string, parentsToUpdate: NonNullable<StudentUpdateType['parents']>) {
 		const student = await this.findById(id)
 
-		const checkIfParentIsAlreadyLinked = await this.getParents(id)
+		const checkIfParentIsAlreadyLinked = student.parents.filter((parent) => parentsToUpdate.includes(parent))
 		if (checkIfParentIsAlreadyLinked.length > 0) {
 			throw new ConflictError(Parent, parentsToUpdate)
 		}
 
-		student.parents.push(...parentsToUpdate)
+		await this.#assertParentExists(parentsToUpdate)
+
+		student.parents = [...student.parents, ...parentsToUpdate]
 		await this.repository.save(student)
 		return student
 	}
 
-	async unlinkParent(
-		id: string,
-		parentToDelete: NonNullable<StudentUpdateType['parents']>,
-	) {
+	async unlinkParent(id: string, parentToDelete: NonNullable<StudentUpdateType['parents']>) {
 		const student = await this.findById(id)
 
-		const checkIfisTheOnlyParent = await this.getParents(id)
+		const checkIfisTheOnlyParent = await Promise.all(
+			student.parents.map((parentId: string) => this.parentService.findById(parentId)),
+		)
 		if (checkIfisTheOnlyParent.length === 1) {
-			throw new StudentMustHaveAtLeastOneParentError(
-				Student,
-				parentToDelete.toString(),
-				Parent,
-			)
+			throw new StudentMustHaveAtLeastOneParentError(Student, parentToDelete.toString(), Parent)
 		}
 
-		student.parents = student.parents.filter(
-			(parent) => !parentToDelete.includes(parent),
-		) as NonNullable<StudentUpdateType['parents']>
-		await this.repository.save(student)
-		return
-	}
-
-	async updateMedications(
-		id: string,
-		medicationsToUpdate: StudentUpdateType['medications'],
-	) {
-		if (!medicationsToUpdate || medicationsToUpdate.length === 0) {
-			throw new BadRequestError(Student, "Medications can't be empty")
-		}
-
-		const student = await this.findById(id)
-
-		student.medications?.push(...medicationsToUpdate)
+		const updatedParents = student.parents.filter((parent) => !parentToDelete.includes(parent))
+		student.parents = updatedParents as NonNullable<StudentUpdateType['parents']>
 		await this.repository.save(student)
 		return student
-	}
-
-	async removeMedications(
-		id: string,
-		medicationsToRemove: StudentCreationType['medications'],
-	) {
-		if (!medicationsToRemove || medicationsToRemove.length === 0) {
-			throw new BadRequestError(Student, "Medications can't be empty")
-		}
-
-		const student = await this.findById(id)
-		student.medications = student.medications?.filter(
-			(medication) => !medicationsToRemove.includes(medication),
-		) as NonNullable<StudentCreationType['medications']>
-		await this.repository.save(student)
-		return
 	}
 }

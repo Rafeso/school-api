@@ -1,10 +1,7 @@
 import type { Collection, Db } from 'mongodb'
 import type { Serializable, SerializableStatic } from '../domain/types.js'
 
-export abstract class Database<
-	S extends SerializableStatic,
-	I extends Serializable = InstanceType<S>,
-> {
+export abstract class Database<S extends SerializableStatic, I extends Serializable = InstanceType<S>> {
 	readonly db: Collection
 	readonly dbEntity: S
 

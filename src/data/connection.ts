@@ -1,6 +1,6 @@
 import { setTimeout } from 'node:timers/promises'
 import { MongoClient } from 'mongodb'
-import { AppConfig } from './../config.js'
+import type { AppConfig } from './../config.js'
 export async function connectToDatabase(config: AppConfig) {
 	return tryConnect(config)
 }

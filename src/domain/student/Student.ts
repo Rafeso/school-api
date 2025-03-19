@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { BaseDomain } from '../BaseDomain.js'
-import { Serializable } from '../types.js'
-import { StudentCreationSchema, StudentCreationType } from './types.js'
+import type { Serializable } from '../types.js'
+import { StudentCreationSchema, type StudentCreationType } from './types.js'
 
 export class Student extends BaseDomain implements Serializable {
 	static collection = 'students'

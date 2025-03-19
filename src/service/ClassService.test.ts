@@ -39,8 +39,7 @@ describe('Class Service', () => {
 		({
 			listBy: t.mock.fn(
 				// biome-ignore lint/suspicious/noExplicitAny: Código de testes.
-				(prop: string, value: any) =>
-					mockReturn.listBy ?? [dummyStudent({ id: studentId, [prop]: value })],
+				(prop: string, value: any) => mockReturn.listBy ?? [dummyStudent({ id: studentId, [prop]: value })],
 			),
 			// biome-ignore lint/suspicious/noExplicitAny: Código de testes.
 		}) as { listBy: Mock<(prop: string, value: any) => Student[]> }
@@ -133,10 +132,7 @@ describe('Class Service', () => {
 				studentService as unknown as StudentService,
 			)
 
-			await assert.rejects(
-				() => service.remove(dummyClass().toObject().id),
-				DependencyConflictError,
-			)
+			await assert.rejects(() => service.remove(dummyClass().toObject().id), DependencyConflictError)
 			assert.strictEqual(studentService.listBy.mock.callCount(), 1)
 			assert.strictEqual(DBMock.remove.mock.callCount(), 0)
 		})
@@ -181,7 +177,7 @@ describe('Class Service', () => {
 		})
 
 		it('should throw an error if class does not exist', async (ctx) => {
-			const DBMock = dummyDatabase(ctx, dummyClass, {
+			const DBMock = dummyDatabase(ctx, () => dummyClass(), {
 				findById: false,
 			})
 			const teacherService = TeacherServiceMock(ctx)
@@ -214,10 +210,7 @@ describe('Class Service', () => {
 			)
 			const newTeacherId = randomUUID()
 
-			await assert.rejects(
-				() => service.update(classId, { code: '1C-T', teacher: newTeacherId }),
-				NotFoundError,
-			)
+			await assert.rejects(() => service.update(classId, { code: '1C-T', teacher: newTeacherId }), NotFoundError)
 			assert.strictEqual(DBMock.findById.mock.callCount(), 1)
 			assert.strictEqual(teacherService.findById.mock.callCount(), 1)
 			assert.strictEqual(DBMock.save.mock.callCount(), 0)
@@ -226,7 +219,7 @@ describe('Class Service', () => {
 
 	describe('GetTeacher', () => {
 		it('should get teacher of a class', async (t) => {
-			const DBMock = dummyDatabase(t, dummyClass)
+			const DBMock = dummyDatabase(t, () => dummyClass())
 			const teacherService = TeacherServiceMock(t)
 			const studentService = StudentServiceMock(t)
 			const service = new ClassService(
@@ -242,7 +235,7 @@ describe('Class Service', () => {
 		})
 
 		it('should throw an error if teacher does not exist', async (ctx) => {
-			const DBMock = dummyDatabase(ctx, dummyClass)
+			const DBMock = dummyDatabase(ctx, () => dummyClass())
 			const teacherService = TeacherServiceMock(ctx)
 			teacherService.findById.mock.mockImplementationOnce(() => {
 				throw new NotFoundError(teacherId, Teacher)
@@ -259,7 +252,7 @@ describe('Class Service', () => {
 		})
 
 		it('should throw an error if class has no teacher', async (t) => {
-			const DBMock = dummyDatabase(t, dummyClass, {
+			const DBMock = dummyDatabase(t, () => dummyClass(), {
 				findById: dummyClass({ code: '1B-M', teacher: null }),
 			})
 			const teacherService = TeacherServiceMock(t)

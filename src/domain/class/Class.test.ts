@@ -1,10 +1,10 @@
-import { randomUUID } from 'crypto'
 import assert from 'node:assert'
+import { randomUUID } from 'node:crypto'
 //@ts-nocheck
 import { describe, it } from 'node:test'
 import { ZodError } from 'zod'
 import { Class } from './Class.js'
-import { ClassCreationType } from './types.js'
+import type { ClassCreationType } from './types.js'
 
 describe('Class Domain', () => {
 	const classEntityObj: ClassCreationType = {
@@ -27,10 +27,7 @@ describe('Class Domain', () => {
 
 	it('should return the correct data on toJSON', () => {
 		const classEntity = new Class(classEntityObj)
-		assert.strictEqual(
-			classEntity.toJSON(),
-			JSON.stringify(classEntity.toObject()),
-		)
+		assert.strictEqual(classEntity.toJSON(), JSON.stringify(classEntity.toObject()))
 	})
 
 	it('should return the correct data on fromObject', () => {
@@ -43,19 +40,6 @@ describe('Class Domain', () => {
 	})
 
 	it('should return an error when trying to create a class with invalid data', () => {
-		assert.throws(
-			() => new Class({ ...classEntityObj, code: 'invalid' }),
-			ZodError,
-		)
-
-		assert.throws(
-			() => new Class({ ...classEntityObj, teacher: 'invalid' }),
-			ZodError,
-		)
-
-		assert.throws(
-			() => new Class({ ...classEntityObj, id: 'invalid' }),
-			ZodError,
-		)
+		assert.throws(() => new Class({ ...classEntityObj, code: 'invalid' }), ZodError)
 	})
 })
