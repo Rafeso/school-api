@@ -17,7 +17,9 @@
 		"formatter": {
 			"semicolons": "asNeeded",
 			"quoteStyle": "single",
-			"lineWidth": 120
+			"lineWidth": 120,
+			"indentStyle": "tab",
+			"lineEnding": "lf"
 		}
 	}
 }

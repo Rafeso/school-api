@@ -43,7 +43,10 @@ export function classRouterFactory(classService: ClassService, teacherService: T
 			},
 			async (req, res) => {
 				const { id } = req.params
-				const updated = await classService.update(id, req.body)
+				const { teacher, code } = req.body
+
+				// Os campos devem ser passados explicitamente para evitar mass assignment.
+				const updated = await classService.update(id, { code: code, teacher: teacher })
 
 				return res.send(updated.toObject())
 			},

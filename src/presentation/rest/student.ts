@@ -40,13 +40,24 @@ export function studentRouterFactory(studentService: StudentService, classServic
 			'/:id',
 			{
 				schema: {
-					body: StudentUpdateSchema.omit({ parents: true }),
+					body: StudentUpdateSchema.omit({ parents: true, document: true }),
 					params: onlyIdParam.schema.params,
 				},
 			},
 			async (req, res) => {
 				const { id } = req.params
-				const updated = await studentService.update(id, req.body)
+				const { allergies, bloodType, medications, startDate, class: classId, birthDate, firstName, surname } = req.body
+				// Os campos devem ser passados explicitamente para evitar mass assignment.
+				const updated = await studentService.update(id, {
+					firstName: firstName,
+					surname: surname,
+					allergies: allergies,
+					bloodType: bloodType,
+					medications: medications,
+					startDate: startDate,
+					class: classId,
+					birthDate: birthDate,
+				})
 
 				return res.send(updated.toObject())
 			},

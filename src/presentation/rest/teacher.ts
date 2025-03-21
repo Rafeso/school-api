@@ -42,14 +42,22 @@ export function teacherRouterFactory(
 			'/:id',
 			{
 				schema: {
-					body: TeacherUpdateSchema,
+					body: TeacherUpdateSchema.omit({ document: true, hiringDate: true }),
 					params: onlyIdParam.schema.params,
 				},
 			},
 			async (req, res) => {
 				const { id } = req.params
-
-				const updated = await teacherService.update(id, req.body)
+				const { firstName, surname, email, phone, salary, major } = req.body
+				// Os campos devem ser passados explicitamente para evitar mass assignment.
+				const updated = await teacherService.update(id, {
+					firstName: firstName,
+					surname: surname,
+					email: email,
+					phone: phone,
+					salary: salary,
+					major: major,
+				})
 				res.send(updated.toObject())
 			},
 		)

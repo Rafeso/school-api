@@ -17,8 +17,13 @@ export class ParentService extends Service<typeof Parent> {
 	async update(id: string, newData: ParentUpdateType) {
 		const entity = await this.findById(id)
 		const updated = new Parent({
-			...entity.toObject(),
-			...newData,
+			id: entity.id,
+			address: newData.address ?? entity.address,
+			document: newData.document ?? entity.document,
+			emails: newData.emails ?? entity.emails,
+			firstName: newData.firstName ?? entity.firstName,
+			phones: newData.phones ?? entity.phones,
+			surname: newData.surname ?? entity.surname,
 		})
 		await this.repository.save(updated)
 		return updated

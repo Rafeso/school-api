@@ -26,12 +26,17 @@ export class StudentService extends Service<typeof Student> {
 
 		const entityObj = entity.toObject()
 		const updated = new Student({
-			...entityObj,
-			...newData,
-			allergies: newData.allergies ? [...entityObj.allergies, ...newData.allergies] : [...entityObj.allergies],
-			medications: newData.medications
-				? [...entityObj.medications, ...newData.medications]
-				: [...entityObj.medications],
+			id: entityObj.id,
+			document: entityObj.document,
+			firstName: newData.firstName ?? entityObj.firstName,
+			surname: newData.surname ?? entityObj.surname,
+			allergies: newData.allergies ? [...entityObj.allergies, ...newData.allergies] : entityObj.allergies,
+			medications: newData.medications ? [...entityObj.medications, ...newData.medications] : entityObj.medications,
+			bloodType: newData.bloodType ?? entityObj.bloodType,
+			birthDate: entityObj.birthDate,
+			class: newData.class ?? entityObj.class,
+			parents: entityObj.parents,
+			startDate: newData.startDate ?? entityObj.startDate,
 		})
 		await this.repository.save(updated)
 

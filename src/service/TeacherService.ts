@@ -7,8 +7,15 @@ export class TeacherService extends Service<typeof Teacher> {
 	async update(id: string, newData: TeacherUpdateType) {
 		const entity = await this.findById(id)
 		const updated = new Teacher({
-			...entity.toObject(),
-			...newData,
+			id: entity.id,
+			document: entity.document,
+			firstName: newData.firstName ?? entity.firstName,
+			surname: newData.surname ?? entity.surname,
+			email: newData.email ?? entity.email,
+			phone: newData.phone ?? entity.phone,
+			hiringDate: entity.hiringDate.toISOString(),
+			salary: newData.salary ?? entity.salary,
+			major: newData.major ?? entity.major,
 		})
 
 		await this.repository.save(updated)

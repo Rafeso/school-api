@@ -10,7 +10,15 @@ export function parentRouterFactory(parentService: ParentService, studentService
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
 		router.post('/', { schema: { body: ParentCreationSchema.omit({ id: true }) } }, async (req, res) => {
-			const parent = await parentService.create(req.body)
+			const { address, document, emails, firstName, phones, surname } = req.body
+			const parent = await parentService.create({
+				address: address,
+				document: document,
+				emails: emails,
+				firstName: firstName,
+				phones: phones,
+				surname: surname,
+			})
 			return res.status(201).send(parent.toObject())
 		})
 
@@ -34,12 +42,23 @@ export function parentRouterFactory(parentService: ParentService, studentService
 		router.put(
 			'/:id',
 			{
-				schema: { body: ParentUpdateSchema, params: onlyIdParam.schema.params },
+				schema: {
+					body: ParentUpdateSchema.omit({ document: true }),
+					params: onlyIdParam.schema.params,
+				},
 			},
 			async (req, res) => {
 				const { id } = req.params
+				const { address, emails, firstName, phones, surname } = req.body
 
-				const updated = await parentService.update(id, req.body)
+				// Os campos devem ser passados explicitamente para evitar mass assignment.
+				const updated = await parentService.update(id, {
+					address: address,
+					emails: emails,
+					firstName: firstName,
+					phones: phones,
+					surname: surname,
+				})
 				return res.send(updated.toObject())
 			},
 		)

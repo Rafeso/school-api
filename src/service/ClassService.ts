@@ -29,7 +29,11 @@ export class ClassService extends Service<typeof Class> {
 		const entity = await this.findById(id)
 		await this.#assertTeacherExists(newData.teacher)
 
-		const updated = new Class({ ...entity.toObject(), ...newData })
+		const updated = new Class({
+			id: entity.id,
+			code: newData.code ?? entity.code,
+			teacher: newData.teacher ?? entity.teacher,
+		})
 		await this.repository.save(updated)
 		return updated
 	}
