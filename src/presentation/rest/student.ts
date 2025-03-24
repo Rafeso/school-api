@@ -10,20 +10,40 @@ export function studentRouterFactory(studentService: StudentService, classServic
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
 		router.post('/', { schema: { body: StudentCreationSchema.omit({ id: true }) } }, async (req, res) => {
-			const { parents, ...rest } = req.body
+			const {
+				parents,
+				allergies,
+				bloodType,
+				medications,
+				startDate,
+				class: classId,
+				birthDate,
+				document,
+				firstName,
+				surname,
+			} = req.body
 			const student = await studentService.create({
+				firstName: firstName,
+				allergies: allergies,
+				surname: surname,
+				bloodType: bloodType,
+				medications: medications,
+				startDate: startDate,
+				class: classId,
+				birthDate: birthDate,
+				document: document,
 				// Criamos um Set para cerificar que não há repetição no array de parents.
 				parents: [...new Set(parents)] as StudentCreationType['parents'],
-				...rest,
 			})
 
 			return res.status(201).send(student.toObject())
 		})
 
 		router.get('/', { schema: { querystring: queryPage.schema.querystring } }, async (req, res) => {
-			const { page } = req.query
+			const { page, per_page } = req.query
 			const students = await studentService.list({
-				page: Number(page ?? 1),
+				page: page ?? 1,
+				per_page: per_page ?? 20,
 			})
 
 			return res.send(students.map((s) => s.toObject()))
@@ -35,6 +55,30 @@ export function studentRouterFactory(studentService: StudentService, classServic
 
 			return res.send(student.toObject())
 		})
+
+		router.get('/:id/parents', onlyIdParam, async (req, res) => {
+			const { id } = req.params
+			const parents = await studentService.getParents(id)
+
+			return res.send(parents.map((p) => p.toObject()))
+		})
+
+		router.patch(
+			'/:id/parents',
+			{
+				schema: {
+					body: StudentCreationSchema.pick({ parents: true }),
+					params: onlyIdParam.schema.params,
+				},
+			},
+			async (req, res) => {
+				const { id } = req.params
+				const { parents } = req.body
+
+				const updated = await studentService.linkParents(id, parents)
+				return res.send(updated.toObject())
+			},
+		)
 
 		router.put(
 			'/:id',
@@ -70,35 +114,11 @@ export function studentRouterFactory(studentService: StudentService, classServic
 			return res.status(204).send()
 		})
 
-		router.get('/:id/parents', onlyIdParam, async (req, res) => {
-			const { id } = req.params
-			const parents = await studentService.getParents(id)
-
-			return res.send(parents.map((p) => p.toObject()))
-		})
-
 		router.delete('/:id/parents/:parentId', StudentAndParentId, async (req, res) => {
 			const { id, parentId } = req.params
 			studentService.unlinkParent(id, [parentId])
 			return res.status(204).send()
 		})
-
-		router.patch(
-			'/:id/parents',
-			{
-				schema: {
-					body: StudentCreationSchema.pick({ parents: true }),
-					params: onlyIdParam.schema.params,
-				},
-			},
-			async (req, res) => {
-				const { id } = req.params
-				const { parents } = req.body
-
-				const updated = await studentService.linkParents(id, parents)
-				return res.send(updated.toObject())
-			},
-		)
 
 		done()
 	}

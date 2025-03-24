@@ -6,6 +6,7 @@ import { ConflictError } from '../domain/@errors/Conflict.js'
 import { NotFoundError } from '../domain/@errors/NotFound.js'
 
 describe('Parent Service', () => {
+  // region Create
   describe('Create', () => {
     it('should create a parent', async (ctx) => {
       const DBMock = dummyDatabase(ctx, () => dummyParent(), {
@@ -27,7 +28,9 @@ describe('Parent Service', () => {
       assert.strictEqual(DBMock.save.mock.callCount(), 0)
     })
   })
+  // endregion
 
+  // region Update
   describe('Update', () => {
     it('should update a parent', async (ctx) => {
       const DBMock = dummyDatabase(ctx, () => dummyParent())
@@ -50,7 +53,9 @@ describe('Parent Service', () => {
       assert.strictEqual(DBMock.save.mock.callCount(), 0)
     })
   })
+  // endregion
 
+  // region Remove
   describe('Remove', () => {
     it('should remove a parent', async (ctx) => {
       const DBMock = dummyDatabase(ctx, () => dummyParent())
@@ -72,4 +77,5 @@ describe('Parent Service', () => {
       assert.strictEqual(DBMock.remove.mock.callCount(), 0)
     })
   })
+  // endregion
 })

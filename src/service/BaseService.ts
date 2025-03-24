@@ -11,12 +11,12 @@ export abstract class Service<S extends SerializableStatic, I extends Serializab
 		return entity
 	}
 
-	async list({ page = 1 }) {
+	async list({ page, per_page }: { page: number; per_page: number }) {
 		const entity = await this.repository.list()
-		return entity.slice((page - 1) * 20, page * 20)
+		return entity.slice((page - 1) * per_page, page * per_page)
 	}
 
-	async listBy<L extends keyof I>(property: L, value: I[L]) {
+	async listBy<L extends keyof Omit<I, 'toJSON' | 'toObject'>>(property: L, value: I[L]) {
 		const entity = await this.repository.listBy(property, value)
 		return entity
 	}

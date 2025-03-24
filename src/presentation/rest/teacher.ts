@@ -22,9 +22,10 @@ export function teacherRouterFactory(
 		})
 
 		router.get('/', { schema: { querystring: queryPage.schema.querystring } }, async (req, res) => {
-			const { page } = req.query
+			const { page, per_page } = req.query
 			const teachers = await teacherService.list({
-				page: Number(page ?? 1),
+				page: page ?? 1,
+				per_page: per_page ?? 20,
 			})
 
 			return res.send(teachers.map((t) => t.toObject()))
@@ -37,30 +38,6 @@ export function teacherRouterFactory(
 
 			return res.send({ ...teacher.toObject() })
 		})
-
-		router.put(
-			'/:id',
-			{
-				schema: {
-					body: TeacherUpdateSchema.omit({ document: true, hiringDate: true }),
-					params: onlyIdParam.schema.params,
-				},
-			},
-			async (req, res) => {
-				const { id } = req.params
-				const { firstName, surname, email, phone, salary, major } = req.body
-				// Os campos devem ser passados explicitamente para evitar mass assignment.
-				const updated = await teacherService.update(id, {
-					firstName: firstName,
-					surname: surname,
-					email: email,
-					phone: phone,
-					salary: salary,
-					major: major,
-				})
-				res.send(updated.toObject())
-			},
-		)
 
 		router.get('/:id/students', onlyIdParam, async (req, res) => {
 			const { id } = req.params
@@ -88,6 +65,30 @@ export function teacherRouterFactory(
 
 			res.send(classes.map((c) => c.toObject()))
 		})
+
+		router.put(
+			'/:id',
+			{
+				schema: {
+					body: TeacherUpdateSchema.omit({ document: true, hiringDate: true }),
+					params: onlyIdParam.schema.params,
+				},
+			},
+			async (req, res) => {
+				const { id } = req.params
+				const { firstName, surname, email, phone, salary, major } = req.body
+				// Os campos devem ser passados explicitamente para evitar mass assignment.
+				const updated = await teacherService.update(id, {
+					firstName: firstName,
+					surname: surname,
+					email: email,
+					phone: phone,
+					salary: salary,
+					major: major,
+				})
+				res.send(updated.toObject())
+			},
+		)
 
 		router.delete('/:id', onlyIdParam, async (req, res) => {
 			const { id } = req.params

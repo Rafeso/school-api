@@ -21,10 +21,19 @@ export const StudentAndParentId = {
 	},
 }
 
+const MAX_PAGE_SIZE = 100
 export const queryPage = {
 	schema: {
 		querystring: z.object({
-			page: z.string().optional(),
+			page: z
+				.string()
+				.transform((value) => Number(value))
+				.optional(),
+			per_page: z
+				.string()
+				.transform((value) => Number(value))
+				.refine((value) => value <= MAX_PAGE_SIZE)
+				.optional(),
 		}),
 	},
 }

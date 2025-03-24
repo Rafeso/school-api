@@ -10,15 +10,20 @@ export function classRouterFactory(classService: ClassService, teacherService: T
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
 		router.post('/', { schema: { body: ClassCreationSchema.omit({ id: true }) } }, async (req, res) => {
-			const Class = await classService.create(req.body)
+			const { code, teacher } = req.body
+			const classEntity = await classService.create({
+				code: code,
+				teacher: teacher,
+			})
 
-			return res.status(201).send(Class.toObject())
+			return res.status(201).send(classEntity.toObject())
 		})
 
 		router.get('/', { schema: { querystring: queryPage.schema.querystring } }, async (req, res) => {
-			const { page } = req.query
+			const { page, per_page } = req.query
 			const classEntities = await classService.list({
-				page: Number(page ?? 1),
+				page: page ?? 1,
+				per_page: per_page ?? 20,
 			})
 
 			return res.send(classEntities.map((c) => c.toObject()))

@@ -45,6 +45,7 @@ describe('Class Service', () => {
 		}) as { listBy: Mock<(prop: string, value: any) => Student[]> }
 	// endregion
 
+	// region Create
 	describe('Create', () => {
 		it('should create a class', async (ctx) => {
 			const DBMock = dummyDatabase(ctx, () => dummyClass(), {
@@ -102,7 +103,9 @@ describe('Class Service', () => {
 			assert.strictEqual(DBMock.save.mock.callCount(), 0)
 		})
 	})
+	// endregion
 
+	// region Remove
 	describe('Remove', () => {
 		it('should remove a class', async (ctx) => {
 			const DBMock = dummyDatabase(ctx, () => dummyClass())
@@ -137,7 +140,9 @@ describe('Class Service', () => {
 			assert.strictEqual(DBMock.remove.mock.callCount(), 0)
 		})
 	})
+	// endregion
 
+	// region Update
 	describe('Update', () => {
 		it('should update a class whithout checking for teacher', async (ctx) => {
 			const DBMock = dummyDatabase(ctx, () => dummyClass())
@@ -216,7 +221,9 @@ describe('Class Service', () => {
 			assert.strictEqual(DBMock.save.mock.callCount(), 0)
 		})
 	})
+	// endregion
 
+	// region GetTeacher
 	describe('GetTeacher', () => {
 		it('should get teacher of a class', async (t) => {
 			const DBMock = dummyDatabase(t, () => dummyClass())
@@ -268,7 +275,9 @@ describe('Class Service', () => {
 			assert.strictEqual(teacherService.findById.mock.callCount(), 0)
 		})
 	})
+	// endregion
 
+	// region GetStudent
 	describe('GetStudent', () => {
 		it('should get student of a class', async (ctx) => {
 			const DBMock = dummyDatabase(ctx, dummyClass)
@@ -286,4 +295,5 @@ describe('Class Service', () => {
 			assert.strictEqual(studentService.listBy.mock.callCount(), 1)
 		})
 	})
+	// endregion
 })

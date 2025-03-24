@@ -6,6 +6,7 @@ import { Service } from './BaseService.js'
 export class TeacherService extends Service<typeof Teacher> {
 	async update(id: string, newData: TeacherUpdateType) {
 		const entity = await this.findById(id)
+
 		const updated = new Teacher({
 			id: entity.id,
 			document: entity.document,

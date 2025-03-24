@@ -23,9 +23,10 @@ export function parentRouterFactory(parentService: ParentService, studentService
 		})
 
 		router.get('/', { schema: { querystring: queryPage.schema.querystring } }, async (req, res) => {
-			const { page } = req.query
+			const { page, per_page } = req.query
 			const parents = await parentService.list({
-				page: Number(page ?? 1),
+				page: page ?? 1,
+				per_page: per_page ?? 20,
 			})
 
 			return res.send(parents.map((p) => p.toObject()))

@@ -24,6 +24,7 @@ export abstract class Database<S extends SerializableStatic, I extends Serializa
 
 	async listBy<L extends keyof I>(property: L, value: I[L]) {
 		const command: Record<string, unknown> = { [property as string]: value }
+
 		if (Array.isArray(value)) {
 			command[property as string] = { $in: value }
 		}

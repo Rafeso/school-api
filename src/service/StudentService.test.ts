@@ -10,7 +10,7 @@ import type { ParentService } from './ParentService.js'
 import { StudentService } from './StudentService.js'
 
 describe('Student Service', () => {
-	// regions mocks
+	// region Mocks
 	const ParentServiceMock = (
 		ctx: TestContext,
 		// biome-ignore lint/suspicious/noExplicitAny: Código de testes.
@@ -19,8 +19,9 @@ describe('Student Service', () => {
 		({
 			findById: ctx.mock.fn((id: string) => mockReturn.findById ?? dummyParent({ id })),
 		}) as { findById: Mock<(id: string) => Parent> }
-	// endregions
+	// endregion
 
+	// region Create
 	describe('Create', () => {
 		it('should create a student', async (ctx) => {
 			const DBMock = dummyDatabase(ctx, () => dummyStudent(), {
@@ -59,7 +60,9 @@ describe('Student Service', () => {
 			assert.strictEqual(DBMock.save.mock.callCount(), 0)
 		})
 	})
+	// endregion
 
+	// region Update
 	describe('Update', () => {
 		it('should update a student', async (ctx) => {
 			const DBMock = dummyDatabase(ctx, () => dummyStudent())
@@ -74,8 +77,22 @@ describe('Student Service', () => {
 			assert.strictEqual(DBMock.findById.mock.callCount(), 1)
 			assert.strictEqual(DBMock.save.mock.callCount(), 1)
 		})
-	})
 
+		it('should throw an error if student does not exist', async (ctx) => {
+			const DBMock = dummyDatabase(ctx, () => dummyStudent(), {
+				findById: false,
+			})
+			const parentService = ParentServiceMock(ctx)
+			const service = new StudentService(DBMock, parentService as unknown as ParentService)
+
+			await assert.rejects(() => service.update(studentId, { firstName: 'John', surname: 'Doe', medications: ['Aspirin'] }), NotFoundError)
+			assert.strictEqual(DBMock.findById.mock.callCount(), 1)
+			assert.strictEqual(DBMock.save.mock.callCount(), 0)
+		})
+	})
+	// endregion
+
+	// region Remove
 	describe('Remove', () => {
 		it('should remove a student', async (ctx) => {
 			const DBMock = dummyDatabase(ctx, () => dummyStudent())
@@ -99,7 +116,9 @@ describe('Student Service', () => {
 			assert.strictEqual(DBMock.remove.mock.callCount(), 0)
 		})
 	})
+	// endregion
 
+	// region LinkParent
 	describe('LinkParent', () => {
 		it('should link a parent to a student', async (ctx) => {
 			const DBMock = dummyDatabase(ctx, () => dummyStudent())
@@ -150,7 +169,9 @@ describe('Student Service', () => {
 			assert.strictEqual(DBMock.save.mock.callCount(), 0)
 		})
 	})
+	// endregion
 
+	// region UnlinkParent
 	describe('UnlinkParent', () => {
 		it('should unlink a parent from a student', async (ctx) => {
 			const DBMock = dummyDatabase(ctx, () => dummyStudent({ parents: [parentId, randomUUID()] }))
@@ -186,7 +207,9 @@ describe('Student Service', () => {
 			assert.strictEqual(DBMock.save.mock.callCount(), 0)
 		})
 	})
+	// endregion
 
+	// region GetParent
 	describe('GetParent', () => {
 		it('should get parents of a student', async (ctx) => {
 			const DBMock = dummyDatabase(ctx, () => dummyStudent())
@@ -225,4 +248,5 @@ describe('Student Service', () => {
 			assert.strictEqual(parentService.findById.mock.callCount(), 1)
 		})
 	})
+	// endregion
 })
