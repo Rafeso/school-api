@@ -2,16 +2,16 @@ import type { SerializableStatic } from '../types.js'
 
 interface DomainErrosOptions extends ErrorOptions {
 	code?: string
-	status?: number
+	statusCode?: number
 }
 
 export abstract class BaseError extends Error {
 	readonly code: string
-	readonly status: number
+	readonly statusCode: number
 	constructor(message: string, entity: SerializableStatic, options?: DomainErrosOptions) {
 		super(message, options)
 		this.name = `${entity.name}Error`
-		this.code = options?.code ?? 'DOMAIN ERROR'
-		this.status = options?.status ?? 500
+		this.code = options?.code ?? 'UNKNOWN_ERROR'
+		this.statusCode = options?.statusCode ?? 500
 	}
 }

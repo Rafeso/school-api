@@ -6,7 +6,7 @@ export class ConflictError extends BaseError {
 	constructor(entity: SerializableStatic, locator: any) {
 		super(`${entity.name} with locator ${JSON.stringify(locator)} already exists.`, entity, {
 			code: 'CONFLICT',
-			status: 409,
+			statusCode: 409,
 		})
 	}
 }

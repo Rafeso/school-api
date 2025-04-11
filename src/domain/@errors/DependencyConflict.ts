@@ -19,7 +19,7 @@ export class DependencyConflictError extends BaseError {
 			entity,
 			{
 				code: 'DEPENDENCY_LOCK',
-				status: 409,
+				statusCode: 409,
 			},
 		)
 	}

@@ -13,7 +13,7 @@ export class MissingDependecyError extends BaseError {
 			searched,
 			{
 				code: 'MISSING_DEPENDENCY',
-				status: 404,
+				statusCode: 404,
 			},
 		)
 	}
