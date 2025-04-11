@@ -5,7 +5,7 @@ import type { ClassService } from '../../service/ClassService.js'
 import type { TeacherService } from '../../service/TeacherService.js'
 import { onlyIdParam, queryPage } from './index.js'
 
-export function classRouterFactory(classService: ClassService, teacherService: TeacherService) {
+export function classRouterFactory(classService: ClassService) {
 	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 

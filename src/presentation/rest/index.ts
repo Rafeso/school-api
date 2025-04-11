@@ -1,9 +1,11 @@
-import fastify from 'fastify'
+import fastify, { FastifyError, FastifyReply } from 'fastify'
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
+import { FastifyReplyType } from 'fastify/types/type-provider.js'
 import { ZodError, z } from 'zod'
 import type { ServiceList } from '../../app.js'
 import type { AppConfig } from '../../config.js'
 import { classRouterFactory } from './class.js'
+import { errorHandler } from './handlers/error-handler.js'
 import { parentRouterFactory } from './parent.js'
 import { studentRouterFactory } from './student.js'
 import { teacherRouterFactory } from './teacher.js'
@@ -42,21 +44,11 @@ export async function WebLayer(config: AppConfig, services: ServiceList) {
 	const app = fastify({ logger: true })
 	app.setValidatorCompiler(validatorCompiler)
 	app.setSerializerCompiler(serializerCompiler)
-	app.setErrorHandler((error, _, reply) => {
-		if (error instanceof ZodError) {
-			error.statusCode = 422
-			return reply.status(422).send({
-				code: 'INVALID_PAYLOAD',
-				message: 'invalid payload',
-				errors: error.issues,
-			})
-		}
-		return reply.send(error)
-	})
+	app.setErrorHandler(errorHandler)
 
 	let server: typeof app
 
-	app.register(classRouterFactory(services.class, services.teacher), {
+	app.register(classRouterFactory(services.class), {
 		prefix: '/v1/classes',
 	})
 	app.register(parentRouterFactory(services.parent, services.student), {
