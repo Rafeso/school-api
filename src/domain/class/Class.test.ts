@@ -1,45 +1,51 @@
-import assert from 'node:assert'
-import { randomUUID } from 'node:crypto'
+import assert from "node:assert"
+import { randomUUID } from "node:crypto"
 //@ts-nocheck
-import { describe, it } from 'node:test'
-import { ZodError } from 'zod'
-import { Class } from './Class.js'
-import type { ClassCreationType } from './types.js'
+import { describe, it } from "node:test"
+import { ZodError } from "zod"
+import { Class } from "./Class.js"
+import type { ClassCreationType } from "./types.js"
 
-describe('Class Domain', () => {
-  const classEntityObj: ClassCreationType = {
-    code: '1B-M',
-    teacher: randomUUID(),
-  }
+describe("Class Domain", () => {
+	const classEntityObj: ClassCreationType = {
+		code: "1B-M",
+		teacher: randomUUID(),
+	}
 
-  it('should return a class instance with the correct data', () => {
-    const classEntity = new Class(classEntityObj)
-    assert.ok(classEntity instanceof Class)
-  })
+	it("should return a class instance with the correct data", () => {
+		const classEntity = new Class(classEntityObj)
+		assert.ok(classEntity instanceof Class)
+	})
 
-  it('should return the correct data on toObject', () => {
-    const classEntity = new Class(classEntityObj)
-    assert.deepStrictEqual(classEntity.toObject(), {
-      ...classEntityObj,
-      id: classEntity.id,
-    })
-  })
+	it("should return the correct data on toObject", () => {
+		const classEntity = new Class(classEntityObj)
+		assert.deepStrictEqual(classEntity.toObject(), {
+			...classEntityObj,
+			id: classEntity.id,
+		})
+	})
 
-  it('should return the correct data on toJSON', () => {
-    const classEntity = new Class(classEntityObj)
-    assert.strictEqual(classEntity.toJSON(), JSON.stringify(classEntity.toObject()))
-  })
+	it("should return the correct data on toJSON", () => {
+		const classEntity = new Class(classEntityObj)
+		assert.strictEqual(
+			classEntity.toJSON(),
+			JSON.stringify(classEntity.toObject()),
+		)
+	})
 
-  it('should return the correct data on fromObject', () => {
-    const classEntity = Class.fromObject(classEntityObj)
-    assert.ok(classEntity instanceof Class)
-    assert.deepStrictEqual(classEntity.toObject(), {
-      ...classEntityObj,
-      id: classEntity.id,
-    })
-  })
+	it("should return the correct data on fromObject", () => {
+		const classEntity = Class.fromObject(classEntityObj)
+		assert.ok(classEntity instanceof Class)
+		assert.deepStrictEqual(classEntity.toObject(), {
+			...classEntityObj,
+			id: classEntity.id,
+		})
+	})
 
-  it('should return an error when trying to create a class with invalid data', () => {
-    assert.throws(() => new Class({ ...classEntityObj, code: 'invalid' }), ZodError)
-  })
+	it("should return an error when trying to create a class with invalid data", () => {
+		assert.throws(
+			() => new Class({ ...classEntityObj, code: "invalid" }),
+			ZodError,
+		)
+	})
 })

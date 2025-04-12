@@ -1,4 +1,4 @@
-import type { SerializableStatic } from '../types.js'
+import type { SerializableStatic } from "../types.js"
 
 interface DomainErrosOptions extends ErrorOptions {
 	code?: string
@@ -8,10 +8,14 @@ interface DomainErrosOptions extends ErrorOptions {
 export abstract class BaseError extends Error {
 	readonly code: string
 	readonly statusCode: number
-	constructor(message: string, entity: SerializableStatic, options?: DomainErrosOptions) {
+	constructor(
+		message: string,
+		entity: SerializableStatic,
+		options?: DomainErrosOptions,
+	) {
 		super(message, options)
 		this.name = `${entity.name}Error`
-		this.code = options?.code ?? 'UNKNOWN_ERROR'
+		this.code = options?.code ?? "UNKNOWN_ERROR"
 		this.statusCode = options?.statusCode ?? 500
 	}
 }

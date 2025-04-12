@@ -1,20 +1,20 @@
-import { randomUUID } from 'node:crypto'
-import { BaseDomain } from '../BaseDomain.js'
-import type { Serializable } from '../types.js'
-import { StudentCreationSchema, type StudentCreationType } from './types.js'
+import { randomUUID } from "node:crypto"
+import { BaseDomain } from "../BaseDomain.js"
+import type { Serializable } from "../types.js"
+import { StudentCreationSchema, type StudentCreationType } from "./types.js"
 
 export class Student extends BaseDomain implements Serializable {
-	static collection = 'students'
-	firstName: StudentCreationType['firstName']
-	surname: StudentCreationType['surname']
+	static collection = "students"
+	firstName: StudentCreationType["firstName"]
+	surname: StudentCreationType["surname"]
 	birthDate: Date
-	accessor parents: StudentCreationType['parents']
-	allergies: StudentCreationType['allergies']
-	bloodType: StudentCreationType['bloodType']
-	medications: StudentCreationType['medications']
+	accessor parents: StudentCreationType["parents"]
+	allergies: StudentCreationType["allergies"]
+	bloodType: StudentCreationType["bloodType"]
+	medications: StudentCreationType["medications"]
 	startDate: Date
-	document: StudentCreationType['document']
-	class: StudentCreationType['class']
+	document: StudentCreationType["document"]
+	class: StudentCreationType["class"]
 	readonly id: string
 
 	constructor(data: StudentCreationType) {

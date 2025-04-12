@@ -1,8 +1,11 @@
-import type { Database } from '../data/Db.js'
-import { NotFoundError } from '../domain/@errors/NotFound.js'
-import type { Serializable, SerializableStatic } from '../domain/types.js'
+import type { Database } from "../data/Db.js"
+import { NotFoundError } from "../domain/@errors/NotFound.js"
+import type { Serializable, SerializableStatic } from "../domain/types.js"
 
-export abstract class Service<S extends SerializableStatic, I extends Serializable = InstanceType<S>> {
+export abstract class Service<
+	S extends SerializableStatic,
+	I extends Serializable = InstanceType<S>,
+> {
 	constructor(protected repository: Database<S>) {}
 
 	async findById(id: string) {
@@ -16,7 +19,10 @@ export abstract class Service<S extends SerializableStatic, I extends Serializab
 		return entity.slice((page - 1) * per_page, page * per_page)
 	}
 
-	async listBy<L extends keyof Omit<I, 'toJSON' | 'toObject'>>(property: L, value: I[L]) {
+	async listBy<L extends keyof Omit<I, "toJSON" | "toObject">>(
+		property: L,
+		value: I[L],
+	) {
 		const entity = await this.repository.listBy(property, value)
 		return entity
 	}

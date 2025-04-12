@@ -1,5 +1,5 @@
-import { z } from 'zod'
-import { AddressSchema } from '../types.js'
+import { z } from "zod"
+import { AddressSchema } from "../types.js"
 
 export const ParentCreationSchema = z.object({
 	id: z.string().uuid().optional(),

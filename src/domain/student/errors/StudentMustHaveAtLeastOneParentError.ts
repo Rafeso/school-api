@@ -1,5 +1,5 @@
-import { BaseError } from '../../@errors/BaseError.js'
-import type { SerializableStatic } from '../../types.js'
+import { BaseError } from "../../@errors/BaseError.js"
+import type { SerializableStatic } from "../../types.js"
 
 export class StudentMustHaveAtLeastOneParentError extends BaseError {
 	constructor(
@@ -14,7 +14,7 @@ export class StudentMustHaveAtLeastOneParentError extends BaseError {
 			} must have at least one parent.`,
 			studentEntity,
 			{
-				code: 'STUDENT_MUST_HAVE_AT_LEAST_ONE_PARENT',
+				code: "STUDENT_MUST_HAVE_AT_LEAST_ONE_PARENT",
 				statusCode: 409,
 			},
 		)

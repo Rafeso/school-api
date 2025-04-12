@@ -1,16 +1,16 @@
-import { randomUUID } from 'node:crypto'
-import { BaseDomain } from '../BaseDomain.js'
-import type { Serializable } from '../types.js'
-import { ParentCreationSchema, type ParentCreationType } from './types.js'
+import { randomUUID } from "node:crypto"
+import { BaseDomain } from "../BaseDomain.js"
+import type { Serializable } from "../types.js"
+import { ParentCreationSchema, type ParentCreationType } from "./types.js"
 
 export class Parent extends BaseDomain implements Serializable {
-	static collection = 'parents'
-	firstName: ParentCreationType['firstName']
-	surname: ParentCreationType['surname']
-	phones: ParentCreationType['phones']
-	emails: ParentCreationType['emails']
-	address: ParentCreationType['address']
-	document: ParentCreationType['document']
+	static collection = "parents"
+	firstName: ParentCreationType["firstName"]
+	surname: ParentCreationType["surname"]
+	phones: ParentCreationType["phones"]
+	emails: ParentCreationType["emails"]
+	address: ParentCreationType["address"]
+	document: ParentCreationType["document"]
 	readonly id: string
 
 	constructor(data: ParentCreationType) {

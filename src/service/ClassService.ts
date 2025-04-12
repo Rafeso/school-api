@@ -1,14 +1,17 @@
-import type { Database } from '../data/Db.js'
-import { ConflictError } from '../domain/@errors/Conflict.js'
-import { DependencyConflictError } from '../domain/@errors/DependencyConflict.js'
-import { MissingDependecyError } from '../domain/@errors/MissingDependecy.js'
-import { Class } from '../domain/class/Class.js'
-import type { ClassCreationType, ClassUpdateType } from '../domain/class/types.js'
-import { Student } from '../domain/student/Student.js'
-import { Teacher } from '../domain/teacher/Teacher.js'
-import { Service } from './BaseService.js'
-import type { StudentService } from './StudentService.js'
-import type { TeacherService } from './TeacherService.js'
+import type { Database } from "../data/Db.js"
+import { ConflictError } from "../domain/@errors/Conflict.js"
+import { DependencyConflictError } from "../domain/@errors/DependencyConflict.js"
+import { MissingDependecyError } from "../domain/@errors/MissingDependecy.js"
+import { Class } from "../domain/class/Class.js"
+import type {
+	ClassCreationType,
+	ClassUpdateType,
+} from "../domain/class/types.js"
+import { Student } from "../domain/student/Student.js"
+import { Teacher } from "../domain/teacher/Teacher.js"
+import { Service } from "./BaseService.js"
+import type { StudentService } from "./StudentService.js"
+import type { TeacherService } from "./TeacherService.js"
 
 export class ClassService extends Service<typeof Class> {
 	constructor(
@@ -39,7 +42,7 @@ export class ClassService extends Service<typeof Class> {
 	}
 
 	async create(creationData: ClassCreationType) {
-		const existing = await this.repository.listBy('code', creationData.code)
+		const existing = await this.repository.listBy("code", creationData.code)
 		if (existing.length > 0) throw new ConflictError(Class, creationData.code)
 
 		await this.#assertTeacherExists(creationData.teacher)
@@ -52,21 +55,23 @@ export class ClassService extends Service<typeof Class> {
 
 	async getTeacher(classId: string) {
 		const classEntity = await this.findById(classId)
-		if (!classEntity.teacher) throw new MissingDependecyError(Teacher, classId, Class)
+		if (!classEntity.teacher)
+			throw new MissingDependecyError(Teacher, classId, Class)
 
 		const teacher = await this.teacherService.findById(classEntity.teacher)
 		return teacher
 	}
 
 	async remove(id: string) {
-		const students = await this.studentService.listBy('class', id)
-		if (students.length > 0) throw new DependencyConflictError(Class, id, Student)
+		const students = await this.studentService.listBy("class", id)
+		if (students.length > 0)
+			throw new DependencyConflictError(Class, id, Student)
 
 		await this.repository.remove(id)
 	}
 
 	async getStudent(classId: string) {
 		const classEntity = await this.findById(classId)
-		return this.studentService.listBy('class', classEntity.id)
+		return this.studentService.listBy("class", classEntity.id)
 	}
 }

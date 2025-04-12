@@ -1,5 +1,5 @@
-import type { SerializableStatic } from '../types.js'
-import { BaseError } from './BaseError.js'
+import type { SerializableStatic } from "../types.js"
+import { BaseError } from "./BaseError.js"
 
 export class DependencyConflictError extends BaseError {
 	constructor(
@@ -14,11 +14,11 @@ export class DependencyConflictError extends BaseError {
 			`${entity.name} with locator ${JSON.stringify(
 				locator,
 			)} cannot be removed because it depends on ${dependecy.name}${
-				dependencyLocator ? `: ${JSON.stringify(dependencyLocator)}` : ''
+				dependencyLocator ? `: ${JSON.stringify(dependencyLocator)}` : ""
 			}.`,
 			entity,
 			{
-				code: 'DEPENDENCY_LOCK',
+				code: "DEPENDENCY_LOCK",
 				statusCode: 409,
 			},
 		)

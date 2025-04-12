@@ -1,21 +1,21 @@
-import assert from 'node:assert'
-import { after, afterEach, before, describe, it } from 'node:test'
-import { appConfig } from '../../config.js'
-import { Teacher } from '../../domain/teacher/Teacher.js'
-import { connectToDatabase } from '../connection.js'
-import { TeacherRepository } from './TeacherRepository.js'
+import assert from "node:assert"
+import { after, afterEach, before, describe, it } from "node:test"
+import { appConfig } from "../../config.js"
+import { Teacher } from "../../domain/teacher/Teacher.js"
+import { connectToDatabase } from "../connection.js"
+import { TeacherRepository } from "./TeacherRepository.js"
 
-describe('TeacherRepository', async () => {
+describe("TeacherRepository", async () => {
 	const { db } = await connectToDatabase(appConfig)
 	const teacher = new Teacher({
-		firstName: 'Rafael',
-		surname: 'Feitosa',
-		hiringDate: new Date('2010-10-10').toISOString(),
-		email: 'teste@testando.com',
-		phone: '11939555105',
+		firstName: "Rafael",
+		surname: "Feitosa",
+		hiringDate: new Date("2010-10-10").toISOString(),
+		email: "teste@testando.com",
+		phone: "11939555105",
 		salary: 5000,
-		major: 'Computer Science',
-		document: '12345678',
+		major: "Computer Science",
+		document: "12345678",
 	})
 
 	before(async () => {
@@ -30,7 +30,7 @@ describe('TeacherRepository', async () => {
 		process.exit()
 	})
 
-	it('should create a teacher', async () => {
+	it("should create a teacher", async () => {
 		const teacherRepository = new TeacherRepository(db)
 		await teacherRepository.save(teacher)
 
@@ -39,20 +39,20 @@ describe('TeacherRepository', async () => {
 		assert.deepStrictEqual(result, teacher)
 	})
 
-	it('should update a teacher', async () => {
+	it("should update a teacher", async () => {
 		const teacherRepository = new TeacherRepository(db)
 		const newTeacher = new Teacher({
-			firstName: 'Rafael',
-			surname: 'Feitosa',
-			hiringDate: new Date('2010-10-10').toISOString(),
-			email: 'teste@testando.com',
-			phone: '11939555105',
+			firstName: "Rafael",
+			surname: "Feitosa",
+			hiringDate: new Date("2010-10-10").toISOString(),
+			email: "teste@testando.com",
+			phone: "11939555105",
 			salary: 5000,
-			major: 'Computer Science',
-			document: '12345678',
+			major: "Computer Science",
+			document: "12345678",
 		})
 		await teacherRepository.save(newTeacher)
-		newTeacher.firstName = 'João'
+		newTeacher.firstName = "João"
 
 		await teacherRepository.save(newTeacher)
 		const result = await teacherRepository.findById(newTeacher.id)
@@ -61,7 +61,7 @@ describe('TeacherRepository', async () => {
 		assert.deepStrictEqual(result, newTeacher)
 	})
 
-	it('should list teachers in database', async () => {
+	it("should list teachers in database", async () => {
 		const teacherRepository = new TeacherRepository(db)
 		await teacherRepository.save(teacher)
 		const result = await teacherRepository.list()
@@ -71,16 +71,16 @@ describe('TeacherRepository', async () => {
 		assert.deepStrictEqual(result, [teacher])
 	})
 
-	it('should list teachers by property', async () => {
+	it("should list teachers by property", async () => {
 		const teacherRepository = new TeacherRepository(db)
 		await teacherRepository.save(teacher)
-		const result = await teacherRepository.listBy('document', teacher.document)
+		const result = await teacherRepository.listBy("document", teacher.document)
 		assert.ok(result.length === 1)
 		assert.ok(result[0] instanceof Teacher)
 		assert.deepStrictEqual(result, [teacher])
 	})
 
-	it('should find a teacher by id', async () => {
+	it("should find a teacher by id", async () => {
 		const teacherRepository = new TeacherRepository(db)
 		await teacherRepository.save(teacher)
 		const result = await teacherRepository.findById(teacher.id)

@@ -1,11 +1,17 @@
-import { ConflictError } from '../domain/@errors/Conflict.js'
-import { Parent } from '../domain/parent/Parent.js'
-import type { ParentCreationType, ParentUpdateType } from '../domain/parent/types.js'
-import { Service } from './BaseService.js'
+import { ConflictError } from "../domain/@errors/Conflict.js"
+import { Parent } from "../domain/parent/Parent.js"
+import type {
+	ParentCreationType,
+	ParentUpdateType,
+} from "../domain/parent/types.js"
+import { Service } from "./BaseService.js"
 
 export class ParentService extends Service<typeof Parent> {
 	async create(creationData: ParentCreationType) {
-		const existing = await this.repository.listBy('document', creationData.document)
+		const existing = await this.repository.listBy(
+			"document",
+			creationData.document,
+		)
 		if (existing.length > 0) {
 			throw new ConflictError(Parent, creationData.document)
 		}

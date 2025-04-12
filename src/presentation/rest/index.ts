@@ -1,14 +1,17 @@
-import fastify, { FastifyError, FastifyReply } from 'fastify'
-import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
-import { FastifyReplyType } from 'fastify/types/type-provider.js'
-import { ZodError, z } from 'zod'
-import type { ServiceList } from '../../app.js'
-import type { AppConfig } from '../../config.js'
-import { classRouterFactory } from './class.js'
-import { errorHandler } from './handlers/error-handler.js'
-import { parentRouterFactory } from './parent.js'
-import { studentRouterFactory } from './student.js'
-import { teacherRouterFactory } from './teacher.js'
+import fastify, { FastifyError, FastifyReply } from "fastify"
+import {
+	serializerCompiler,
+	validatorCompiler,
+} from "fastify-type-provider-zod"
+import { FastifyReplyType } from "fastify/types/type-provider.js"
+import { ZodError, z } from "zod"
+import type { ServiceList } from "../../app.js"
+import type { AppConfig } from "../../config.js"
+import { classRouterFactory } from "./class.js"
+import { errorHandler } from "./handlers/error-handler.js"
+import { parentRouterFactory } from "./parent.js"
+import { studentRouterFactory } from "./student.js"
+import { teacherRouterFactory } from "./teacher.js"
 
 export const onlyIdParam = {
 	schema: { params: z.object({ id: z.string().uuid() }) },
@@ -49,30 +52,33 @@ export async function WebLayer(config: AppConfig, services: ServiceList) {
 	let server: typeof app
 
 	app.register(classRouterFactory(services.class), {
-		prefix: '/v1/classes',
+		prefix: "/v1/classes",
 	})
 	app.register(parentRouterFactory(services.parent, services.student), {
-		prefix: '/v1/parents',
+		prefix: "/v1/parents",
 	})
-	app.register(teacherRouterFactory(services.teacher, services.class, services.student), {
-		prefix: '/v1/teachers',
-	})
+	app.register(
+		teacherRouterFactory(services.teacher, services.class, services.student),
+		{
+			prefix: "/v1/teachers",
+		},
+	)
 	app.register(studentRouterFactory(services.student, services.class), {
-		prefix: '/v1/students',
+		prefix: "/v1/students",
 	})
 
 	const start = async () => {
-		console.log('Starting web layer')
+		console.log("Starting web layer")
 		server = app
 		await app.listen({ port: config.PORT })
 		console.info(`Listening on port ${config.PORT}`)
 	}
 
 	const stop = () => {
-		console.debug('Stopping web layer')
+		console.debug("Stopping web layer")
 		if (server) {
 			server.close(() => {
-				console.info('Web layer stopped')
+				console.info("Web layer stopped")
 				process.exit(0)
 			})
 		}

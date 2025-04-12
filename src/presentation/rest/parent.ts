@@ -1,38 +1,57 @@
-import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
-import type { ZodTypeProvider } from 'fastify-type-provider-zod'
-import { ParentCreationSchema, ParentUpdateSchema } from '../../domain/parent/types.js'
-import type { ParentService } from '../../service/ParentService.js'
-import type { StudentService } from '../../service/StudentService.js'
-import { onlyIdParam, queryPage } from './index.js'
+import type { FastifyInstance, FastifyPluginOptions } from "fastify"
+import type { ZodTypeProvider } from "fastify-type-provider-zod"
+import {
+	ParentCreationSchema,
+	ParentUpdateSchema,
+} from "../../domain/parent/types.js"
+import type { ParentService } from "../../service/ParentService.js"
+import type { StudentService } from "../../service/StudentService.js"
+import { onlyIdParam, queryPage } from "./index.js"
 
-export function parentRouterFactory(parentService: ParentService, studentService: StudentService) {
-	return (app: FastifyInstance, _: FastifyPluginOptions, done: (err?: Error) => void) => {
+export function parentRouterFactory(
+	parentService: ParentService,
+	studentService: StudentService,
+) {
+	return (
+		app: FastifyInstance,
+		_: FastifyPluginOptions,
+		done: (err?: Error) => void,
+	) => {
 		const router = app.withTypeProvider<ZodTypeProvider>()
 
-		router.post('/', { schema: { body: ParentCreationSchema.omit({ id: true }) } }, async (req, res) => {
-			const { address, document, emails, firstName, phones, surname } = req.body
-			const parent = await parentService.create({
-				address: address,
-				document: document,
-				emails: emails,
-				firstName: firstName,
-				phones: phones,
-				surname: surname,
-			})
-			return res.status(201).send(parent.toObject())
-		})
+		router.post(
+			"/",
+			{ schema: { body: ParentCreationSchema.omit({ id: true }) } },
+			async (req, res) => {
+				const { address, document, emails, firstName, phones, surname } =
+					req.body
+				const parent = await parentService.create({
+					address: address,
+					document: document,
+					emails: emails,
+					firstName: firstName,
+					phones: phones,
+					surname: surname,
+				})
+				return res.status(201).send(parent.toObject())
+			},
+		)
 
-		router.get('/', { schema: { querystring: queryPage.schema.querystring } }, async (req, res) => {
-			const { page, per_page } = req.query
-			const parents = await parentService.list({
-				page: page ?? 1,
-				per_page: per_page ?? 20,
-			})
+		router.get(
+			"/",
+			{ schema: { querystring: queryPage.schema.querystring } },
+			async (req, res) => {
+				const { page, per_page } = req.query
+				const parents = await parentService.list({
+					page: page ?? 1,
+					per_page: per_page ?? 20,
+				})
 
-			return res.send(parents.map((p) => p.toObject()))
-		})
+				return res.send(parents.map((p) => p.toObject()))
+			},
+		)
 
-		router.get('/:id', onlyIdParam, async (req, res) => {
+		router.get("/:id", onlyIdParam, async (req, res) => {
 			const { id } = req.params
 
 			const parentEntity = await parentService.findById(id)
@@ -41,7 +60,7 @@ export function parentRouterFactory(parentService: ParentService, studentService
 		})
 
 		router.put(
-			'/:id',
+			"/:id",
 			{
 				schema: {
 					body: ParentUpdateSchema.omit({ document: true }),
@@ -64,15 +83,15 @@ export function parentRouterFactory(parentService: ParentService, studentService
 			},
 		)
 
-		router.delete('/:id', onlyIdParam, async (req, res) => {
+		router.delete("/:id", onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			const students = await studentService.listBy('parents', [id])
+			const students = await studentService.listBy("parents", [id])
 			if (students.length > 0) {
 				return res.code(409).send({
 					status: 409,
-					code: 'PARENT_HAS_STUDENTS',
-					error: 'Conflict',
-					message: 'Cannot delete parent because it has students assigned',
+					code: "PARENT_HAS_STUDENTS",
+					error: "Conflict",
+					message: "Cannot delete parent because it has students assigned",
 				})
 			}
 
@@ -80,9 +99,9 @@ export function parentRouterFactory(parentService: ParentService, studentService
 			return res.status(204).send()
 		})
 
-		router.get('/:id/students', onlyIdParam, async (req, res) => {
+		router.get("/:id/students", onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			const students = await studentService.listBy('parents', [id])
+			const students = await studentService.listBy("parents", [id])
 			return res.send(students.map((s) => s.toObject()))
 		})
 
