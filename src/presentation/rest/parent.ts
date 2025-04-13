@@ -88,10 +88,9 @@ export function parentRouterFactory(
 			const students = await studentService.listBy("parents", [id])
 			if (students.length > 0) {
 				return res.code(409).send({
-					status: 409,
-					code: "PARENT_HAS_STUDENTS",
-					error: "Conflict",
-					message: "Cannot delete parent because it has students assigned",
+					code: "CONFLICT",
+					name: "ParentError",
+					message: "Cannot delete parent because it has students assigned.",
 				})
 			}
 

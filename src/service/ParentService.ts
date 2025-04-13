@@ -26,9 +26,13 @@ export class ParentService extends Service<typeof Parent> {
 			id: entity.id,
 			address: newData.address ?? entity.address,
 			document: newData.document ?? entity.document,
-			emails: newData.emails ?? entity.emails,
+			emails: newData.emails
+				? [...entity.emails, ...newData.emails]
+				: entity.emails,
 			firstName: newData.firstName ?? entity.firstName,
-			phones: newData.phones ?? entity.phones,
+			phones: newData.phones
+				? [...entity.phones, ...newData.phones]
+				: entity.phones,
 			surname: newData.surname ?? entity.surname,
 		})
 		await this.repository.save(updated)

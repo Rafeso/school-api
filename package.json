@@ -3,9 +3,6 @@
 	"version": "0.1.0",
 	"description": "School API for managing students, teachers, parents, and classes",
 	"main": "build/app.js",
-	"bin": {
-		"school": "build/app.js"
-	},
 	"type": "module",
 	"engines": {
 		"node": ">=20.*"
@@ -17,7 +14,7 @@
 		"build": "tsc",
 		"test": "NODE_ENV='test' tsx --no-warnings=ExperimentalWarnings --test './src/**/*.test.*'",
 		"build:clean": "npm run clean && npm run build",
-		"clean": "rm -rf build",
+		"clean": "rm -rf ./build",
 		"fix": "npx @biomejs/biome format --write ./src",
 		"prepare": "husky install",
 		"infra:up": "docker compose up -d",
@@ -40,7 +37,6 @@
 		"@commitlint/cli": "^18.6.0",
 		"@commitlint/config-conventional": "^18.6.0",
 		"@types/node": "^20.17.24",
-		"axiosist": "^1.2.0",
 		"cz-conventional-changelog": "^3.3.0",
 		"fastify-type-provider-zod": "^1.1.9",
 		"husky": "^8.0.3",
