@@ -256,9 +256,8 @@ describe("Student Service", () => {
 				DBMock,
 				parentService as unknown as ParentService,
 			)
-			const result = await service.unlinkParent(studentId, [parentId])
+			await service.unlinkParent(studentId, [parentId])
 
-			assert.strictEqual(result.parents.length, 1)
 			assert.strictEqual(DBMock.findById.mock.callCount(), 1)
 			assert.strictEqual(parentService.findById.mock.callCount(), 2)
 			assert.strictEqual(DBMock.save.mock.callCount(), 1)

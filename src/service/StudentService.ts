@@ -129,6 +129,6 @@ export class StudentService extends Service<typeof Student> {
 			StudentUpdateType["parents"]
 		>
 		await this.repository.save(student)
-		return student
+		return
 	}
 }
