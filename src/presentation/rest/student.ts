@@ -5,14 +5,10 @@ import {
 	type StudentCreationType,
 	StudentUpdateSchema,
 } from "../../domain/student/types.js"
-import type { ClassService } from "../../service/ClassService.js"
 import type { StudentService } from "../../service/StudentService.js"
 import { StudentAndParentId, onlyIdParam, queryPage } from "./index.js"
 
-export function studentRouterFactory(
-	studentService: StudentService,
-	classService: ClassService,
-) {
+export function studentRouterFactory(studentService: StudentService) {
 	return (
 		app: FastifyInstance,
 		_: FastifyPluginOptions,
@@ -46,7 +42,7 @@ export function studentRouterFactory(
 					class: classId,
 					birthDate: birthDate,
 					document: document,
-					// Criamos um Set para cerificar que não há repetição no array de parents.
+					// Criamos um Set para cerificar que nao ha repeticao no array de parents.
 					parents: [...new Set(parents)] as StudentCreationType["parents"],
 				})
 
@@ -137,7 +133,7 @@ export function studentRouterFactory(
 
 		router.delete("/:id", onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			studentService.remove(id)
+			await studentService.remove(id)
 
 			return res.status(204).send()
 		})
@@ -147,7 +143,7 @@ export function studentRouterFactory(
 			StudentAndParentId,
 			async (req, res) => {
 				const { id, parentId } = req.params
-				studentService.unlinkParent(id, [parentId])
+				await studentService.unlinkParent(id, [parentId])
 				return res.status(204).send()
 			},
 		)

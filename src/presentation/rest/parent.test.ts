@@ -94,6 +94,35 @@ describe("parentRouterFactory", () => {
 			assert.deepStrictEqual(response.json(), newParent)
 		})
 
+		it("should 500 if any other error", async (t) => {
+			const studentService = studentServiceMock(t)
+			const parentService = parentServiceMock(t)
+			const app = getApp(
+				parentService as unknown as ParentService,
+				studentService as unknown as StudentService,
+			)
+			const newParent = dummyParent().toObject()
+
+			parentService.create.mock.mockImplementationOnce(() => {
+				throw new Error("foo")
+			})
+
+			const response = await app.inject({
+				method: "POST",
+				url: `${PARENTS_ENDPOINT}`,
+				body: newParent,
+			})
+
+			const data = response.json()
+
+			assert.strictEqual(response.statusCode, 500)
+			assert.deepStrictEqual(data, {
+				code: "UNKNOWN_ERROR",
+				name: "Error",
+				message: "foo",
+			})
+		})
+
 		it("should 409 on parent already exists", async (t) => {
 			const parentService = parentServiceMock(t)
 			const studentService = studentServiceMock(t)
@@ -177,6 +206,33 @@ describe("parentRouterFactory", () => {
 			assert.deepStrictEqual(data, dummyParent({ id: parentId }).toObject())
 		})
 
+		it("should 500 if any other error", async (t) => {
+			const studentService = studentServiceMock(t)
+			const parentService = parentServiceMock(t)
+			const app = getApp(
+				parentService as unknown as ParentService,
+				studentService as unknown as StudentService,
+			)
+
+			parentService.findById.mock.mockImplementationOnce(() => {
+				throw new Error("foo")
+			})
+
+			const response = await app.inject({
+				method: "GET",
+				url: `${PARENTS_ENDPOINT}/${parentId}`,
+			})
+
+			const data = response.json()
+
+			assert.strictEqual(response.statusCode, 500)
+			assert.deepStrictEqual(data, {
+				code: "UNKNOWN_ERROR",
+				name: "Error",
+				message: "foo",
+			})
+		})
+
 		it("should 404 on no parent", async (t) => {
 			const parentService = parentServiceMock(t)
 			const studentService = studentServiceMock(t)
@@ -228,6 +284,36 @@ describe("parentRouterFactory", () => {
 			assert.match(data.id, /^[0-9a-f-]{36}$/)
 		})
 
+		it("should 500 if any other error", async (t) => {
+			const studentService = studentServiceMock(t)
+			const parentService = parentServiceMock(t)
+			const app = getApp(
+				parentService as unknown as ParentService,
+				studentService as unknown as StudentService,
+			)
+
+			parentService.update.mock.mockImplementationOnce(() => {
+				throw new Error("foo")
+			})
+
+			const response = await app.inject({
+				method: "PUT",
+				url: `${PARENTS_ENDPOINT}/${parentId}`,
+				body: {
+					phones: ["11 93593-9439"],
+				},
+			})
+
+			const data = response.json()
+
+			assert.strictEqual(response.statusCode, 500)
+			assert.deepStrictEqual(data, {
+				code: "UNKNOWN_ERROR",
+				name: "Error",
+				message: "foo",
+			})
+		})
+
 		it("should 404 on no parent", async (t) => {
 			const parentService = parentServiceMock(t)
 			const studentService = studentServiceMock(t)
@@ -243,7 +329,6 @@ describe("parentRouterFactory", () => {
 			const response = await app.inject({
 				method: "PUT",
 				url: `${PARENTS_ENDPOINT}/${parentId}`,
-
 				body: {
 					phones: ["11 93947-3925"],
 				},
@@ -276,6 +361,33 @@ describe("parentRouterFactory", () => {
 
 			assert.strictEqual(response.statusCode, 204)
 			assert.ok(!response.body.length)
+		})
+
+		it("should 500 if any other error", async (t) => {
+			const studentService = studentServiceMock(t)
+			const parentService = parentServiceMock(t)
+			const app = getApp(
+				parentService as unknown as ParentService,
+				studentService as unknown as StudentService,
+			)
+			studentService.listBy.mock.mockImplementationOnce(() => [])
+			parentService.remove.mock.mockImplementationOnce(() => {
+				throw new Error("foo")
+			})
+
+			const response = await app.inject({
+				method: "DELETE",
+				url: `${PARENTS_ENDPOINT}/${parentId}`,
+			})
+
+			const data = response.json()
+
+			assert.strictEqual(response.statusCode, 500)
+			assert.deepStrictEqual(data, {
+				code: "UNKNOWN_ERROR",
+				name: "Error",
+				message: "foo",
+			})
 		})
 
 		it("should 409 if has students assigned", async (t) => {

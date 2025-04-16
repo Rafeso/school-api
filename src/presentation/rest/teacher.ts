@@ -51,12 +51,12 @@ export function teacherRouterFactory(
 
 			const teacher = await teacherService.findById(id)
 
-			return res.send({ ...teacher.toObject() })
+			return res.send(teacher.toObject())
 		})
 
 		router.get("/:id/students", onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			teacherService.findById(id)
+			await teacherService.findById(id)
 
 			const classes = await classService.listBy("teacher", id)
 			if (classes.length === 0) {
@@ -74,7 +74,7 @@ export function teacherRouterFactory(
 
 		router.get("/:id/classes", onlyIdParam, async (req, res) => {
 			const { id } = req.params
-			teacherService.findById(id)
+			await teacherService.findById(id)
 
 			const classes = await classService.listBy("teacher", id)
 
@@ -85,13 +85,14 @@ export function teacherRouterFactory(
 			"/:id",
 			{
 				schema: {
-					body: TeacherUpdateSchema.omit({ document: true, hiringDate: true }),
+					body: TeacherUpdateSchema.omit({ document: true }),
 					params: onlyIdParam.schema.params,
 				},
 			},
 			async (req, res) => {
 				const { id } = req.params
-				const { firstName, surname, email, phone, salary, major } = req.body
+				const { firstName, surname, email, phone, salary, major, hiringDate } =
+					req.body
 				// Os campos devem ser passados explicitamente para evitar mass assignment.
 				const updated = await teacherService.update(id, {
 					firstName: firstName,
@@ -100,6 +101,7 @@ export function teacherRouterFactory(
 					phone: phone,
 					salary: salary,
 					major: major,
+					hiringDate: hiringDate,
 				})
 				res.send(updated.toObject())
 			},
@@ -110,10 +112,10 @@ export function teacherRouterFactory(
 			const classes = await classService.listBy("teacher", id)
 
 			for (const classEntity of classes) {
-				classService.update(classEntity.id, { teacher: null })
+				await classService.update(classEntity.id, { teacher: null })
 			}
-
-			return res.status(204).send(teacherService.remove(id))
+			await teacherService.remove(id)
+			return res.status(204).send()
 		})
 
 		done()

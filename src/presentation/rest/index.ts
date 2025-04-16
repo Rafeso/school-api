@@ -63,7 +63,7 @@ export async function WebLayer(config: AppConfig, services: ServiceList) {
 			prefix: "/v1/teachers",
 		},
 	)
-	app.register(studentRouterFactory(services.student, services.class), {
+	app.register(studentRouterFactory(services.student), {
 		prefix: "/v1/students",
 	})
 
