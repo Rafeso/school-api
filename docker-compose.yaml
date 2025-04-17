@@ -4,6 +4,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - database:/data/db
+      - ./database:/mvertes/alpine-mongo
 volumes:
   database:
+    driver: local
