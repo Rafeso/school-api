@@ -1,7 +1,10 @@
 import { env } from "node:process"
+import { config } from "dotenv"
 import { z } from "zod"
 
+config()
 export const AppConfigSchema = z.object({
+	NODE_ENV: z.string().default("development"),
 	PORT: z
 		.string()
 		.optional()
@@ -10,8 +13,10 @@ export const AppConfigSchema = z.object({
 		.refine((port) => port >= 0 && port <= 65535, {
 			message: "Port must be less than 65535",
 		}),
-	DB_HOST: z.string().optional().default("mongodb://localhost:27017"),
-	DB_NAME: z.string().optional().default("school-api"),
+	MONGODB_URL: z.string(),
+	MONGODB_DATABASE: z.string(),
+	MONGODB_USERNAME: z.string(),
+	MONGODB_PASSWORD: z.string(),
 })
 export type AppConfig = z.infer<typeof AppConfigSchema>
 

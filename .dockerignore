@@ -1,0 +1,7 @@
+/node_modules
+/build
+.husky
+.env
+.env*.local
+.git
+test.*

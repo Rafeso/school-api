@@ -1,0 +1,16 @@
+{
+	"apps": [
+		{
+			"name": "api",
+			"script": "app.js",
+			"instances": 3,
+			"exec_mode": "cluster",
+			"watch": false,
+			"cwd": "./build",
+			"merge_logs": true,
+			"env": {
+				"NODE_ENV": "production"
+			}
+		}
+	]
+}

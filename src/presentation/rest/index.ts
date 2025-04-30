@@ -7,6 +7,7 @@ import { FastifyReplyType } from "fastify/types/type-provider.js"
 import { ZodError, z } from "zod"
 import type { ServiceList } from "../../app.js"
 import type { AppConfig } from "../../config.js"
+import { loggerConfig } from "../../utils/logger-config.js"
 import { classRouterFactory } from "./class.js"
 import { errorHandler } from "./handlers/error-handler.js"
 import { parentRouterFactory } from "./parent.js"
@@ -44,7 +45,9 @@ export const queryPage = {
 }
 
 export async function WebLayer(config: AppConfig, services: ServiceList) {
-	const app = fastify({ logger: true })
+	const app = fastify({
+		logger: loggerConfig[config.NODE_ENV] ?? true,
+	})
 	app.setValidatorCompiler(validatorCompiler)
 	app.setSerializerCompiler(serializerCompiler)
 	app.setErrorHandler(errorHandler)
@@ -67,18 +70,22 @@ export async function WebLayer(config: AppConfig, services: ServiceList) {
 		prefix: "/v1/students",
 	})
 
+	app.get("/v1/ping", (_, res) => res.send("pong"))
+
 	const start = async () => {
-		console.log("Starting web layer")
 		server = app
-		await app.listen({ port: config.PORT })
-		console.info(`Listening on port ${config.PORT}`)
+		app.listen({ port: config.PORT, host: "0.0.0.0" }, (err, addr) => {
+			if (err) return app.log.error(err)
+
+			app.log.info(`Server listening on port ${addr}`)
+		})
 	}
 
 	const stop = () => {
-		console.debug("Stopping web layer")
+		app.log.debug("Stopping web layer")
 		if (server) {
 			server.close(() => {
-				console.info("Web layer stopped")
+				app.log.info("Web layer stopped")
 				process.exit(0)
 			})
 		}

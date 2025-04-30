@@ -79,6 +79,4 @@ async function main(app: Application, config: AppConfig) {
 	return start()
 }
 
-if (process.env.IS_WEB) {
-	await main(WebLayer, appConfig)
-}
+await main(WebLayer, appConfig)
